@@ -9,3 +9,6 @@ body,
 body {
   font-family: "DM Sans", sans-serif;
 }
+html {
+  scroll-behavior: smooth;
+}
