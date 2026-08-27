@@ -74,13 +74,7 @@ function Navbar() {
   >
     Signup
   </Link>
-        <Link
-          to="/booking"
-          className="navbar-book"
-        >
-          Book a Ride
-          <ArrowUpRight size={17} />
-        </Link>
+
 
       </div>
 

@@ -2,13 +2,14 @@ import { Routes, Route } from "react-router-dom";
 import "./App.css";
 
 import Home from "./pages/Home";
-import Services from "./pages/Services";
+import Service from "./components/Service";
 import About from "./pages/About";
 import Fleet from "./pages/Fleet";
 import Contact from "./pages/Contact";
 import Booking from "./pages/Booking";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Services from "./components/Service";
 
 function App() {
   return (

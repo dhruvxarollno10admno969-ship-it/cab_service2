@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 
 function Services() {
   return (
+    
     <section className="services-section" id="services">
-      <div className="section-heading">
+    <div className="section-heading">  
         <p className="eyebrow">
           <span></span>
           01 — SERVICES
