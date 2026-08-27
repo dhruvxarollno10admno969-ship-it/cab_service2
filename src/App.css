@@ -111,27 +111,24 @@ a {
 ===================================================== */
 
 .navbar-links {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+
   display: flex;
   align-items: center;
-
   gap: 30px;
-
-  margin-left: auto;
-  margin-right: 45px;
 }
 
 .navbar-links a {
   display: block;
-
   position: relative;
 
   color: #333;
-
   text-decoration: none;
 
   font-size: 14px;
   font-weight: 400;
-
   white-space: nowrap;
 
   transition: color 0.25s ease;
@@ -167,6 +164,7 @@ a {
 ===================================================== */
 
 .navbar-actions {
+  margin-left: auto;
   display: flex;
   align-items: center;
 

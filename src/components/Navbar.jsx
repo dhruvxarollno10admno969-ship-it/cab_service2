@@ -68,6 +68,12 @@ function Navbar() {
           Login
         </Link>
 
+ <Link
+    to="/signup"
+    className="navbar-signup"
+  >
+    Signup
+  </Link>
         <Link
           to="/booking"
           className="navbar-book"
@@ -143,6 +149,14 @@ function Navbar() {
               className="navbar-login"
             >
               Login
+            </Link>
+
+            <Link
+              to="/signup"
+              onClick={closeMenu}
+              className="navbar-login"
+            >
+              signup
             </Link>
 
             <Link
