@@ -156,7 +156,7 @@ function Navbar() {
               onClick={closeMenu}
               className="navbar-login"
             >
-              signup
+              Signup
             </Link>
 
             <Link

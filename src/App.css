@@ -350,17 +350,38 @@ a {
 
 
   .mobile-actions {
+    width: 100%;
     display: flex;
     align-items: center;
-
+    flex-direction: column;
     gap: 12px;
-
-    padding-top: 10px;
+    margin-top: 15px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e3df;
   }
+.mobile-actions .navbar-login,
+.mobile-actions .navbar-signup {
+  width: 100%;
+  min-height: 42px;
 
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  padding: 0 5px;
+
+  box-sizing: border-box;
+
+  color: #111;
+  text-decoration: none;
+
+  font-size: 15px;
+}
 
   .mobile-actions .navbar-book {
-    flex: 1;
+   
+    width: 100%;
+    min-height: 46px;
   }
 
 }
