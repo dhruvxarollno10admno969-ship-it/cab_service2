@@ -9,12 +9,13 @@ import Contact from "./pages/Contact";
 import Booking from "./pages/Booking";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
    <Routes>
     <Route path="/" element={<Home/>}/>
-
+<Route path="/navbar" element={<Navbar/>}/>
     <Route path="/services" element={<Services/>}/>
     <Route path="/about" element={<About/>}/>
     <Route path="/fleet" element={<Fleet/>}/>

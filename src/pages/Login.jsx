@@ -6,6 +6,7 @@ import {
   EyeOff,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+
 import "../App.css";
 
 function Login() {
@@ -27,7 +28,7 @@ function Login() {
       return;
     }
 
-    // Temporary frontend test
+    // Temporary frontend login
     console.log({
       email,
       password,
@@ -41,7 +42,7 @@ function Login() {
 
       <div className="auth-card">
 
-        {/* BACK */}
+        {/* BACK TO HOME */}
 
         <Link to="/" className="auth-back">
           <ArrowLeft size={17} />
@@ -85,7 +86,7 @@ function Login() {
         </div>
 
 
-        {/* FORM */}
+        {/* LOGIN FORM */}
 
         <form
           className="auth-form"
