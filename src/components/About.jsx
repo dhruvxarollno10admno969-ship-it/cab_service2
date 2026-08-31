@@ -34,25 +34,7 @@ function About() {
 
       <div className="about-visual">
         <RealMap />
-
-        <div className="location-card pickup-card">
-          <span className="card-dot"></span>
-
-          <div>
-            <small>PICKUP</small>
-            <strong>Your location</strong>
-          </div>
         </div>
-
-        <div className="location-card destination-card">
-          <MapPin size={17} />
-
-          <div>
-            <small>DESTINATION</small>
-            <strong>Your destination</strong>
-          </div>
-        </div>
-      </div>
 
       {/* Journey line */}
 

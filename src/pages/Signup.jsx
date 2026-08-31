@@ -6,46 +6,91 @@ import {
   EyeOff,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+import { auth } from "../firebase";
 import "../App.css";
-
 function Signup() {
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
-const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState(false);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] =
+    useState("");
 
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (event) => {
-  event.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-  setError("");
+    setError("");
 
-  if (password !== confirmPassword) {
-    setError("Passwords do not match.");
-    return;
-  }
+    // Check passwords
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
 
-  if (password.length < 6) {
-    setError("Password must be at least 6 characters.");
-    return;
-  }
+    // Check password length
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
 
-  localStorage.setItem(
-    "user",
-    JSON.stringify({
-      name,
-      email,
-    })
-  );
+    try {
+      setLoading(true);
 
-  navigate("/");
-};
+      // Create Firebase account
+      const userCredential =
+        await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+
+      // Get Firebase user
+      const user = userCredential.user;
+
+      // Save user's name in Firebase profile
+      await updateProfile(user, {
+        displayName: name,
+      });
+
+      // Go to home page
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          setError(
+            "An account already exists with this email."
+          );
+          break;
+
+        case "auth/invalid-email":
+          setError("Please enter a valid email address.");
+          break;
+
+        case "auth/weak-password":
+          setError("Password is too weak.");
+          break;
+
+        default:
+          setError("Something went wrong. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <main className="auth-page">
@@ -140,79 +185,92 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
           {/* PASSWORD */}
 
           <label>
-  <span>PASSWORD</span>
+            <span>PASSWORD</span>
 
-  <div className="password-input">
-    <input
-      type={showPassword ? "text" : "password"}
-      value={password}
-      onChange={(event) =>
-        setPassword(event.target.value)
-      }
-      placeholder="Minimum 6 characters"
-      required
-    />
+            <div className="password-input">
 
-    <button
-      type="button"
-      className="password-toggle"
-      onClick={() =>
-        setShowPassword(!showPassword)
-      }
-      aria-label={
-        showPassword
-          ? "Hide password"
-          : "Show password"
-      }
-    >
-      {showPassword ? (
-        <EyeOff size={18} />
-      ) : (
-        <Eye size={18} />
-      )}
-    </button>
-  </div>
-</label>
+              <input
+                type={
+                  showPassword
+                    ? "text"
+                    : "password"
+                }
+                value={password}
+                onChange={(event) =>
+                  setPassword(event.target.value)
+                }
+                placeholder="Minimum 6 characters"
+                required
+              />
+
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() =>
+                  setShowPassword(!showPassword)
+                }
+                aria-label={
+                  showPassword
+                    ? "Hide password"
+                    : "Show password"
+                }
+              >
+                {showPassword ? (
+                  <EyeOff size={18} />
+                ) : (
+                  <Eye size={18} />
+                )}
+              </button>
+
+            </div>
+          </label>
+
+
           {/* CONFIRM PASSWORD */}
 
           <label>
-  <span>CONFIRM PASSWORD</span>
+            <span>CONFIRM PASSWORD</span>
 
-  <div className="password-input">
+            <div className="password-input">
 
-    <input
-      type={showConfirmPassword ? "text" : "password"}
-      value={confirmPassword}
-      onChange={(event) =>
-        setConfirmPassword(event.target.value)
-      }
-      placeholder="Repeat your password"
-      required
-    />
+              <input
+                type={
+                  showConfirmPassword
+                    ? "text"
+                    : "password"
+                }
+                value={confirmPassword}
+                onChange={(event) =>
+                  setConfirmPassword(event.target.value)
+                }
+                placeholder="Repeat your password"
+                required
+              />
 
-    <button
-      type="button"
-      className="password-toggle"
-      onClick={() =>
-        setShowConfirmPassword(
-          !showConfirmPassword
-        )
-      }
-      aria-label={
-        showConfirmPassword
-          ? "Hide password"
-          : "Show password"
-      }
-    >
-      {showConfirmPassword ? (
-        <EyeOff size={18} />
-      ) : (
-        <Eye size={18} />
-      )}
-    </button>
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() =>
+                  setShowConfirmPassword(
+                    !showConfirmPassword
+                  )
+                }
+                aria-label={
+                  showConfirmPassword
+                    ? "Hide password"
+                    : "Show password"
+                }
+              >
+                {showConfirmPassword ? (
+                  <EyeOff size={18} />
+                ) : (
+                  <Eye size={18} />
+                )}
+              </button>
 
-  </div>
-</label>
+            </div>
+          </label>
+
 
           {/* ERROR */}
 
@@ -228,9 +286,13 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
           <button
             type="submit"
             className="auth-button"
+            disabled={loading}
           >
-            Create Account
-            <ArrowUpRight size={18} />
+            {loading
+              ? "Creating Account..."
+              : "Create Account"}
+
+            {!loading && <ArrowUpRight size={18} />}
           </button>
 
         </form>
@@ -240,6 +302,7 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
         <p className="auth-switch">
           Already have an account?{" "}
+
           <Link to="/login">
             Log in
           </Link>

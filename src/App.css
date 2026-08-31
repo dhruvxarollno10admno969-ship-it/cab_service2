@@ -4926,3 +4926,207 @@ a {
 }
 }
 }
+/* ================= PROFILE ================= */
+
+.profile-wrapper {
+  position: relative;
+}
+
+.profile-button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  border: none;
+  background: transparent;
+
+  cursor: pointer;
+
+  padding: 6px 10px;
+  border-radius: 30px;
+
+  font-family: inherit;
+  font-size: 15px;
+
+  transition: 0.25s ease;
+}
+
+.profile-button:hover {
+  background: #f1f0ed;
+}
+
+.profile-avatar {
+  width: 34px;
+  height: 34px;
+
+  border-radius: 50%;
+
+  background: #111;
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.profile-name {
+  max-width: 120px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rotate-icon {
+  transform: rotate(180deg);
+  transition: 0.2s ease;
+}
+
+
+/* ================= DROPDOWN ================= */
+
+.profile-dropdown {
+  position: absolute;
+
+  top: calc(100% + 12px);
+  right: 0;
+
+  width: 280px;
+
+  background: #fff;
+
+  border: 1px solid #e6e4df;
+  border-radius: 18px;
+
+  padding: 10px;
+
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.12);
+
+  z-index: 1000;
+
+  animation: profileDrop 0.2s ease;
+}
+
+@keyframes profileDrop {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ================= PROFILE HEADER ================= */
+
+.profile-header {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 12px;
+}
+
+.profile-avatar.large {
+  width: 44px;
+  height: 44px;
+
+  font-size: 17px;
+}
+
+.profile-header div:last-child {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+
+  min-width: 0;
+}
+
+.profile-header strong {
+  font-size: 14px;
+  color: #111;
+}
+
+.profile-header span {
+  font-size: 12px;
+  color: #777;
+
+  max-width: 180px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+/* ================= DIVIDER ================= */
+
+.profile-divider {
+  height: 1px;
+  background: #eceae6;
+
+  margin: 6px 4px;
+}
+
+
+/* ================= MENU ITEMS ================= */
+
+.profile-item {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 11px 12px;
+
+  border-radius: 11px;
+
+  background: transparent;
+  border: none;
+
+  color: #222;
+
+  text-decoration: none;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  cursor: pointer;
+
+  box-sizing: border-box;
+
+  transition: 0.2s ease;
+}
+
+.profile-item:hover {
+  background: #f4f3f0;
+}
+
+.profile-item svg {
+  color: #777;
+}
+
+
+/* ================= LOGOUT ================= */
+
+.logout-item {
+  color: #c0392b;
+}
+
+.logout-item svg {
+  color: #c0392b;
+}
+
+.logout-item:hover {
+  background: #fff1ef;
+}
