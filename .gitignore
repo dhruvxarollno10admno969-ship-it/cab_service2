@@ -24,6 +24,7 @@ dist-ssr
 *.sw?
 
 ### Firebase ###
+
 .idea
 **/node_modules/*
 **/.firebaserc
@@ -31,3 +32,6 @@ dist-ssr
 ### Firebase Patch ###
 .runtimeconfig.json
 .firebase/
+
+# Firebase client configuration
+src/firebase.js
