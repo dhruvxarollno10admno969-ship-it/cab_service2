@@ -11,6 +11,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../firebase";
+
 import "../App.css";
 function Signup() {
   const navigate = useNavigate();

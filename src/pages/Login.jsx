@@ -5,7 +5,11 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
+
 import { Link, useNavigate } from "react-router-dom";
+
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
 
 import "../App.css";
 
@@ -17,40 +21,52 @@ function Login() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+const handleSubmit = async (event) => {
+  event.preventDefault();
 
-    setError("");
+  setError("");
 
-    if (!email || !password) {
-      setError("Please enter your email and password.");
-      return;
-    }
+  if (!email || !password) {
+    setError("Please enter your email and password.");
+    return;
+  }
 
-    // Temporary frontend login
-    console.log({
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
       email,
-      password,
-    });
+      password
+    );
+
+    console.log("Logged in user:", userCredential.user);
 
     navigate("/");
-  };
+  } catch (error) {
+    console.error("Login error:", error);
+
+    if (error.code === "auth/invalid-credential") {
+      setError("Invalid email or password.");
+    } else if (error.code === "auth/user-not-found") {
+      setError("No account found with this email.");
+    } else if (error.code === "auth/wrong-password") {
+      setError("Incorrect password.");
+    } else {
+      setError("Login failed. Please try again.");
+    }
+  }
+};
 
   return (
     <main className="auth-page">
 
       <div className="auth-card">
 
-        {/* BACK TO HOME */}
-
         <Link to="/" className="auth-back">
           <ArrowLeft size={17} />
           Back to Home
         </Link>
-
-
-        {/* LOGO */}
 
         <Link to="/" className="auth-logo">
           <span className="logo-mark">
@@ -61,9 +77,6 @@ function Login() {
             MANZILL 777
           </span>
         </Link>
-
-
-        {/* HEADING */}
 
         <div className="auth-heading">
 
@@ -85,15 +98,10 @@ function Login() {
 
         </div>
 
-
-        {/* LOGIN FORM */}
-
         <form
           className="auth-form"
           onSubmit={handleSubmit}
         >
-
-          {/* EMAIL */}
 
           <label>
             <span>EMAIL</span>
@@ -108,9 +116,6 @@ function Login() {
               required
             />
           </label>
-
-
-          {/* PASSWORD */}
 
           <label>
             <span>PASSWORD</span>
@@ -137,11 +142,6 @@ function Login() {
                 onClick={() =>
                   setShowPassword(!showPassword)
                 }
-                aria-label={
-                  showPassword
-                    ? "Hide password"
-                    : "Show password"
-                }
               >
                 {showPassword ? (
                   <EyeOff size={18} />
@@ -153,30 +153,25 @@ function Login() {
             </div>
           </label>
 
-
-          {/* ERROR */}
-
           {error && (
             <p className="auth-error">
               {error}
             </p>
           )}
 
-
-          {/* LOGIN BUTTON */}
-
           <button
             type="submit"
             className="auth-button"
+            disabled={loading}
           >
-            Sign In
-            <ArrowUpRight size={18} />
+            {loading ? "Signing In..." : "Sign In"}
+
+            {!loading && (
+              <ArrowUpRight size={18} />
+            )}
           </button>
 
         </form>
-
-
-        {/* SIGNUP */}
 
         <p className="auth-switch">
           Don't have an account?{" "}

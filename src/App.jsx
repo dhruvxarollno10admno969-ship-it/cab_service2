@@ -1,15 +1,15 @@
 import { Routes, Route } from "react-router-dom";
-import "./App.css";
 
 import Home from "./pages/Home";
-import Service from "./components/Service";
+import Services from "./components/Service";
 import About from "./pages/About";
 import Fleet from "./pages/Fleet";
 import Contact from "./pages/Contact";
 import Booking from "./pages/Booking";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Services from "./components/Service";
+import Profile from "./pages/profile";
+import Setting from "./pages/Setting";
 
 function App() {
   return (
@@ -26,6 +26,12 @@ function App() {
 
       {/* BOOKING */}
       <Route path="/booking" element={<Booking />} />
+
+      {/* PROFILE */}
+      <Route path="/profile" element={<Profile />} />
+
+      {/* SETTINGS */}
+      <Route path="/settings" element={<Setting />} />
 
       {/* AUTH */}
       <Route path="/login" element={<Login />} />
