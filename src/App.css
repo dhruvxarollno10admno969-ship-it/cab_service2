@@ -5825,3 +5825,512 @@ a {
   }
 
 }
+.profile-header {
+  width: 100%;
+  max-width: 1475px;
+  margin: 0 auto;
+
+  height: 100px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom: 1px solid #d8d6d0;
+
+  padding: 0 4px;
+}
+
+.profile-back {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  color: #666;
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 400;
+
+  transition: color 0.2s ease;
+}
+
+.profile-back:hover {
+  color: #111;
+}
+
+.profile-back svg {
+  transition: transform 0.2s ease;
+}
+
+.profile-back:hover svg {
+  transform: translateX(-4px);
+}
+
+
+/* LOGO */
+
+.profile-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  color: #555;
+  text-decoration: none;
+
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+}
+
+.profile-logo-mark {
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #111;
+  color: white;
+
+  border-radius: 50%;
+
+  font-size: 16px;
+  font-weight: 600;
+}
+.settings-page {
+  min-height: 100vh;
+  background: #f7f6f2;
+  color: #111;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.settings-header {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 40px 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom: 1px solid #deddd8;
+}
+
+
+.back-home {
+  border: none;
+  background: transparent;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  color: #666;
+  font-size: 15px;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+
+.back-home:hover {
+  color: #111;
+  transform: translateX(-3px);
+}
+
+
+.settings-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+
+.settings-avatar {
+  width: 44px;
+  height: 44px;
+
+  border-radius: 50%;
+
+  background: #111;
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 17px;
+}
+
+
+.settings-user strong {
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+
+.settings-user span {
+  color: #777;
+  margin-left: 3px;
+}
+
+
+/* =========================
+   CONTENT
+========================= */
+
+.settings-container {
+  width: min(900px, calc(100% - 40px));
+  margin: 0 auto;
+
+  padding: 80px 0 100px;
+}
+
+
+.settings-intro {
+  margin-bottom: 55px;
+}
+
+
+.settings-label {
+  display: block;
+
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+
+  color: #777;
+
+  margin-bottom: 15px;
+}
+
+
+.settings-intro h1 {
+  margin: 0;
+
+  font-size: clamp(48px, 7vw, 76px);
+  line-height: 0.95;
+  letter-spacing: -4px;
+}
+
+
+.settings-intro p {
+  margin-top: 22px;
+
+  font-size: 18px;
+  color: #777;
+
+  line-height: 1.6;
+}
+
+
+/* =========================
+   SECTION
+========================= */
+
+.settings-section {
+  margin-bottom: 48px;
+
+  background: white;
+
+  border: 1px solid #deddd8;
+  border-radius: 24px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.035);
+}
+
+
+.settings-section-title {
+  padding: 28px 30px;
+
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+
+  border-bottom: 1px solid #e5e3de;
+}
+
+
+.settings-section-title svg {
+  margin-top: 3px;
+  color: #777;
+}
+
+
+.settings-section-title h2 {
+  margin: 0;
+
+  font-size: 21px;
+  font-weight: 600;
+}
+
+
+.settings-section-title p {
+  margin: 7px 0 0;
+
+  color: #888;
+  font-size: 14px;
+}
+
+
+/* =========================
+   SETTINGS ITEMS
+========================= */
+
+.settings-list {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.settings-item {
+  width: 100%;
+
+  padding: 23px 30px;
+
+  border: none;
+  border-bottom: 1px solid #e9e7e2;
+
+  background: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    padding-left 0.25s ease;
+}
+
+
+.settings-item:last-child {
+  border-bottom: none;
+}
+
+
+.settings-item:hover {
+  background: #faf9f6;
+  padding-left: 35px;
+}
+
+
+.settings-item > svg {
+  color: #999;
+}
+
+
+.settings-item-left {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+}
+
+
+.settings-icon {
+  width: 42px;
+  height: 42px;
+
+  border-radius: 12px;
+
+  background: #f3f2ee;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #555;
+}
+
+
+.settings-item strong {
+  display: block;
+
+  font-size: 15px;
+  font-weight: 600;
+}
+
+
+.settings-item span {
+  display: block;
+
+  margin-top: 5px;
+
+  color: #888;
+  font-size: 13px;
+}
+
+
+/* =========================
+   SWITCH
+========================= */
+
+.switch {
+  position: relative;
+
+  width: 48px;
+  height: 27px;
+
+  flex-shrink: 0;
+}
+
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+
+.slider {
+  position: absolute;
+  inset: 0;
+
+  background: #d6d5d1;
+
+  border-radius: 30px;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+
+.slider::before {
+  content: "";
+
+  position: absolute;
+
+  width: 21px;
+  height: 21px;
+
+  left: 3px;
+  top: 3px;
+
+  background: white;
+
+  border-radius: 50%;
+
+  transition: 0.25s ease;
+
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+
+.switch input:checked + .slider {
+  background: #111;
+}
+
+
+.switch input:checked + .slider::before {
+  transform: translateX(21px);
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+.logout-button {
+  width: 100%;
+
+  padding: 20px;
+
+  border: 1px solid #e1c9c5;
+  border-radius: 18px;
+
+  background: white;
+
+  color: #d7352b;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+
+.logout-button:hover {
+  background: #fff5f3;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .settings-header {
+    padding: 22px 20px;
+  }
+
+  .settings-user {
+    display: none;
+  }
+
+  .settings-container {
+    width: calc(100% - 28px);
+    padding: 55px 0 70px;
+  }
+
+  .settings-intro {
+    margin-bottom: 35px;
+  }
+
+  .settings-intro h1 {
+    font-size: 52px;
+    letter-spacing: -3px;
+  }
+
+  .settings-intro p {
+    font-size: 15px;
+  }
+
+  .settings-section {
+    border-radius: 18px;
+    margin-bottom: 25px;
+  }
+
+  .settings-section-title {
+    padding: 22px;
+  }
+
+  .settings-item {
+    padding: 20px 22px;
+  }
+
+  .settings-item:hover {
+    padding-left: 22px;
+  }
+
+  .settings-item-left {
+    gap: 12px;
+  }
+
+  .settings-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+}

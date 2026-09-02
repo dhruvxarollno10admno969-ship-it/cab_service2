@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { User, Mail, Phone, MapPin, Home, Pencil, Save } from "lucide-react";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-
+import { ArrowLeft } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { auth, db } from "../firebase";
 
 import "../App.css";
@@ -12,6 +13,7 @@ function Profile() {
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -22,6 +24,8 @@ function Profile() {
     state: "",
     country: "India",
   });
+
+  
 
   /* ================= GET USER ================= */
 
@@ -143,6 +147,19 @@ function Profile() {
 
   return (
     <main className="profile-page">
+ {/* HEADER */}
+      <header className="profile-header">
+
+        <Link to="/" className="profile-back">
+          <ArrowLeft size={20} />
+          <span>Back to Home</span>
+        </Link>
+
+      <Link to="/" className="profile-logo ">
+          <span>MANZILL 777</span>
+        </Link>
+
+      </header>
 
       <div className="profile-container">
 

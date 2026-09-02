@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
-import Services from "./components/Service";
+import Service from "./components/Service";
 import About from "./pages/About";
 import Fleet from "./pages/Fleet";
 import Contact from "./pages/Contact";
@@ -19,7 +19,7 @@ function App() {
       <Route path="/" element={<Home />} />
 
       {/* MAIN PAGES */}
-      <Route path="/services" element={<Services />} />
+      <Route path="/services" element={<Service />} />
       <Route path="/about" element={<About />} />
       <Route path="/fleet" element={<Fleet />} />
       <Route path="/contact" element={<Contact />} />
@@ -27,11 +27,11 @@ function App() {
       {/* BOOKING */}
       <Route path="/booking" element={<Booking />} />
 
-      {/* PROFILE */}
+      {/* ACCOUNT */}
       <Route path="/profile" element={<Profile />} />
-
-      {/* SETTINGS */}
       <Route path="/settings" element={<Setting />} />
+
+      
 
       {/* AUTH */}
       <Route path="/login" element={<Login />} />
