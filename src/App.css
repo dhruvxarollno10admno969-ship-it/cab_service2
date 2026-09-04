@@ -174,31 +174,59 @@ a {
 }
 
 
+
 /* =====================================================
-   LOGIN
+   LOGIN — BOTTOM CENTER LIQUID FILL
 ===================================================== */
 
 .navbar-login {
+  position: relative;
+
   display: inline-flex;
   align-items: center;
+  justify-content: center;
 
   color: #222;
+  background: transparent;
+  border: none;
+
+  padding: 10px 22px;
+  border-radius: 6px;
 
   text-decoration: none;
-
   font-size: 14px;
   font-weight: 400;
 
-  white-space: nowrap;
+  overflow: hidden;
+  isolation: isolate;
 
-  transition: opacity 0.25s ease;
+  transition: color 0.45s ease;
+}
+
+/* Bottom-center fill */
+.navbar-login::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background: #222;
+
+  clip-path: circle(0% at 50% 100%);
+
+  z-index: -1;
+
+  transition: clip-path 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hover */
+.navbar-login:hover::before {
+  clip-path: circle(150% at 50% 100%);
 }
 
 .navbar-login:hover {
-  opacity: 0.55;
+  color: #fff;
 }
-
-
 /* =====================================================
    BOOK BUTTON
 ===================================================== */

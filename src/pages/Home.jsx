@@ -10,6 +10,7 @@ import Navbar from "../components/Navbar";
 import QuickBooking from "../components/QuickBooking";
 import Service from "../components/Service";
 import About from "../components/About";
+import Footer from "../components/Footer";
 
 function Home() {
   return (
@@ -426,56 +427,17 @@ function Home() {
         </div>
 
 
-        {/* CONTACT BOTTOM */}
-        <div className="contact-bottom">
-
-          <span>
-            AVAILABLE 24 / 7
-          </span>
-
-          <span>
-            MANZILL 777
-          </span>
-
-          <span>
-            EVERY JOURNEY MATTERS.
-          </span>
-
-        </div>
+        
 
       </section>
 
 
       {/* ================= FOOTER ================= */}
-      <footer className="footer">
+      
 
-        <div className="logo">
+      <Footer />
+      </main>
 
-          <span className="logo-mark">
-            M
-          </span>
-
-          <span>
-            MANZILL 777
-          </span>
-
-        </div>
-
-        <p>
-          Reliable rides. Every journey.
-        </p>
-
-        <a
-          href="#home"
-          className="footer-top"
-        >
-          Back to top
-          <ArrowUpRight size={17} />
-        </a>
-
-      </footer>
-
-    </main>
   );
 }
 
