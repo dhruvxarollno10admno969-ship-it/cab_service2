@@ -6,11 +6,7 @@ function Services() {
     
     <section className="services-section" id="services">
     <div className="section-heading">  
-        <p className="eyebrow">
-          <span></span>
-          01 — SERVICES
-        </p>
-
+ 
         <h2>
           One platform.
           <br />
