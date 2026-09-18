@@ -11,9 +11,7 @@ function About() {
           02 — ABOUT US
         </p>
 
-        <span className="about-label">
-          MANZILL 777 / EST. 2026
-        </span>
+        
       </div>
 
       <div className="about-title">

@@ -8,6 +8,7 @@
   color: #111;
   padding: 110px 0 30px;
   overflow: hidden;
+  margin-top: -100px;
 }
 
 /* =====================================================
@@ -388,7 +389,7 @@
 
   .footer-main {
     grid-template-columns: 1fr 1fr;
-
+margin-top: 90px;
     gap: 55px 40px;
   }
 

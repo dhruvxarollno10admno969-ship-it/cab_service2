@@ -155,10 +155,7 @@ function Profile() {
           <span>Back to Home</span>
         </Link>
 
-      <Link to="/" className="profile-logo ">
-          <span>MANZILL 777</span>
-        </Link>
-
+      
       </header>
 
       <div className="profile-container">

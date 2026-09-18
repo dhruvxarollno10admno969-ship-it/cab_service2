@@ -429,9 +429,9 @@ a {
 
   align-items: center;
 
-  gap: 80px;
+  gap: 100px;
 
-  padding: 90px 0;
+  padding: 90px 10px;
 }
 
 .eyebrow {
@@ -442,6 +442,8 @@ a {
   margin: 0 0 24px;
 
   color: #77736b;
+
+  margin-top: -200px;
 
   font-size: 11px;
   font-weight: 700;
@@ -514,6 +516,7 @@ a {
 .booking-card {
   padding: 32px;
 
+ margin-top: -200px;
   background: #ffffff;
 
   border: 1px solid #dfddd7;
@@ -628,14 +631,14 @@ a {
 
   padding: 110px 0 130px;
 
-  border-top: 1px solid #dcdad4;
+  
 }
 
 .section-heading {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-
+margin-top: -249px;
   margin-bottom: 60px;
 }
 
@@ -727,7 +730,7 @@ a {
     width: calc(100% - 32px);
 
     grid-template-columns: 1fr;
-
+margin-top: 160px;
     gap: 50px;
 
     padding: 70px 0;
@@ -740,10 +743,13 @@ a {
 
   .booking-card {
     padding: 24px;
+    margin-top: 0px;
+    margin: 0;
   }
 
   .section-heading {
     display: block;
+    margin-top: -190px;
   }
 
   .section-heading h2 {
@@ -767,6 +773,7 @@ a {
 
   .hero-description {
     font-size: 15px;
+    
   }
 
   .booking-card {
@@ -786,15 +793,13 @@ a {
   width: min(1180px, calc(100% - 48px));
   margin: 0 auto;
   padding: 130px 0;
-
-  border-top: 1px solid #dcdad4;
 }
 
 .about-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
+margin-top: -30px;
   margin-bottom: 70px;
 }
 
@@ -812,6 +817,7 @@ a {
   grid-template-columns: 1.25fr 0.75fr;
 
   gap: 100px;
+  margin-top: -120px;
 
   align-items: end;
 
@@ -856,7 +862,7 @@ a {
   align-items: center;
 
   width: 100%;
-
+margin-top: -50px;
   margin-bottom: 120px;
 }
 
@@ -932,14 +938,14 @@ a {
 
 .about-bottom {
   display: grid;
-
+margin-top: -110px;
   grid-template-columns: 1fr 1fr;
 
   gap: 100px;
 
   padding-top: 80px;
 
-  border-top: 1px solid #dcdad4;
+
 }
 
 .about-statement > span {
@@ -980,6 +986,7 @@ a {
   grid-template-columns: repeat(3, 1fr);
 
   align-self: end;
+
 
   border-top: 1px solid #d4d2cb;
 }
@@ -1583,7 +1590,7 @@ a {
 .fleet-section {
   width: min(1180px, calc(100% - 48px));
   margin: 0 auto;
-
+margin-top: -130px;
   padding: 140px 0;
 }
 
@@ -1838,6 +1845,7 @@ a {
 
   .fleet-section {
     padding: 100px 0;
+    margin-top: 70px;
   }
 
   .fleet-heading {
@@ -2218,7 +2226,7 @@ a {
 
   .contact-section {
     width: calc(100% - 32px);
-
+    margin-top: 90px;
     padding: 80px 0 40px;
   }
 
@@ -2257,6 +2265,7 @@ a {
 
   margin: 0 auto;
 
+  
   padding: 120px 0 30px;
 }
 
@@ -5165,12 +5174,13 @@ a {
 .profile-page {
   min-height: calc(100vh - 80px);
   padding: 100px 7%;
+  margin-top: -120px;
   background: #f5f4f0;
 }
 
 .profile-container {
   max-width: 1000px;
-  margin: 0 auto;
+ 
 }
 
 .profile-title {
@@ -5423,11 +5433,13 @@ a {
   min-height: 100vh;
   background: #f7f6f2;
   padding: 120px 24px 80px;
+  margin-top: -180px;
 }
 
 .settings-container {
   width: min(900px, 100%);
   margin: 0 auto;
+  
 }
 
 
@@ -5443,7 +5455,8 @@ a {
 
   font-size: 14px;
 
-  margin-bottom: 55px;
+ 
+  margin-bottom: 30px;
 
   transition: 0.25s ease;
 }
@@ -6362,3 +6375,82 @@ a {
   }
 
 }
+
+
+/* SERVICES CARD CSS  */
+
+.service-card {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Image */
+.service-card-image {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  opacity: 0;
+  transform: scale(1.08);
+
+  transition:
+    opacity 0.5s ease,
+    transform 0.7s ease;
+
+  z-index: 0;
+}
+
+/* Overlay */
+.service-card-overlay {
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.75),
+    rgba(0, 0, 0, 0.25)
+  );
+
+  opacity: 0;
+
+  transition: opacity 0.5s ease;
+
+  z-index: 1;
+}
+
+/* Keep content above image */
+.service-card > *:not(.service-card-image):not(.service-card-overlay) {
+  position: relative;
+  z-index: 2;
+}
+
+/* Hover */
+.service-card:hover .service-card-image {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.service-card:hover .service-card-overlay {
+  opacity: 1;
+}
+
+/* .service-card:hover h3 {
+  color: white;
+}
+
+.service-card:hover p {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.service-card:hover .service-number {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.service-card:hover .service-arrow {
+  color: white;
+  transform: translate(4px, -4px);
+} */

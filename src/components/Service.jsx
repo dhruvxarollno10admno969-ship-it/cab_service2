@@ -19,33 +19,40 @@ function Services() {
           number="01"
           title="City Rides"
           description="Quick and comfortable rides for your everyday journeys."
+          imgsrc="/images/city-rides.jpg"
         />
 
         <ServiceCard
           number="02"
           title="Airport Transfers"
           description="On-time airport pickups and drop-offs without the stress."
+          imgsrc="/images/airport.jpg"
         />
 
         <ServiceCard
           number="03"
           title="Outstation"
           description="Travel beyond the city with comfortable long-distance rides."
+          imgsrc="/images/outstation.jpg"
         />
 
         <ServiceCard
           number="04"
           title="Corporate"
           description="Professional transportation for businesses and teams."
+          imgsrc="/images/corporate.jpg"
         />
       </div>
     </section>
   );
 }
 
-function ServiceCard({ number, title, description }) {
+function ServiceCard({ number, title, description , imgsrc }) {
   return (
     <Link to="/booking" className="service-card">
+
+      <img src={imgsrc} alt={title} classname="service-image" />
+      
       <span className="service-number">{number}</span>
 
       <div>
