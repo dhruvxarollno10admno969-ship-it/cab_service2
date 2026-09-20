@@ -419,10 +419,11 @@ a {
 
 .hero-section {
   width: min(1180px, calc(100% - 48px));
+max-width: none;
 
   min-height: 650px;
 
-  margin: 0 auto;
+  margin: 0;
 
   display: grid;
   grid-template-columns: 1.25fr 0.75fr;
@@ -431,7 +432,9 @@ a {
 
   gap: 100px;
 
-  padding: 90px 10px;
+  padding: 40px 4vw;
+
+  box-sizing: border-box;
 }
 
 .eyebrow {
@@ -519,6 +522,7 @@ a {
  margin-top: -200px;
   background: #ffffff;
 
+
   border: 1px solid #dfddd7;
 
   border-radius: 24px;
@@ -528,7 +532,7 @@ a {
 
 .booking-header {
   display: flex;
-  align-items: flex-start;
+  align-items: flex-end;
   justify-content: space-between;
 
   margin-bottom: 32px;
@@ -6376,81 +6380,3 @@ margin-top: -130px;
 
 }
 
-
-/* SERVICES CARD CSS  */
-
-.service-card {
-  position: relative;
-  overflow: hidden;
-}
-
-/* Image */
-.service-card-image {
-  position: absolute;
-  inset: 0;
-
-  width: 100%;
-  height: 100%;
-
-  object-fit: cover;
-
-  opacity: 0;
-  transform: scale(1.08);
-
-  transition:
-    opacity 0.5s ease,
-    transform 0.7s ease;
-
-  z-index: 0;
-}
-
-/* Overlay */
-.service-card-overlay {
-  position: absolute;
-  inset: 0;
-
-  background: linear-gradient(
-    90deg,
-    rgba(0, 0, 0, 0.75),
-    rgba(0, 0, 0, 0.25)
-  );
-
-  opacity: 0;
-
-  transition: opacity 0.5s ease;
-
-  z-index: 1;
-}
-
-/* Keep content above image */
-.service-card > *:not(.service-card-image):not(.service-card-overlay) {
-  position: relative;
-  z-index: 2;
-}
-
-/* Hover */
-.service-card:hover .service-card-image {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.service-card:hover .service-card-overlay {
-  opacity: 1;
-}
-
-/* .service-card:hover h3 {
-  color: white;
-}
-
-.service-card:hover p {
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.service-card:hover .service-number {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.service-card:hover .service-arrow {
-  color: white;
-  transform: translate(4px, -4px);
-} */

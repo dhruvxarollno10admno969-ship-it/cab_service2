@@ -14,6 +14,31 @@ import PrivateRoute from "./PrivateRoute";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
+
+
+function Card({ number, title, description, image }) {
+  return (
+    <div
+      className="card"
+      style={{ backgroundImage: `url(${image})` }}
+    >
+      <div className="overlay"></div>
+
+      <div className="card-content">
+        <span className="number">{number}</span>
+
+        <div className="card-bottom">
+          <div>
+            <h2>{title}</h2>
+            <p>{description}</p>
+          </div>
+
+          <span className="arrow">↗</span>
+        </div>
+      </div>
+    </div>
+  );
+}
 function App() {
   return (
     <>
@@ -28,6 +53,8 @@ function App() {
       <Route path="/signup" element={<Signup />} />
 
       {/* MAIN PAGES */}
+
+      
       <Route path="/services" element={<Service />} />
       <Route path="/about" element={<About />} />
       <Route path="/fleet" element={<Fleet />} />
