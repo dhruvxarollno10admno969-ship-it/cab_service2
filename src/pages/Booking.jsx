@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   Link,
   useSearchParams,
+  useLocation,
 } from "react-router-dom";
 
 import {
@@ -57,19 +58,19 @@ function Booking() {
   // ---------------------------------------------------
 
   const [searchParams] = useSearchParams();
-
+const location = useLocation();
 
   // ---------------------------------------------------
   // JOURNEY
   // ---------------------------------------------------
 
   const [pickup, setPickup] = useState(
-    searchParams.get("pickup") || ""
-  );
+  location.state?.pickup || searchParams.get("pickup") || ""
+);
 
   const [destination, setDestination] = useState(
-    searchParams.get("destination") || ""
-  );
+  location.state?.destination || searchParams.get("destination") || ""
+);
 
 
   // ---------------------------------------------------

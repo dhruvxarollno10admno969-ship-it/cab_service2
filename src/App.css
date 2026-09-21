@@ -418,7 +418,7 @@ a {
 ========================= */
 
 .hero-section {
-  width: min(1180px, calc(100% - 48px));
+  width: 100%;
 max-width: none;
 
   min-height: 650px;
@@ -530,7 +530,7 @@ max-width: none;
 
   box-shadow: 0 25px 70px rgba(0, 0, 0, 0.08);
 
-  transform: translateX(290px);
+  transform: translateX(-100px);
 }
 
 .booking-header {
@@ -2904,7 +2904,7 @@ margin-top: -110px;
 
 .booking-title {
   max-width: 700px;
-
+margin-top: 145px;
   margin-bottom: 70px;
 }
 
@@ -3600,7 +3600,7 @@ margin-top: -110px;
 
   .booking-header {
     width: calc(100% - 32px);
-
+margin-top: 25px;
     height: 70px;
   }
 
@@ -3620,6 +3620,7 @@ margin-top: -110px;
 
   .booking-title {
     margin-bottom: 50px;
+    margin-top: -80px;
   }
 
   .booking-title h1 {

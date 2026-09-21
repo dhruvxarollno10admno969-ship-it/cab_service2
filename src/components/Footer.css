@@ -20,7 +20,8 @@
 
 
 .footer-main {
-  width: min(1400px, calc(100% - 8vw));
+    width: calc(100% - 30px);
+  max-width: 1700px;
   margin: 0 auto;
 
   display: grid;
@@ -33,7 +34,7 @@
   gap: 70px;
 
   margin-top: 0px;
-  padding: 20px 0 30px;
+  padding: 20px 0 50px;
   border-top: 1px solid #dedbd4;
 
   padding-bottom: 90px;
@@ -175,10 +176,11 @@
 .footer-cta {
   position: relative;
 
-  width: min(1400px, calc(100% - 8vw));
+    width: calc(100% - 30px);
+  max-width: 1700px;
   min-height: 280px;
 
-  margin: 0 auto 80px;
+  margin: 0 auto 50px;
 
   padding: 55px;
 
@@ -312,7 +314,8 @@
 ===================================================== */
 
 .footer-bottom {
-  width: min(1400px, calc(100% - 8vw));
+  width: calc(100% - 30px);
+  max-width: 1700px;
 
   margin: 0 auto;
 
