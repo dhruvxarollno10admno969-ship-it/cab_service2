@@ -735,11 +735,9 @@ margin-top: -249px;
 
   .hero-section {
     width: calc(100% - 32px);
-
     grid-template-columns: 1fr;
-margin-top: 160px;
+    margin: 0 auto;
     gap: 50px;
-
     padding: 70px 0;
   }
 
@@ -749,9 +747,11 @@ margin-top: 160px;
   }
 
   .booking-card {
+     width: 100%;
+    max-width: 100%;
     padding: 24px;
-    margin-top: 0px;
     margin: 0;
+    transform: none;
   }
 
   .section-heading {
@@ -775,12 +775,16 @@ margin-top: 160px;
 @media (max-width: 500px) {
   .hero-actions {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+  }
+
+  .hero-actions a,
+  .hero-actions button {
+    width: 100%;
   }
 
   .hero-description {
-    font-size: 15px;
-    
+    max-width: 100%;
   }
 
   .booking-card {
@@ -1606,10 +1610,10 @@ margin-top: -110px;
   max-width: none;
 
   /* REMOVE max-height */
-  min-height: 100vh;
+  min-height: 0;
   height: auto;
 
-  padding: 40px 4vw 120px;
+  padding: 40px 4vw 0px;
 
   box-sizing: border-box;
 }
@@ -1973,19 +1977,33 @@ margin-top: -110px;
    CONTACT
 ========================= */
 
+/* =========================
+   CONTACT SECTION
+========================= */
+
 .contact-section {
-  width: min(1180px, calc(100% - 48px));
+  width: 100%;
+  max-width: none;
 
-  margin: 0 auto;
+  min-height: 0;
+  height: auto;
 
-  padding: 140px 0 60px;
+  margin: 0;
+
+  padding: 70px 4vw 120px;
+
+  box-sizing: border-box;
 }
 
 
-/* HEADING */
+/* =========================
+   HEADING
+========================= */
 
 .contact-heading {
-  margin-bottom: 90px;
+  width: 100%;
+
+  margin-bottom: 70px;
 }
 
 .contact-heading h2 {
@@ -1996,6 +2014,8 @@ margin-top: -110px;
   line-height: 0.88;
 
   letter-spacing: -6px;
+
+  font-weight: 600;
 }
 
 .contact-heading h2 span {
@@ -2003,20 +2023,31 @@ margin-top: -110px;
 }
 
 
-/* LAYOUT */
+/* =========================
+   MAIN LAYOUT
+========================= */
 
 .contact-layout {
+  width: 100%;
+
   display: grid;
 
   grid-template-columns: 0.85fr 1.15fr;
 
   gap: 100px;
+
+  align-items: start;
+
+  box-sizing: border-box;
 }
 
 
-/* INFO */
+/* =========================
+   LEFT INFO
+========================= */
 
 .contact-intro {
+  width: 100%;
   max-width: 330px;
 
   margin-bottom: 50px;
@@ -2029,13 +2060,19 @@ margin-top: -110px;
 }
 
 
-/* CONTACT ITEMS */
+/* =========================
+   CONTACT ITEMS
+========================= */
 
 .contact-items {
+  width: 100%;
+
   border-top: 1px solid #d6d3cc;
 }
 
 .contact-item {
+  width: 100%;
+
   display: flex;
 
   align-items: center;
@@ -2045,6 +2082,8 @@ margin-top: -110px;
   min-height: 85px;
 
   padding: 15px 0;
+
+  box-sizing: border-box;
 
   border-bottom: 1px solid #d6d3cc;
 
@@ -2065,6 +2104,8 @@ margin-top: -110px;
   width: 32px;
   height: 32px;
 
+  flex-shrink: 0;
+
   display: grid;
   place-items: center;
 
@@ -2079,6 +2120,8 @@ margin-top: -110px;
 
 .contact-item div {
   flex: 1;
+
+  min-width: 0;
 }
 
 .contact-item small {
@@ -2102,10 +2145,17 @@ margin-top: -110px;
 }
 
 
-/* FORM */
+/* =========================
+   FORM
+========================= */
 
 .contact-form {
+  width: 100%;
+  max-width: none;
+
   padding: 35px;
+
+  box-sizing: border-box;
 
   border: 1px solid #dad7d0;
 
@@ -2170,7 +2220,9 @@ margin-top: -110px;
 }
 
 
-/* TWO INPUTS */
+/* =========================
+   TWO INPUTS
+========================= */
 
 .form-row {
   display: grid;
@@ -2181,7 +2233,9 @@ margin-top: -110px;
 }
 
 
-/* SUBMIT */
+/* =========================
+   SUBMIT
+========================= */
 
 .contact-submit {
   width: 100%;
@@ -2189,7 +2243,6 @@ margin-top: -110px;
   display: flex;
 
   align-items: center;
-
   justify-content: center;
 
   gap: 10px;
@@ -2224,7 +2277,9 @@ margin-top: -110px;
 }
 
 
-/* BOTTOM */
+/* =========================
+   BOTTOM
+========================= */
 
 .contact-bottom {
   display: flex;
@@ -2246,6 +2301,111 @@ margin-top: -110px;
   font-weight: 700;
 
   letter-spacing: 1.3px;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 1000px) {
+  .contact-layout {
+    grid-template-columns: 1fr 1fr;
+
+    gap: 50px;
+  }
+
+  .contact-heading h2 {
+    font-size: clamp(55px, 8vw, 80px);
+  }
+
+  .contact-form {
+    padding: 28px;
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+  .contact-section {
+    padding: 60px 24px 80px;
+  }
+
+  .contact-heading {
+    margin-bottom: 50px;
+  }
+
+  .contact-heading h2 {
+    font-size: clamp(52px, 14vw, 72px);
+
+    letter-spacing: -4px;
+  }
+
+  .contact-layout {
+    grid-template-columns: 1fr;
+
+    gap: 55px;
+  }
+
+  .contact-intro {
+    max-width: 400px;
+
+    margin-bottom: 40px;
+  }
+
+  .contact-form {
+    padding: 28px 24px;
+
+    border-radius: 22px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+
+    gap: 0;
+  }
+
+  .contact-bottom {
+    margin-top: 60px;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 15px;
+  }
+}
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 480px) {
+  .contact-section {
+    padding: 50px 20px 70px;
+  }
+
+  .contact-heading h2 {
+    font-size: 52px;
+
+    letter-spacing: -3px;
+  }
+
+  .contact-form {
+    padding: 24px 20px;
+  }
+
+  .contact-item {
+    gap: 12px;
+  }
+
+  .contact-item strong {
+    font-size: 13px;
+  }
 }
 
 
@@ -6429,3 +6589,47 @@ margin-top: -110px;
 
 }
 
+
+/* ================================
+   MOBILE RESPONSIVE FIX
+================================ */
+
+@media (max-width: 800px) {
+  .eyebrow {
+    margin-top: 0;
+  }
+
+  .section-heading {
+    margin-top: 0;
+  }
+
+  .about-title {
+    margin-top: 0;
+  }
+
+  .about-bottom {
+    margin-top: 0;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+}
+
+@media (max-width: 500px) {
+  .services-section {
+    width: calc(100% - 32px);
+    margin: 0 auto;
+  }
+
+  .services-grid {
+    width: 100%;
+    grid-template-columns: 1fr;
+  }
+
+  .service-card {
+    width: 100%;
+    min-width: 0;
+  }
+}

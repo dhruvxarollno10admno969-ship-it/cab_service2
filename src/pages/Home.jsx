@@ -174,11 +174,6 @@ function Home() {
       {/* ================= CONTACT ================= */}
       <section className="contact-section" id="contact">
         <div className="contact-heading">
-          <p className="eyebrow">
-            <span></span>
-            04 — CONTACT
-          </p>
-
           <h2>
             Let's get you
             <br />

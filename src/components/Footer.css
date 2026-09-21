@@ -6,9 +6,12 @@
   width: 100%;
   background: #f5f4f0;
   color: #111;
-  padding: 110px 0 30px;
+
+  padding: 80px 0 30px;
+
   overflow: hidden;
-  margin-top: -100px;
+
+  margin-top: 0;
 }
 
 /* =====================================================
@@ -17,7 +20,7 @@
 
 
 .footer-main {
-  width: min(1100px, calc(100% - 80px));
+  width: min(1400px, calc(100% - 8vw));
   margin: 0 auto;
 
   display: grid;
@@ -172,7 +175,7 @@
 .footer-cta {
   position: relative;
 
-  width: min(1100px, calc(100% - 80px));
+  width: min(1400px, calc(100% - 8vw));
   min-height: 280px;
 
   margin: 0 auto 80px;
@@ -309,7 +312,7 @@
 ===================================================== */
 
 .footer-bottom {
-  width: min(1100px, calc(100% - 80px));
+  width: min(1400px, calc(100% - 8vw));
 
   margin: 0 auto;
 
@@ -388,19 +391,28 @@
 @media (max-width: 900px) {
 
   .footer-main {
+  width: calc(100% - 48px);
+
     grid-template-columns: 1fr 1fr;
-margin-top: 90px;
+  
     gap: 55px 40px;
   }
 
   .footer-cta {
+     width: calc(100% - 48px);
+
     flex-direction: column;
+
     align-items: flex-start;
+
     gap: 40px;
   }
 
   .footer-book {
     align-self: flex-start;
+  }
+  .footer-bottom{
+     width: calc(100% - 48px);
   }
 
 }
@@ -471,9 +483,12 @@ margin-top: 90px;
   }
 
   .footer-top {
-    position: static;
+    position: fixed;
 
-    margin-top: 10px;
+    right: 20px;
+    bottom:20px;
+    margin: 0;
+    z-index: 1000;
   }
 
 }
