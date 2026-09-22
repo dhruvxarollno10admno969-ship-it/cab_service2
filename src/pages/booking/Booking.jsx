@@ -13,7 +13,7 @@ import {
   Plus,
 } from "lucide-react";
 
-import "../App.css";
+import "./booking.css";
 
 
 // =====================================================
@@ -432,24 +432,6 @@ const location = useLocation();
           Back to Home
 
         </Link>
-
-
-        <Link
-          to="/"
-          className="booking-logo"
-        >
-
-          <span className="logo-mark">
-            M
-          </span>
-
-          <span>
-            MANZILL 777
-          </span>
-
-        </Link>
-
-
       </header>
 
 

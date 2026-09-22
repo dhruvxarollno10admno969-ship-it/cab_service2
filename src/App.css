@@ -2834,9 +2834,9 @@ margin-top: -110px;
 
   align-items: center;
 
-  justify-content: space-between;
+  justify-content:flex-start;
 
-  border-bottom: 1px solid #d8d5ce;
+  border-bottom: none !important;
 }
 
 .booking-back,
@@ -2894,7 +2894,7 @@ margin-top: -110px;
 
   margin: 0 auto;
 
-  padding: 90px 0 120px;
+  padding: 50px 0 60px;
 }
 
 
@@ -2904,18 +2904,18 @@ margin-top: -110px;
 
 .booking-title {
   max-width: 700px;
-margin-top: 145px;
-  margin-bottom: 70px;
+margin-top: 20px;
+  margin-bottom: 35px;
 }
 
 .booking-title h1 {
-  margin: 25px 0 20px;
+  margin: 0 0 14px;
 
-  font-size: clamp(60px, 8vw, 100px);
+  font-size: clamp(58px, 6vw, 82px);
 
   line-height: 0.88;
 
-  letter-spacing: -6px;
+  letter-spacing: -5px;
 
   font-weight: 600;
 }
@@ -2968,7 +2968,7 @@ margin-top: 145px;
 ========================= */
 
 .booking-block {
-  padding: 35px 0;
+  padding: px 0;
 
   border-top: 1px solid #d6d3cc;
 }
@@ -2984,7 +2984,7 @@ margin-top: 145px;
 
   gap: 15px;
 
-  margin-bottom: 30px;
+  margin-bottom: 16px;
 }
 
 .booking-block-header > span {
@@ -3118,7 +3118,7 @@ margin-top: 145px;
 
   gap: 20px;
 
-  padding: 18px 20px;
+  padding: 11px 15px;
 
   border: 1px solid #d6d3cc;
 
@@ -3599,9 +3599,7 @@ margin-top: 145px;
 @media (max-width: 600px) {
 
   .booking-header {
-    width: calc(100% - 32px);
-margin-top: 25px;
-    height: 70px;
+    display: none !important;
   }
 
   .booking-back {
@@ -3609,18 +3607,18 @@ margin-top: 25px;
   }
 
   .booking-logo {
-    font-size: 12px;
+    display: none !important;
   }
 
   .booking-container {
     width: calc(100% - 32px);
 
-    padding: 65px 0 80px;
+    padding: 40px 0 80px;
   }
 
   .booking-title {
     margin-bottom: 50px;
-    margin-top: -80px;
+    /* margin-top: -80px; */
   }
 
   .booking-title h1 {
@@ -3678,7 +3676,8 @@ margin-top: 25px;
   }
 
   .booking-header {
-    width: calc(100% - 24px);
+    /* width: calc(100% - 24px); */
+    display: none !important;
   }
 }
 /* =====================================================
@@ -3694,8 +3693,8 @@ margin-top: 25px;
 
   gap: 8px;
 
-  margin-top: 25px;
-  padding: 14px 18px;
+  margin-top: 14px;
+  padding: 11px 18px;
 
   border: 1px solid #111;
   border-radius: 50px;
@@ -6634,3 +6633,4 @@ margin-top: 25px;
     min-width: 0;
   }
 }
+

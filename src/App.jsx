@@ -5,7 +5,7 @@ import Service from "./components/Service";
 import About from "./pages/About";
 import Fleet from "./pages/Fleet";
 import Contact from "./pages/Contact";
-import Booking from "./pages/Booking";
+import Booking from "./pages/booking/Booking";
 import Login from "./pages/Authentication/Login";
 import Signup from "./pages/Authentication/Signup";
 import Profile from "./pages/profile";

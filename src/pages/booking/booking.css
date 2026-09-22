@@ -1,0 +1,984 @@
+/* =========================================================
+   BOOKING PAGE — NEW DESIGN
+========================================================= */
+
+.booking-page {
+  min-height: 100vh;
+  background: #f4f3ef;
+  color: #111;
+}
+
+
+/* =========================================================
+   BACK HEADER
+========================================================= */
+
+.booking-page .booking-header {
+  width: min(1180px, calc(100% - 48px));
+  height: 64px;
+
+  margin: 0 auto;
+ 
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  border: none !important;
+}
+
+.booking-page .booking-back {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 8px;
+
+  color: #77746d;
+  text-decoration: none;
+
+  font-size: 13px;
+
+  transition: 0.2s ease;
+}
+
+.booking-page .booking-back:hover {
+  color: #111;
+  transform: translateX(-3px);
+}
+
+.booking-page .booking-logo {
+  display: none !important;
+}
+
+
+/* =========================================================
+   MAIN CONTAINER
+========================================================= */
+
+.booking-page .booking-container {
+  width: min(1180px, calc(100% - 48px));
+
+  margin: 0 auto;
+
+  padding: 28px 0 70px;
+}
+
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.booking-page .booking-title {
+  max-width: 700px;
+
+  margin: 0 0 38px;
+  padding: 0;
+}
+
+.booking-page .booking-title .eyebrow {
+  margin: 0 0 16px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color: #77746d;
+
+  font-size: 8px;
+  font-weight: 700;
+
+  letter-spacing: 1.5px;
+}
+
+.booking-page .booking-title .eyebrow span {
+  width: 5px;
+  height: 5px;
+
+  border-radius: 50%;
+
+  background: #111;
+}
+
+.booking-page .booking-title h1 {
+  margin: 0 0 22px;
+
+  font-size: clamp(62px, 7vw, 94px);
+
+  line-height: 0.84;
+
+  letter-spacing: -6px;
+
+  font-weight: 600;
+}
+
+.booking-page .booking-title h1 span {
+  color: #8b8881;
+}
+
+.booking-page .booking-title > p:last-child {
+  max-width: 470px;
+
+  margin: 0;
+
+  color: #77746d;
+
+  font-size: 14px;
+
+  line-height: 1.55;
+}
+
+
+/* =========================================================
+   MAIN LAYOUT
+========================================================= */
+
+.booking-page .booking-layout {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1.3fr) minmax(340px, 0.7fr);
+
+  gap: 46px;
+
+  align-items: start;
+}
+
+
+/* =========================================================
+   LEFT FORM
+========================================================= */
+
+.booking-page .booking-form {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0;
+}
+
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.booking-page .booking-block {
+  padding: 20px 0;
+
+  border-top: 1px solid #d6d3cc;
+}
+
+.booking-page .booking-block:last-child {
+  border-bottom: 1px solid #d6d3cc;
+}
+
+.booking-page .booking-block-header {
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  margin-bottom: 18px;
+}
+
+.booking-page .booking-block-header > span {
+  color: #99958d;
+
+  font-size: 8px;
+  font-weight: 700;
+
+  letter-spacing: 1.2px;
+}
+
+.booking-page .booking-block-header h2 {
+  margin: 0;
+
+  font-size: 17px;
+
+  letter-spacing: -0.4px;
+}
+
+
+/* =========================================================
+   JOURNEY
+========================================================= */
+
+.booking-page .location-fields {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr);
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 0;
+}
+
+.booking-page .booking-location {
+  min-height: 62px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 13px 15px;
+
+  border: 1px solid #dedbd3;
+
+  border-radius: 13px;
+
+  background: #efede7;
+
+  box-sizing: border-box;
+}
+
+.booking-page .booking-location:nth-of-type(3) {
+  background: transparent;
+}
+
+.booking-page .booking-dot {
+  flex-shrink: 0;
+
+  width: 11px;
+  height: 11px;
+
+  border-radius: 50%;
+
+  border: 2px solid #111;
+}
+
+.booking-page .pickup-dot {
+  background: #111;
+}
+
+.booking-page .destination-dot {
+  background: #fff;
+}
+
+.booking-page .booking-location > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.booking-page .booking-location small {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #89867f;
+
+  font-size: 7px;
+  font-weight: 700;
+
+  letter-spacing: 1.3px;
+}
+
+.booking-page .booking-location input {
+  width: 100%;
+
+  padding: 0;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #111;
+
+  font-family: inherit;
+
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.booking-page .booking-location-line {
+  width: 40px;
+  height: 40px;
+
+  margin: 0;
+
+  border-radius: 50%;
+
+  background: #ebe9e2;
+
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 0;
+}
+
+.booking-page .booking-location-line::after {
+  content: "→";
+
+  font-size: 18px;
+
+  color: #77746d;
+}
+
+
+/* =========================================================
+   CALCULATE ROUTE
+========================================================= */
+
+.booking-page .calculate-route {
+  grid-column: 1 / -1;
+
+  width: 100%;
+
+  min-height: 42px;
+
+  margin-top: 2px;
+  padding: 0 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  border: none;
+  border-radius: 30px;
+
+  background: #111;
+  color: #fff;
+
+  font-family: inherit;
+
+  font-size: 11px;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.booking-page .calculate-route:hover {
+  background: #242424;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   ROUTE RESULT
+========================================================= */
+
+.booking-page .route-result {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 1px;
+
+  margin: 12px 0 0;
+
+  border: 1px solid #d6d3cc;
+
+  border-radius: 12px;
+
+  overflow: hidden;
+}
+
+.booking-page .route-result > div {
+  padding: 14px;
+
+  background: #ebe9e2;
+}
+
+.booking-page .route-result span {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #8b8881;
+
+  font-size: 7px;
+
+  font-weight: 700;
+
+  letter-spacing: 1.2px;
+}
+
+.booking-page .route-result strong {
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   VEHICLE OPTIONS
+========================================================= */
+
+.booking-page .vehicle-options {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 12px;
+}
+
+.booking-page .vehicle-option {
+  min-height: 114px;
+
+  padding: 14px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: stretch;
+
+  justify-content: space-between;
+
+  gap: 12px;
+
+  border: 1px solid #d6d3cc;
+
+  border-radius: 13px;
+
+  background: transparent;
+
+  color: #111;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.booking-page .vehicle-option:hover {
+  transform: translateY(-2px);
+
+  border-color: #aaa69d;
+}
+
+.booking-page .vehicle-option.selected {
+  background: #111;
+
+  border-color: #111;
+
+  color: #fff;
+}
+
+.booking-page .vehicle-info {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.booking-page .vehicle-info strong {
+  font-size: 14px;
+}
+
+.booking-page .vehicle-info span {
+  color: #858179;
+
+  font-size: 9px;
+
+  line-height: 1.3;
+}
+
+.booking-page .vehicle-option.selected .vehicle-info span {
+  color: #aaa;
+}
+
+.booking-page .vehicle-info small {
+  color: #99958d;
+
+  font-size: 8px;
+}
+
+.booking-page .vehicle-price {
+  align-self: flex-end;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   DATE & TIME
+========================================================= */
+
+.booking-page .booking-date-row {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 12px;
+}
+
+.booking-page .booking-date-row label {
+  padding: 13px;
+
+  border: 1px solid #d6d3cc;
+
+  border-radius: 12px;
+
+  background: transparent;
+}
+
+.booking-page .booking-date-row small {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #89867f;
+
+  font-size: 7px;
+  font-weight: 700;
+
+  letter-spacing: 1.2px;
+}
+
+.booking-page .booking-date-row input {
+  width: 100%;
+
+  padding: 0;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #111;
+
+  font-family: inherit;
+
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   PASSENGERS
+========================================================= */
+
+.booking-page .passenger-control {
+  width: fit-content;
+
+  min-width: 190px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  padding: 5px;
+
+  border: 1px solid #d6d3cc;
+
+  border-radius: 50px;
+}
+
+.booking-page .passenger-control button {
+  width: 32px;
+  height: 32px;
+
+  display: grid;
+  place-items: center;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: #fff;
+
+  color: #111;
+
+  cursor: pointer;
+}
+
+.booking-page .passenger-control > div {
+  min-width: 55px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+}
+
+.booking-page .passenger-control strong {
+  font-size: 15px;
+}
+
+.booking-page .passenger-control span {
+  color: #858179;
+
+  font-size: 7px;
+}
+
+
+/* =========================================================
+   RIGHT SUMMARY
+========================================================= */
+
+.booking-page .booking-summary {
+  position: sticky;
+
+  top: 20px;
+
+  padding: 24px;
+
+  border: 1px solid #d5d2ca;
+
+  border-radius: 22px;
+
+  background: #ebe9e2;
+
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.05);
+}
+
+
+/* Summary header */
+
+.booking-page .summary-top {
+  padding-bottom: 16px;
+
+  border-bottom: 1px solid #d2cfc7;
+}
+
+.booking-page .summary-top span {
+  color: #858179;
+
+  font-size: 8px;
+
+  font-weight: 700;
+
+  letter-spacing: 1.4px;
+}
+
+
+/* Summary route */
+
+.booking-page .summary-route {
+  padding: 18px 0;
+}
+
+.booking-page .summary-location {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+}
+
+.booking-page .summary-dot {
+  flex-shrink: 0;
+
+  width: 9px;
+  height: 9px;
+
+  border-radius: 50%;
+
+  border: 2px solid #111;
+}
+
+.booking-page .summary-location strong {
+  font-size: 13px;
+}
+
+.booking-page .summary-line {
+  height: 25px;
+
+  margin-left: 4px;
+
+  border-left: 1px dashed #bbb7ae;
+}
+
+
+/* =========================================================
+   SUMMARY DETAILS
+========================================================= */
+
+.booking-page .summary-details {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  overflow: hidden;
+
+  border: 1px solid #d4d1c9;
+
+  border-radius: 12px;
+}
+
+.booking-page .summary-details > div {
+  padding: 14px;
+
+  border-bottom: 1px solid #d4d1c9;
+}
+
+.booking-page .summary-details > div:nth-child(odd) {
+  border-right: 1px solid #d4d1c9;
+}
+
+.booking-page .summary-details span {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #858179;
+
+  font-size: 7px;
+
+  font-weight: 700;
+
+  letter-spacing: 1px;
+}
+
+.booking-page .summary-details strong {
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   FARE
+========================================================= */
+
+.booking-page .summary-fare {
+  margin-top: 18px;
+
+  padding: 16px;
+
+  border-radius: 13px;
+
+  background: #f0eee8;
+}
+
+.booking-page .summary-fare > span {
+  color: #77746d;
+
+  font-size: 9px;
+}
+
+.booking-page .summary-fare > strong {
+  display: block;
+
+  margin-top: 4px;
+
+  font-size: 28px;
+
+  letter-spacing: -1px;
+}
+
+.booking-page .summary-fare small {
+  display: block;
+
+  margin-top: 5px;
+
+  color: #99958d;
+
+  font-size: 8px;
+}
+
+
+/* =========================================================
+   CONTINUE BUTTON
+========================================================= */
+
+.booking-page .confirm-booking {
+  width: 100%;
+
+  min-height: 44px;
+
+  margin-top: 15px;
+  padding: 0 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  border: none;
+
+  border-radius: 25px;
+
+  background: #111;
+  color: #fff;
+
+  font-family: inherit;
+
+  font-size: 11px;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.booking-page .confirm-booking:hover {
+  background: #292929;
+
+  transform: translateY(-1px);
+}
+
+.booking-page .booking-note {
+  margin-top: 10px;
+
+  color: #99958d;
+
+  font-size: 8px;
+
+  line-height: 1.5;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+
+  .booking-page .booking-layout {
+    grid-template-columns: 1fr;
+
+    gap: 25px;
+  }
+
+  .booking-page .booking-summary {
+    position: relative;
+
+    top: auto;
+
+    order: -1;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .booking-page .booking-header {
+    width: calc(100% - 32px);
+
+    height: 58px;
+  }
+
+  .booking-page .booking-container {
+    width: calc(100% - 32px);
+
+    padding: 25px 0 50px;
+  }
+
+  .booking-page .booking-title {
+    margin-bottom: 28px;
+  }
+
+  .booking-page .booking-title h1 {
+    font-size: clamp(48px, 15vw, 68px);
+
+    letter-spacing: -4px;
+  }
+
+  .booking-page .booking-layout {
+    grid-template-columns: 1fr;
+
+    gap: 20px;
+  }
+
+  /* Summary first */
+  .booking-page .booking-summary {
+    order: -1;
+
+    padding: 18px;
+
+    border-radius: 18px;
+  }
+
+  /* Journey becomes vertical */
+  .booking-page .location-fields {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+  }
+
+  .booking-page .booking-location {
+    width: 100%;
+  }
+
+  .booking-page .booking-location-line {
+    width: 34px;
+    height: 34px;
+
+    transform: rotate(90deg);
+  }
+
+  .booking-page .calculate-route {
+    margin-top: 5px;
+  }
+
+  /* Vehicles become vertical */
+  .booking-page .vehicle-options {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-page .vehicle-option {
+    min-height: 70px;
+
+    flex-direction: row;
+
+    align-items: center;
+  }
+
+  .booking-page .vehicle-price {
+    align-self: center;
+  }
+
+  /* Date/time */
+  .booking-page .booking-date-row {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-page .booking-block {
+    padding: 20px 0;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .booking-page .booking-header {
+    width: calc(100% - 24px);
+  }
+
+  .booking-page .booking-container {
+    width: calc(100% - 24px);
+  }
+
+  .booking-page .booking-title h1 {
+    font-size: 48px;
+
+    letter-spacing: -3px;
+  }
+
+  .booking-page .booking-title > p:last-child {
+    font-size: 13px;
+  }
+
+  .booking-page .booking-summary {
+    padding: 15px;
+  }
+
+  .booking-page .booking-location {
+    min-height: 58px;
+
+    padding: 11px 13px;
+  }
+
+}
