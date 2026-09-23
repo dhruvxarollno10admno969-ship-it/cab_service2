@@ -100,11 +100,11 @@
 .booking-page .booking-title h1 {
   margin: 0 0 22px;
 
-  font-size: clamp(62px, 7vw, 94px);
+  font-size: 70px;
 
-  line-height: 0.84;
+  line-height: 1;
 
-  letter-spacing: -6px;
+  letter-spacing: -1px;
 
   font-weight: 600;
 }
@@ -181,7 +181,8 @@
 .booking-page .booking-block-header > span {
   color: #99958d;
 
-  font-size: 8px;
+  font-size: 11px;
+
   font-weight: 700;
 
   letter-spacing: 1.2px;
@@ -190,7 +191,9 @@
 .booking-page .booking-block-header h2 {
   margin: 0;
 
-  font-size: 17px;
+  font-size: 20px;
+
+  font-weight: 700;
 
   letter-spacing: -0.4px;
 }
@@ -266,10 +269,10 @@
 
   color: #89867f;
 
-  font-size: 7px;
+  font-size: 11px;
   font-weight: 700;
 
-  letter-spacing: 1.3px;
+  letter-spacing: 1.1px;
 }
 
 .booking-page .booking-location input {
@@ -286,7 +289,7 @@
 
   font-family: inherit;
 
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
 }
 
@@ -346,7 +349,8 @@
 
   font-family: inherit;
 
-  font-size: 11px;
+  font-size: 14px;
+  font-weight: 600;
 
   cursor: pointer;
 
@@ -469,15 +473,14 @@
 }
 
 .booking-page .vehicle-info strong {
-  font-size: 14px;
+  font-size: 18px;
+  font-weight: 700;
 }
 
 .booking-page .vehicle-info span {
   color: #858179;
-
-  font-size: 9px;
-
-  line-height: 1.3;
+  font-size: 13px;
+  line-height: 1.4;
 }
 
 .booking-page .vehicle-option.selected .vehicle-info span {
@@ -486,15 +489,14 @@
 
 .booking-page .vehicle-info small {
   color: #99958d;
-
-  font-size: 8px;
+  font-size: 11px;
+  line-height: 1.3;
 }
 
 .booking-page .vehicle-price {
   align-self: flex-end;
-
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
 }
 
 
@@ -523,14 +525,14 @@
 .booking-page .booking-date-row small {
   display: block;
 
-  margin-bottom: 5px;
+  margin-bottom: 7px;
 
   color: #89867f;
 
-  font-size: 7px;
+  font-size: 11px;
   font-weight: 700;
 
-  letter-spacing: 1.2px;
+  letter-spacing: 1.1px;
 }
 
 .booking-page .booking-date-row input {
@@ -547,7 +549,9 @@
 
   font-family: inherit;
 
-  font-size: 13px;
+  font-size: 16px;
+
+  font-weight: 500;
 }
 
 
@@ -603,12 +607,13 @@
 
 .booking-page .passenger-control strong {
   font-size: 15px;
+  font-weight: 700;
 }
 
 .booking-page .passenger-control span {
   color: #858179;
 
-  font-size: 7px;
+  font-size: 11px;
 }
 
 
@@ -722,15 +727,16 @@
 
   color: #858179;
 
-  font-size: 7px;
+  font-size: 11px;
 
   font-weight: 700;
 
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
 }
 
 .booking-page .summary-details strong {
   font-size: 13px;
+  font-weight: 600;
 }
 
 
@@ -751,7 +757,9 @@
 .booking-page .summary-fare > span {
   color: #77746d;
 
-  font-size: 9px;
+  font-size: 12px;
+
+  font-weight: 500;
 }
 
 .booking-page .summary-fare > strong {
@@ -767,11 +775,13 @@
 .booking-page .summary-fare small {
   display: block;
 
-  margin-top: 5px;
+  margin-top: 7px;
 
   color: #99958d;
 
-  font-size: 8px;
+  font-size: 11px;
+
+  line-height: 1.4;
 }
 
 
@@ -802,7 +812,8 @@
 
   font-family: inherit;
 
-  font-size: 11px;
+  font-size: 14px;
+  font-weight: 600;
 
   cursor: pointer;
 
@@ -816,11 +827,11 @@
 }
 
 .booking-page .booking-note {
-  margin-top: 10px;
+  margin-top: 12px;
 
   color: #99958d;
 
-  font-size: 8px;
+  font-size: 12px;
 
   line-height: 1.5;
 
@@ -981,4 +992,364 @@
     padding: 11px 13px;
   }
 
+}
+
+/* =========================================================
+   RESPONSIVE TYPOGRAPHY — READABLE
+========================================================= */
+
+/* ---------- TABLET ---------- */
+
+@media (max-width: 1000px) {
+
+  .booking-page .booking-block-header h2 {
+    font-size: 20px;
+  }
+
+  .booking-page .booking-block-header > span {
+    font-size: 11px;
+  }
+
+  /* Ride cards */
+  .booking-page .vehicle-info strong {
+    font-size: 18px;
+  }
+
+  .booking-page .vehicle-info span {
+    font-size: 13px;
+  }
+
+  .booking-page .vehicle-info small {
+    font-size: 11px;
+  }
+
+  .booking-page .vehicle-price {
+    font-size: 15px;
+  }
+
+  /* Form */
+  .booking-page .booking-location small,
+  .booking-page .booking-date-row small {
+    font-size: 11px;
+  }
+
+  .booking-page .booking-location input,
+  .booking-page .booking-date-row input {
+    font-size: 16px;
+  }
+
+  /* Buttons */
+  .booking-page .calculate-route,
+  .booking-page .confirm-booking {
+    font-size: 14px;
+  }
+
+  /* Summary */
+  .booking-page .summary-details span {
+    font-size: 11px;
+  }
+
+  .booking-page .summary-details strong {
+    font-size: 16px;
+  }
+
+  .booking-page .summary-fare > span {
+    font-size: 12px;
+  }
+
+  .booking-page .summary-fare small {
+    font-size: 11px;
+  }
+
+  .booking-page .booking-note {
+    font-size: 12px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+  /* Section headings */
+  .booking-page .booking-block-header {
+    gap: 11px;
+    margin-bottom: 16px;
+  }
+
+  .booking-page .booking-block-header > span {
+    font-size: 10px;
+  }
+
+  .booking-page .booking-block-header h2 {
+    font-size: 19px;
+  }
+
+
+  /* -------------------------
+     JOURNEY
+  ------------------------- */
+
+  .booking-page .booking-location {
+    min-height: 64px;
+    padding: 13px 15px;
+  }
+
+  .booking-page .booking-location small {
+    font-size: 10px;
+    margin-bottom: 5px;
+  }
+
+  .booking-page .booking-location input {
+    font-size: 16px;
+  }
+
+
+  /* -------------------------
+     CALCULATE BUTTON
+  ------------------------- */
+
+  .booking-page .calculate-route {
+    min-height: 46px;
+    font-size: 14px;
+  }
+
+
+  /* -------------------------
+     RIDE CARDS
+  ------------------------- */
+
+  .booking-page .vehicle-option {
+    min-height: 76px;
+    padding: 14px 15px;
+  }
+
+  .booking-page .vehicle-info {
+    gap: 3px;
+  }
+
+  .booking-page .vehicle-info strong {
+    font-size: 17px;
+  }
+
+  .booking-page .vehicle-info span {
+    font-size: 12px;
+  }
+
+  .booking-page .vehicle-info small {
+    font-size: 10px;
+  }
+
+  .booking-page .vehicle-price {
+    font-size: 14px;
+  }
+
+
+  /* -------------------------
+     DATE & TIME
+  ------------------------- */
+
+  .booking-page .booking-date-row {
+    gap: 10px;
+  }
+
+  .booking-page .booking-date-row label {
+    padding: 14px;
+  }
+
+  .booking-page .booking-date-row small {
+    font-size: 10px;
+    margin-bottom: 6px;
+  }
+
+  .booking-page .booking-date-row input {
+    font-size: 16px;
+  }
+
+
+  /* -------------------------
+     PASSENGERS
+  ------------------------- */
+
+  .booking-page .passenger-control {
+    min-width: 190px;
+  }
+
+  .booking-page .passenger-control strong {
+    font-size: 18px;
+  }
+
+  .booking-page .passenger-control span {
+    font-size: 10px;
+  }
+
+
+  /* -------------------------
+     SUMMARY
+  ------------------------- */
+
+  .booking-page .booking-summary {
+    padding: 20px;
+  }
+
+  .booking-page .summary-top span {
+    font-size: 10px;
+  }
+
+  .booking-page .summary-location strong {
+    font-size: 15px;
+  }
+
+  .booking-page .summary-details span {
+    font-size: 10px;
+  }
+
+  .booking-page .summary-details strong {
+    font-size: 15px;
+  }
+
+  .booking-page .summary-fare > span {
+    font-size: 12px;
+  }
+
+  .booking-page .summary-fare > strong {
+    font-size: 26px;
+  }
+
+  .booking-page .summary-fare small {
+    font-size: 10px;
+  }
+
+
+  /* -------------------------
+     CONTINUE
+  ------------------------- */
+
+  .booking-page .confirm-booking {
+    min-height: 48px;
+    font-size: 14px;
+  }
+
+  .booking-page .booking-note {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .booking-page .booking-block-header h2 {
+    font-size: 18px;
+  }
+
+  .booking-page .booking-block-header > span {
+    font-size: 10px;
+  }
+
+
+  /* Journey */
+  .booking-page .booking-location {
+    min-height: 62px;
+    padding: 12px 14px;
+  }
+
+  .booking-page .booking-location small {
+    font-size: 10px;
+  }
+
+  .booking-page .booking-location input {
+    font-size: 15px;
+  }
+
+
+  /* Ride cards */
+  .booking-page .vehicle-option {
+    min-height: 74px;
+    padding: 13px 14px;
+  }
+
+  .booking-page .vehicle-info strong {
+    font-size: 16px;
+  }
+
+  .booking-page .vehicle-info span {
+    font-size: 11px;
+  }
+
+  .booking-page .vehicle-info small {
+    font-size: 10px;
+  }
+
+  .booking-page .vehicle-price {
+    font-size: 13px;
+  }
+
+
+  /* Date / Time */
+  .booking-page .booking-date-row label {
+    padding: 13px;
+  }
+
+  .booking-page .booking-date-row small {
+    font-size: 10px;
+  }
+
+  .booking-page .booking-date-row input {
+    font-size: 15px;
+  }
+
+
+  /* Passenger */
+  .booking-page .passenger-control strong {
+    font-size: 17px;
+  }
+
+  .booking-page .passenger-control span {
+    font-size: 10px;
+  }
+
+
+  /* Summary */
+  .booking-page .booking-summary {
+    padding: 16px;
+  }
+
+  .booking-page .summary-location strong {
+    font-size: 14px;
+  }
+
+  .booking-page .summary-details span {
+    font-size: 10px;
+  }
+
+  .booking-page .summary-details strong {
+    font-size: 14px;
+  }
+
+  .booking-page .summary-fare > strong {
+    font-size: 24px;
+  }
+
+  .booking-page .summary-fare small {
+    font-size: 10px;
+  }
+
+
+  /* Buttons */
+  .booking-page .calculate-route,
+  .booking-page .confirm-booking {
+    font-size: 13px;
+    min-height: 46px;
+  }
+
+  .booking-page .booking-note {
+    font-size: 10px;
+  }
 }

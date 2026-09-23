@@ -458,17 +458,11 @@ const location = useLocation();
 
           </p>
 
-
           <h1>
 
             Where are you
-
+            going
             <br />
-
-            <span>
-              going?
-            </span>
-
           </h1>
 
 

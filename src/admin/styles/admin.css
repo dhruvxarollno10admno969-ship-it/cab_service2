@@ -1,0 +1,679 @@
+/* =========================================================
+   ADMIN DASHBOARD
+========================================================= */
+
+.admin-dashboard {
+  width: 100%;
+  min-height: 100%;
+  padding: 34px 34px 60px;
+  box-sizing: border-box;
+  background: #f7f7f5;
+  color: #151515;
+}
+
+
+/* =========================================================
+   DASHBOARD HEADER
+========================================================= */
+
+.admin-content-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 28px;
+}
+
+.admin-content-heading > div {
+  min-width: 0;
+}
+
+.admin-eyebrow {
+  display: block;
+  margin-bottom: 8px;
+  color: #8b8b8b;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.admin-content-heading h1 {
+  margin: 0;
+  font-size: clamp(32px, 3vw, 42px);
+  line-height: 1.05;
+  font-weight: 650;
+  letter-spacing: -1.5px;
+  color: #111;
+}
+
+.admin-content-heading p {
+  margin: 12px 0 0;
+  color: #666;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   PRIMARY BUTTON
+========================================================= */
+
+.admin-primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  min-height: 42px;
+  padding: 0 17px;
+
+  border: 1px solid #171717;
+  border-radius: 10px;
+
+  background: #171717;
+  color: #fff;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.admin-primary-button:hover {
+  background: #282828;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+
+/* =========================================================
+   STAT CARDS
+========================================================= */
+
+.admin-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.admin-stat-card {
+  min-height: 158px;
+  padding: 22px;
+
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.admin-stat-card:hover {
+  transform: translateY(-3px);
+  border-color: #d9d9d9;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+}
+
+.admin-stat-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.admin-stat-icon {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 11px;
+  background: #f4f4f4;
+  color: #171717;
+}
+
+.admin-stat-change {
+  color: #078a4b;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.admin-stat-value {
+  margin-top: auto;
+
+  color: #111;
+  font-size: 30px;
+  line-height: 1;
+  font-weight: 650;
+  letter-spacing: -1px;
+}
+
+.admin-stat-title {
+  margin-top: 9px;
+
+  color: #8a8a8a;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+
+/* =========================================================
+   LOWER DASHBOARD GRID
+========================================================= */
+
+.admin-dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr);
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+
+/* =========================================================
+   GENERAL PANEL
+========================================================= */
+
+.admin-panel {
+  min-width: 0;
+
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+
+  overflow: hidden;
+}
+
+.admin-panel-header {
+  min-height: 82px;
+  padding: 20px 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom: 1px solid #eeeeee;
+  box-sizing: border-box;
+}
+
+.admin-panel-header > div {
+  min-width: 0;
+}
+
+.admin-panel-header span {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #9a9a9a;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.admin-panel-header h2 {
+  margin: 0;
+
+  color: #111;
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 650;
+  letter-spacing: -0.3px;
+}
+
+
+/* =========================================================
+   CHART
+========================================================= */
+
+.admin-chart-panel {
+  min-height: 330px;
+}
+
+.admin-panel-header select {
+  min-width: 130px;
+  height: 38px;
+
+  padding: 0 12px;
+
+  border: 1px solid #dedede;
+  border-radius: 9px;
+
+  background: #fff;
+  color: #333;
+
+  font-size: 12px;
+  outline: none;
+  cursor: pointer;
+}
+
+.admin-panel-header select:focus {
+  border-color: #aaa;
+}
+
+
+/* Chart area */
+
+.admin-chart-placeholder {
+  position: relative;
+
+  height: 240px;
+  padding: 25px 28px 30px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.045) 1px,
+      transparent 1px
+    );
+
+  background-size: 100% 25%;
+}
+
+
+/* Chart bars */
+
+.chart-bars {
+  height: 175px;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+
+  gap: 24px;
+
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.chart-bars span {
+  width: min(52px, 8%);
+  min-width: 25px;
+
+  background: linear-gradient(
+    to bottom,
+    #171717,
+    #333
+  );
+
+  border-radius: 8px 8px 0 0;
+
+  transition:
+    height 0.4s ease,
+    transform 0.2s ease;
+}
+
+.chart-bars span:hover {
+  transform: translateY(-4px);
+}
+
+
+/* Chart labels */
+
+.chart-labels {
+  display: flex;
+  justify-content: space-around;
+
+  padding-top: 12px;
+
+  color: #737373;
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   VEHICLES
+========================================================= */
+
+.admin-vehicle-list {
+  padding: 0 22px;
+}
+
+.admin-vehicle-item {
+  min-height: 74px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom: 1px solid #eeeeee;
+}
+
+.admin-vehicle-item:last-child {
+  border-bottom: none;
+}
+
+.admin-vehicle-item > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.admin-vehicle-item strong {
+  color: #151515;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.admin-vehicle-item span {
+  color: #929292;
+  font-size: 11px;
+}
+
+.admin-vehicle-item b {
+  position: relative;
+
+  padding-left: 13px;
+
+  color: #078a4b;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.admin-vehicle-item b::before {
+  content: "";
+
+  position: absolute;
+  left: 0;
+  top: 50%;
+
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+  background: #0a9b55;
+
+  transform: translateY(-50%);
+}
+
+
+/* =========================================================
+   RECENT BOOKINGS
+========================================================= */
+
+.admin-recent-bookings {
+  margin-bottom: 10px;
+}
+
+.admin-view-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 8px 0;
+
+  border: none;
+  background: transparent;
+
+  color: #171717;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.admin-view-all:hover {
+  opacity: 0.65;
+  transform: translateX(2px);
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.admin-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  min-width: 760px;
+
+  border-collapse: collapse;
+}
+
+.admin-table thead {
+  background: #fafafa;
+}
+
+.admin-table th {
+  padding: 14px 20px;
+
+  color: #898989;
+
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.8px;
+
+  text-align: left;
+  white-space: nowrap;
+
+  border-bottom: 1px solid #eeeeee;
+}
+
+.admin-table td {
+  padding: 17px 20px;
+
+  color: #555;
+
+  font-size: 13px;
+
+  border-bottom: 1px solid #eeeeee;
+
+  white-space: nowrap;
+}
+
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.admin-table tbody tr:hover {
+  background: #fafafa;
+}
+
+.admin-table td:first-child {
+  color: #111;
+  font-weight: 650;
+}
+
+.admin-table td strong {
+  color: #222;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status {
+  display: inline-flex;
+  align-items: center;
+
+  min-height: 25px;
+
+  padding: 0 10px;
+
+  border-radius: 999px;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.status.confirmed {
+  color: #087d45;
+  background: #e7f8ef;
+  border: 1px solid #bdebd2;
+}
+
+.status.pending {
+  color: #9a6800;
+  background: #fff5d8;
+  border: 1px solid #f0dda4;
+}
+
+.status.completed {
+  color: #2761a5;
+  background: #e9f1ff;
+  border: 1px solid #c8dbfa;
+}
+
+
+/* =========================================================
+   DESKTOP CONTENT SAFETY
+========================================================= */
+
+/*
+   IMPORTANT:
+   The dashboard must stay beside the fixed sidebar.
+   This prevents the dashboard from going underneath it.
+*/
+
+.admin-main {
+ flex:1;
+ min-width: 0;
+ margin-left: 270px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1200px) {
+
+  .admin-dashboard {
+    padding: 28px 24px 50px;
+  }
+
+  .admin-stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+@media (max-width: 900px) {
+
+  .admin-main {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .admin-dashboard {
+    padding: 24px 18px 40px;
+  }
+
+  .admin-content-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .admin-primary-button {
+    width: 100%;
+  }
+}
+
+
+@media (max-width: 600px) {
+
+  .admin-dashboard {
+    padding: 20px 14px 35px;
+  }
+
+  .admin-stat-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .admin-stat-card {
+    min-height: 145px;
+    padding: 18px;
+  }
+
+  .admin-stat-value {
+    font-size: 27px;
+  }
+
+  .admin-panel-header {
+    padding: 17px;
+  }
+
+  .admin-chart-placeholder {
+    height: 210px;
+    padding: 20px 14px 25px;
+  }
+
+  .chart-bars {
+    gap: 10px;
+  }
+
+  .chart-bars span {
+    min-width: 20px;
+  }
+
+  .admin-vehicle-list {
+    padding: 0 17px;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}
+
+.admin-layout {
+  display: flex;
+
+  width: 100%;
+  min-height: 100vh;
+
+  background: #f7f7f5;
+}
+
+.admin-main {
+  flex: 1;
+  min-width: 0;
+  margin-left: 270px;
+  width: auto;
+}
+
+.admin-page-content {
+  width: 100%;
+  min-height: calc(100vh - 72px);
+}
