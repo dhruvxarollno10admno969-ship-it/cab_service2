@@ -20,6 +20,7 @@ import Footer from "./components/Footer";
 
 import AdminLayout from "./admin/layout/AdminLayout";
 import Dashboard from "./admin/pages/Dashboard";
+import AdminBooking from "./admin/pages/AdminBooking";
 
 
 // ========================================
@@ -95,18 +96,28 @@ function App() {
       </Route>
 
 
-      {/* ==================================
-          ADMIN PANEL
-      ================================== */}
+   {/* ==================================
+    ADMIN PANEL
+================================== */}
 
-      <Route
-        path="/admin"
-        element={
-          <AdminLayout>
-            <Dashboard />
-          </AdminLayout>
-        }
-      />
+<Route
+  path="/admin"
+  element={
+    <AdminLayout>
+      <Dashboard />
+    </AdminLayout>
+  }
+/>
+
+<Route
+  path="/admin/bookings"
+  element={
+    <AdminLayout>
+      <AdminBooking />
+    </AdminLayout>
+  }
+/>
+      
 
     </Routes>
   );

@@ -1,3 +1,4 @@
+import "./fleet.css";
 function Fleet() {
   return (
     <section className="page">

@@ -1,3 +1,4 @@
+import "./contact.css";
 function Contact() {
   return (
     <section className="page">

@@ -1,0 +1,478 @@
+/* =====================================================
+   NAVBAR
+===================================================== */
+
+.navbar {
+  position: relative;
+
+  width: 100%;
+
+  min-height: 76px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 32px;
+
+  box-sizing: border-box;
+
+  border-bottom: 1px solid #e2dfd8;
+
+  background: rgba(244, 243, 239, 0.9);
+
+  backdrop-filter: blur(14px);
+
+  z-index: 1000;
+}
+
+
+/* =====================================================
+   LOGO
+===================================================== */
+
+.logo {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  color: #111;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  letter-spacing: -0.4px;
+
+  text-decoration: none;
+
+  white-space: nowrap;
+}
+
+.logo-mark {
+  width: 34px;
+  height: 34px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+
+  background: #111;
+
+  color: #fff;
+
+  font-size: 13px;
+}
+
+
+/* =====================================================
+   DESKTOP LINKS
+===================================================== */
+
+.nav-links {
+  display: flex;
+  align-items: center;
+
+  gap: 30px;
+
+  margin: 0 auto;
+}
+
+.nav-links a {
+  position: relative;
+
+  color: #77736b;
+
+  font-size: 11px;
+  font-weight: 500;
+
+  text-decoration: none;
+
+  transition: color 0.25s ease;
+}
+
+.nav-links a::after {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  bottom: -7px;
+
+  width: 0;
+  height: 1px;
+
+  background: #111;
+
+  transition: width 0.25s ease;
+}
+
+.nav-links a:hover {
+  color: #111;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+
+/* =====================================================
+   ACTIONS
+===================================================== */
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+}
+
+
+/* SIGN IN */
+
+.nav-login,
+.nav-signup {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 10px 15px;
+
+  border-radius: 50px;
+
+  color: #111;
+
+  font-size: 10px;
+
+  text-decoration: none;
+
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.nav-login:hover {
+  background: #e9e7e0;
+}
+
+
+/* SIGN UP */
+
+.nav-signup {
+  border: 1px solid #d5d2ca;
+}
+
+.nav-signup:hover {
+  background: #111;
+  border-color: #111;
+  color: #fff;
+
+  transform: translateY(-2px);
+}
+
+
+/* BOOK */
+
+.nav-button {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 11px 17px;
+
+  border-radius: 50px;
+
+  background: #111;
+
+  color: #fff;
+
+  font-size: 10px;
+  font-weight: 500;
+
+  text-decoration: none;
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease;
+}
+
+.nav-button:hover {
+  background: #292929;
+
+  transform: translateY(-2px);
+}
+
+
+/* =====================================================
+   MOBILE BUTTON
+===================================================== */
+
+.menu-button {
+  display: none;
+
+  width: 40px;
+  height: 40px;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #d5d2ca;
+
+  border-radius: 50%;
+
+  background: transparent;
+
+  color: #111;
+
+  cursor: pointer;
+}
+
+
+/* =====================================================
+   MOBILE NAV
+===================================================== */
+
+.mobile-nav {
+  display: none;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 900px) {
+
+  .navbar {
+    padding: 0 22px;
+  }
+
+  .nav-links {
+    gap: 18px;
+  }
+
+  .nav-actions {
+    gap: 4px;
+  }
+
+  .nav-login,
+  .nav-signup {
+    padding: 9px 11px;
+  }
+
+  .nav-button {
+    padding: 10px 13px;
+  }
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 760px) {
+
+  .navbar {
+    min-height: 68px;
+
+    padding: 0 18px;
+  }
+
+
+  .nav-links,
+  .nav-actions {
+    display: none;
+  }
+
+
+  .menu-button {
+    display: flex;
+
+    margin-left: auto;
+  }
+
+
+  /* MOBILE DROPDOWN */
+
+  .mobile-nav {
+    position: absolute;
+
+    top: calc(100% + 10px);
+
+    left: 14px;
+    right: 14px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+    padding: 14px;
+
+    border: 1px solid #dedbd3;
+
+    border-radius: 20px;
+
+    background: rgba(235, 233, 226, 0.97);
+
+    box-shadow:
+      0 20px 50px rgba(0, 0, 0, 0.1);
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transform:
+      translateY(-10px)
+      scale(0.98);
+
+    transform-origin: top;
+
+    transition:
+      opacity 0.25s ease,
+      visibility 0.25s ease,
+      transform 0.25s ease;
+  }
+
+
+  .mobile-nav-open {
+    opacity: 1;
+
+    visibility: visible;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+
+
+  .mobile-nav a {
+    display: flex;
+
+    align-items: center;
+
+    min-height: 44px;
+
+    padding: 0 14px;
+
+    border-radius: 12px;
+
+    color: #55514a;
+
+    font-size: 13px;
+
+    text-decoration: none;
+
+    transition:
+      background 0.2s ease,
+      color 0.2s ease;
+  }
+
+
+  .mobile-nav a:hover {
+    background: #dedbd3;
+
+    color: #111;
+  }
+
+
+  .mobile-nav-divider {
+    height: 1px;
+
+    margin: 8px 4px;
+
+    background: #d8d5ce;
+  }
+
+
+  .mobile-login {
+    margin-top: 2px;
+  }
+
+
+  .mobile-signup {
+    border: 1px solid #d5d2ca;
+  }
+
+
+  .mobile-book {
+    justify-content: center;
+
+    gap: 8px;
+
+    margin-top: 5px;
+
+    background: #111 !important;
+
+    color: #fff !important;
+  }
+.location-field {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.location-field small {
+  color: #888;
+  font-size: 10px;
+}
+
+.location-field input {
+  width: 100%;
+  padding: 0;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #111;
+
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.location-field input::placeholder {
+  color: #aaa;
+}
+
+.booking-button {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  margin-top: 20px;
+  padding: 14px 18px;
+
+  border: none;
+  border-radius: 50px;
+
+  background: #111;
+  color: white;
+
+  font-family: inherit;
+  font-size: 12px;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease;
+}
+
+.booking-button:hover {
+  background: #292929;
+  transform: translateY(-2px);
+}
+}
