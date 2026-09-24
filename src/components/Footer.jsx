@@ -138,34 +138,7 @@ function Footer() {
       </div>
 
 
-      {/* ================= CTA ================= */}
-      <div className="footer-cta">
-
-        <div className="footer-cta-content">
-
-          <span className="footer-cta-label">
-            READY TO RIDE?
-          </span>
-
-          <h2>
-            Your journey
-            <br />
-            <span>starts here.</span>
-          </h2>
-
-        </div>
-
-
-        <Link
-          to="/booking"
-          className="footer-book"
-        >
-          <span>Book a Ride</span>
-          <ArrowUpRight size={19} />
-        </Link>
-
-      </div>
-
+      
 
       {/* ================= BOTTOM ================= */}
       <div className="footer-bottom">

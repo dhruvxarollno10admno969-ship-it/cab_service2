@@ -2,6 +2,7 @@ import { ArrowUpRight, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import RealMap from "./RealMap";
 
+import "./About.css";
 function About() {
   return (
     <section className="about-section" id="about">

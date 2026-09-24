@@ -1,28 +1,24 @@
 /* =====================================================
-   NAVBAR
+   MANZILL 777 NAVBAR
 ===================================================== */
 
 .navbar {
-  position: relative;
-
   width: 100%;
+  height: 76px;
 
-  min-height: 76px;
+  padding: 0 5%;
 
   display: flex;
   align-items: center;
 
-  padding: 0 32px;
+  background: #faf9f6;
+
+  border-bottom: 1px solid #e5e3df;
+
+  position: relative;
+  z-index: 1000;
 
   box-sizing: border-box;
-
-  border-bottom: 1px solid #e2dfd8;
-
-  background: rgba(244, 243, 239, 0.9);
-
-  backdrop-filter: blur(14px);
-
-  z-index: 1000;
 }
 
 
@@ -30,74 +26,95 @@
    LOGO
 ===================================================== */
 
-.logo {
+.navbar-logo {
   display: flex;
   align-items: center;
+  gap: 12px;
 
-  gap: 10px;
-
-  color: #111;
-
-  font-size: 14px;
-  font-weight: 800;
-
-  letter-spacing: -0.4px;
+  flex-shrink: 0;
 
   text-decoration: none;
-
-  white-space: nowrap;
+  color: #111;
 }
 
 .logo-mark {
   width: 34px;
   height: 34px;
 
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  background: #111;
+  color: white;
 
   border-radius: 50%;
 
-  background: #111;
+  font-size: 14px;
+  font-weight: 600;
+}
 
-  color: #fff;
+.logo-text {
+  display: flex;
+  align-items: baseline;
 
-  font-size: 13px;
+  gap: 3px;
+
+  white-space: nowrap;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  color: #222;
+}
+
+.logo-text small {
+  font-size: 10px;
+  color: #777;
 }
 
 
 /* =====================================================
-   DESKTOP LINKS
+   NAV LINKS
 ===================================================== */
 
-.nav-links {
+.navbar-links {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+
   display: flex;
   align-items: center;
-
   gap: 30px;
-
-  margin: 0 auto;
 }
 
-.nav-links a {
+.navbar-links a {
+  display: block;
   position: relative;
 
-  color: #77736b;
-
-  font-size: 11px;
-  font-weight: 500;
-
+  color: #333;
   text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 400;
+  white-space: nowrap;
 
   transition: color 0.25s ease;
 }
 
-.nav-links a::after {
+.navbar-links a:hover {
+  color: #777;
+}
+
+.navbar-links a::after {
   content: "";
 
   position: absolute;
 
   left: 0;
-  bottom: -7px;
+  bottom: -8px;
 
   width: 0;
   height: 1px;
@@ -107,101 +124,112 @@
   transition: width 0.25s ease;
 }
 
-.nav-links a:hover {
-  color: #111;
-}
-
-.nav-links a:hover::after {
+.navbar-links a:hover::after {
   width: 100%;
 }
 
 
 /* =====================================================
-   ACTIONS
+   RIGHT ACTIONS
 ===================================================== */
 
-.nav-actions {
+.navbar-actions {
+  margin-left: auto;
   display: flex;
   align-items: center;
 
-  gap: 8px;
+  gap: 20px;
+
+  flex-shrink: 0;
 }
 
 
-/* SIGN IN */
 
-.nav-login,
-.nav-signup {
+/* =====================================================
+   LOGIN — BOTTOM CENTER LIQUID FILL
+===================================================== */
+
+.navbar-login {
+  position: relative;
+
   display: inline-flex;
-
   align-items: center;
   justify-content: center;
 
-  padding: 10px 15px;
+  color: #222;
+  background: transparent;
+  border: none;
 
-  border-radius: 50px;
+  padding: 10px 22px;
+  border-radius: 6px;
 
-  color: #111;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 400;
 
-  font-size: 10px;
+  overflow: hidden;
+  isolation: isolate;
+
+  transition: color 0.45s ease;
+}
+
+/* Bottom-center fill */
+.navbar-login::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background: #222;
+
+  clip-path: circle(0% at 50% 100%);
+
+  z-index: -1;
+
+  transition: clip-path 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hover */
+.navbar-login:hover::before {
+  clip-path: circle(150% at 50% 100%);
+}
+
+.navbar-login:hover {
+  color: #fff;
+}
+/* =====================================================
+   BOOK BUTTON
+===================================================== */
+
+.navbar-book {
+  height: 42px;
+
+  padding: 0 18px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  background: #111;
+  color: #fff;
+
+  border-radius: 999px;
 
   text-decoration: none;
 
-  transition:
-    background 0.25s ease,
-    color 0.25s ease,
-    transform 0.25s ease;
-}
-
-.nav-login:hover {
-  background: #e9e7e0;
-}
-
-
-/* SIGN UP */
-
-.nav-signup {
-  border: 1px solid #d5d2ca;
-}
-
-.nav-signup:hover {
-  background: #111;
-  border-color: #111;
-  color: #fff;
-
-  transform: translateY(-2px);
-}
-
-
-/* BOOK */
-
-.nav-button {
-  display: inline-flex;
-
-  align-items: center;
-  justify-content: center;
-
-  gap: 8px;
-
-  padding: 11px 17px;
-
-  border-radius: 50px;
-
-  background: #111;
-
-  color: #fff;
-
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 500;
 
-  text-decoration: none;
+  white-space: nowrap;
 
   transition:
     transform 0.25s ease,
     background 0.25s ease;
 }
 
-.nav-button:hover {
+.navbar-book:hover {
   background: #292929;
 
   transform: translateY(-2px);
@@ -212,18 +240,19 @@
    MOBILE BUTTON
 ===================================================== */
 
-.menu-button {
+.navbar-menu {
   display: none;
 
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
 
   align-items: center;
   justify-content: center;
 
-  border: 1px solid #d5d2ca;
+  margin-left: auto;
 
-  border-radius: 50%;
+  border: 1px solid #d8d6d2;
+  border-radius: 8px;
 
   background: transparent;
 
@@ -234,10 +263,10 @@
 
 
 /* =====================================================
-   MOBILE NAV
+   MOBILE MENU
 ===================================================== */
 
-.mobile-nav {
+.mobile-menu {
   display: none;
 }
 
@@ -246,28 +275,17 @@
    TABLET
 ===================================================== */
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
 
-  .navbar {
-    padding: 0 22px;
-  }
-
-  .nav-links {
+  .navbar-links {
     gap: 18px;
+    margin-right: 25px;
   }
 
-  .nav-actions {
-    gap: 4px;
+  .navbar-actions {
+    gap: 12px;
   }
 
-  .nav-login,
-  .nav-signup {
-    padding: 9px 11px;
-  }
-
-  .nav-button {
-    padding: 10px 13px;
-  }
 }
 
 
@@ -275,204 +293,93 @@
    MOBILE
 ===================================================== */
 
-@media (max-width: 760px) {
+@media (max-width: 768px) {
 
   .navbar {
-    min-height: 68px;
-
-    padding: 0 18px;
+    height: 70px;
+    padding: 0 20px;
   }
 
 
-  .nav-links,
-  .nav-actions {
+  .navbar-links,
+  .navbar-actions {
     display: none;
   }
 
 
-  .menu-button {
+  .navbar-menu {
     display: flex;
-
-    margin-left: auto;
   }
 
 
-  /* MOBILE DROPDOWN */
-
-  .mobile-nav {
+  .mobile-menu {
     position: absolute;
 
-    top: calc(100% + 10px);
+    top: 70px;
+    left: 0;
 
-    left: 14px;
-    right: 14px;
+    width: 100%;
+
+    padding: 25px 20px 30px;
 
     display: flex;
-
     flex-direction: column;
 
-    gap: 5px;
+    gap: 20px;
 
-    padding: 14px;
+    box-sizing: border-box;
 
-    border: 1px solid #dedbd3;
+    background: #faf9f6;
 
-    border-radius: 20px;
+    border-bottom: 1px solid #e5e3df;
 
-    background: rgba(235, 233, 226, 0.97);
-
-    box-shadow:
-      0 20px 50px rgba(0, 0, 0, 0.1);
-
-    opacity: 0;
-
-    visibility: hidden;
-
-    transform:
-      translateY(-10px)
-      scale(0.98);
-
-    transform-origin: top;
-
-    transition:
-      opacity 0.25s ease,
-      visibility 0.25s ease,
-      transform 0.25s ease;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
   }
 
 
-  .mobile-nav-open {
-    opacity: 1;
-
-    visibility: visible;
-
-    transform:
-      translateY(0)
-      scale(1);
-  }
-
-
-  .mobile-nav a {
-    display: flex;
-
-    align-items: center;
-
-    min-height: 44px;
-
-    padding: 0 14px;
-
-    border-radius: 12px;
-
-    color: #55514a;
-
-    font-size: 13px;
+  .mobile-menu > a {
+    color: #111;
 
     text-decoration: none;
 
-    transition:
-      background 0.2s ease,
-      color 0.2s ease;
+    font-size: 16px;
+    font-weight: 500;
   }
 
 
-  .mobile-nav a:hover {
-    background: #dedbd3;
-
-    color: #111;
+  .mobile-actions {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 15px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e3df;
   }
-
-
-  .mobile-nav-divider {
-    height: 1px;
-
-    margin: 8px 4px;
-
-    background: #d8d5ce;
-  }
-
-
-  .mobile-login {
-    margin-top: 2px;
-  }
-
-
-  .mobile-signup {
-    border: 1px solid #d5d2ca;
-  }
-
-
-  .mobile-book {
-    justify-content: center;
-
-    gap: 8px;
-
-    margin-top: 5px;
-
-    background: #111 !important;
-
-    color: #fff !important;
-  }
-.location-field {
+.mobile-actions .navbar-login,
+.mobile-actions .navbar-signup {
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.location-field small {
-  color: #888;
-  font-size: 10px;
-}
-
-.location-field input {
-  width: 100%;
-  padding: 0;
-
-  border: none;
-  outline: none;
-
-  background: transparent;
-
-  color: #111;
-
-  font-family: inherit;
-  font-size: 13px;
-}
-
-.location-field input::placeholder {
-  color: #aaa;
-}
-
-.booking-button {
-  width: 100%;
+  min-height: 42px;
 
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 
-  gap: 8px;
+  padding: 0 5px;
 
-  margin-top: 20px;
-  padding: 14px 18px;
+  box-sizing: border-box;
 
-  border: none;
-  border-radius: 50px;
+  color: #111;
+  text-decoration: none;
 
-  background: #111;
-  color: white;
-
-  font-family: inherit;
-  font-size: 12px;
-
-  cursor: pointer;
-
-  transition:
-    transform 0.25s ease,
-    background 0.25s ease;
+  font-size: 15px;
 }
 
-.booking-button:hover {
-  background: #292929;
-  transform: translateY(-2px);
-}
+  .mobile-actions .navbar-book {
+   
+    width: 100%;
+    min-height: 46px;
+  }
+
 }

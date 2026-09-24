@@ -24,7 +24,7 @@ import {
 
 import { auth } from "../firebase";
 
-import "../App.css";
+import "./Navbar.css";
 
 function Navbar() {
 

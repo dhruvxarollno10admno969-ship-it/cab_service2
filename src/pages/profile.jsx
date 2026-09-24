@@ -6,7 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth, db } from "../firebase";
 
-import "../App.css";
+import "./profile.css";
 
 function Profile() {
   const [user, setUser] = useState(null);

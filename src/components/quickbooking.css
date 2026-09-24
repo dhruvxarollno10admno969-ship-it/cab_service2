@@ -1,346 +1,133 @@
-/* =========================
-   QUICK BOOKING INPUTS
-========================= */
+/* =========================================
+   QUICK BOOKING
+========================================= */
 
-.location-input input {
+.booking-card {
   width: 100%;
+  max-width: 400px;
 
-  padding: 0;
-
-  border: none;
-
-  outline: none;
-
-  background: transparent;
-
-  color: #111;
-
-  font-family: inherit;
-
-  font-size: 14px;
-}
-
-.location-input input::placeholder {
-  color: #77746d;
-}
-
-.location-input input:focus {
-  outline: none;
-}
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.nav-login,
-.nav-signup {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 10px 15px;
-
-  border-radius: 50px;
-
-  text-decoration: none;
-
-  font-size: 11px;
-
-  transition: 0.25s ease;
-}
-
-.nav-login {
-  color: #111;
-}
-
-.nav-login:hover {
-  background: #f0eee8;
-}
-
-.nav-signup {
-  border: 1px solid #d6d3cc;
-  color: #111;
-}
-
-.nav-signup:hover {
-  background: #111;
-  border-color: #111;
-  color: #fff;
-}
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.nav-login,
-.nav-signup {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 10px 15px;
-
-  border-radius: 50px;
-
-  text-decoration: none;
-
-  font-size: 11px;
-
-  transition: 0.25s ease;
-}
-
-.nav-login {
-  color: #111;
-}
-
-.nav-login:hover {
-  background: #f0eee8;
-}
-
-.nav-signup {
-  border: 1px solid #d6d3cc;
-  color: #111;
-}
-
-.nav-signup:hover {
-  background: #111;
-  border-color: #111;
-  color: #fff;
-}
-/* =====================================================
-   SIGNUP / AUTH PAGE
-===================================================== */
-
-.auth-page {
-  min-height: 100vh;
-  width: 100%;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 40px 20px;
-
-  box-sizing: border-box;
-
-  background: #f4f3ef;
-}
-
-
-/* =====================================================
-   AUTH CARD
-===================================================== */
-
-.auth-card {
-  width: 100%;
-  max-width: 480px;
-
-  padding: 42px;
-
-  box-sizing: border-box;
-
-  border: 1px solid #dedbd3;
-  border-radius: 28px;
+  padding: 28px;
 
   background: #ebe9e2;
 
-  box-shadow:
-    0 25px 70px rgba(0, 0, 0, 0.07);
+  border: 1px solid #dedbd3;
+
+  border-radius: 24px;
+
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
 }
 
 
-/* =====================================================
-   BACK BUTTON
-===================================================== */
+/* HEADER */
 
-.auth-back {
-  display: inline-flex;
-
-  align-items: center;
-  gap: 8px;
-
-  color: #77736b;
-
-  font-size: 11px;
-  font-weight: 500;
-
-  text-decoration: none;
-
-  transition:
-    color 0.25s ease,
-    transform 0.25s ease;
-}
-
-.auth-back:hover {
-  color: #111;
-
-  transform: translateX(-3px);
-}
-
-
-/* =====================================================
-   LOGO
-===================================================== */
-
-.auth-logo {
-  display: inline-flex;
-
-  align-items: center;
-  gap: 10px;
-
-  margin-top: 42px;
-
-  color: #111;
-
-  font-size: 14px;
-  font-weight: 800;
-
-  letter-spacing: -0.4px;
-
-  text-decoration: none;
-}
-
-.auth-logo .logo-mark {
-  width: 36px;
-  height: 36px;
-
-  display: grid;
-  place-items: center;
-
-  border-radius: 50%;
-
-  background: #111;
-
-  color: #fff;
-
-  font-size: 14px;
-  font-weight: 700;
-}
-
-
-/* =====================================================
-   HEADING
-===================================================== */
-
-.auth-heading {
-  margin-top: 48px;
-}
-
-
-/* EYEBROW */
-
-.auth-heading .eyebrow {
+.booking-header {
   display: flex;
-  align-items: center;
-  gap: 8px;
 
-  margin: 0;
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  margin-bottom: 28px;
+}
+
+.booking-header span {
+  display: block;
+
+  margin-bottom: 7px;
 
   color: #858178;
 
   font-size: 9px;
+
   font-weight: 700;
 
   letter-spacing: 1.5px;
 }
 
-.auth-heading .eyebrow span {
-  width: 5px;
-  height: 5px;
+.booking-header h2 {
+  margin: 0;
+
+  color: #111;
+
+  font-size: 22px;
+
+  font-weight: 600;
+
+  letter-spacing: -0.7px;
+}
+
+.booking-header svg {
+  color: #77736b;
+}
+
+
+/* LOCATION */
+
+.location-input {
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  width: 100%;
+}
+
+
+/* DOT */
+
+.input-dot {
+  width: 9px;
+  height: 9px;
 
   flex-shrink: 0;
 
   border-radius: 50%;
+}
 
+.input-dot.pickup {
   background: #111;
 }
 
+.input-dot.destination {
+  border: 2px solid #111;
 
-/* TITLE */
-
-.auth-heading h1 {
-  margin: 20px 0 18px;
-
-  color: #111;
-
-  font-size: clamp(48px, 7vw, 64px);
-
-  line-height: 0.9;
-
-  letter-spacing: -4px;
-
-  font-weight: 600;
-}
-
-.auth-heading h1 span {
-  color: #89867e;
+  background: transparent;
 }
 
 
-/* DESCRIPTION */
+/* FIELD */
 
-.auth-heading > p:last-child {
-  max-width: 350px;
-
-  margin: 0;
-
-  color: #77736b;
-
-  font-size: 13px;
-
-  line-height: 1.6;
-}
-
-
-/* =====================================================
-   FORM
-===================================================== */
-
-.auth-form {
-  display: flex;
-  flex-direction: column;
-
-  gap: 21px;
-
-  margin-top: 38px;
-}
-
-
-/* LABEL */
-
-.auth-form label {
-  display: flex;
-  flex-direction: column;
-
-  gap: 8px;
-}
-
-
-/* LABEL TITLE */
-
-.auth-form label span {
-  color: #858178;
-
-  font-size: 8px;
-  font-weight: 700;
-
-  letter-spacing: 1.3px;
-}
-
-
-/* INPUT */
-
-.auth-form input {
+.location-field {
   width: 100%;
 
-  box-sizing: border-box;
+  display: flex;
 
-  padding: 13px 0;
+  flex-direction: column;
+
+  gap: 5px;
+}
+
+.location-field label {
+  color: #858178;
+
+  font-size: 9px;
+
+  font-weight: 600;
+
+  text-transform: uppercase;
+
+  letter-spacing: 1px;
+}
+
+.location-field input {
+  width: 100%;
+
+  padding: 4px 0 8px;
 
   border: none;
-  border-bottom: 1px solid #c8c4bc;
+
+  border-bottom: 1px solid #ccc8bf;
 
   outline: none;
 
@@ -348,314 +135,110 @@
 
   color: #111;
 
-  font-family: inherit;
-
-  font-size: 14px;
-
-  transition:
-    border-color 0.25s ease,
-    padding-left 0.25s ease;
+  font-size: 13px;
 }
 
-.auth-form input::placeholder {
+.location-field input::placeholder {
   color: #aaa69e;
 }
 
-.auth-form input:focus {
+.location-field input:focus {
   border-bottom-color: #111;
 }
 
 
-/* =====================================================
-   ERROR
-===================================================== */
+/* CONNECTING LINE */
 
-.auth-error {
-  margin: -5px 0 0;
+.location-line {
+  width: 1px;
 
-  color: #b42318;
+  height: 25px;
 
-  font-size: 11px;
+  margin: 2px 0 2px 4px;
 
-  line-height: 1.4;
+  background: #cfcac1;
 }
 
 
-/* =====================================================
-   CREATE ACCOUNT BUTTON
-===================================================== */
+/* BUTTON */
 
-.auth-button {
+.booking-button {
   width: 100%;
 
   display: flex;
+
   align-items: center;
+
   justify-content: center;
 
-  gap: 9px;
+  gap: 8px;
 
-  margin-top: 8px;
+  margin-top: 24px;
 
-  padding: 16px 20px;
+  padding: 15px 20px;
 
   border: none;
+
   border-radius: 50px;
 
   background: #111;
 
-  color: #fff;
-
-  font-family: inherit;
+  color: white;
 
   font-size: 12px;
+
   font-weight: 500;
 
   cursor: pointer;
 
   transition:
     transform 0.25s ease,
-    background 0.25s ease,
-    box-shadow 0.25s ease;
+    background 0.25s ease;
 }
 
-.auth-button:hover {
-  transform: translateY(-3px);
+.booking-button:hover {
+  background: #292929;
 
-  background: #242424;
-
-  box-shadow:
-    0 10px 25px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
 }
 
-.auth-button:active {
-  transform: translateY(-1px);
-}
-
-.auth-button:disabled {
-  opacity: 0.5;
-
-  cursor: not-allowed;
-
-  transform: none;
-
-  box-shadow: none;
+.booking-button:active {
+  transform: translateY(0);
 }
 
 
-/* =====================================================
-   LOGIN SWITCH
-===================================================== */
-
-.auth-switch {
-  margin: 24px 0 0;
-
-  color: #858178;
-
-  font-size: 11px;
-
-  text-align: center;
-}
-
-.auth-switch a {
-  color: #111;
-
-  font-weight: 700;
-
-  text-decoration: none;
-
-  transition: opacity 0.2s ease;
-}
-
-.auth-switch a:hover {
-  opacity: 0.6;
-}
-
-
-/* =====================================================
-   TABLET
-===================================================== */
-
-@media (max-width: 768px) {
-
-  .auth-page {
-    padding: 30px 18px;
-  }
-
-  .auth-card {
-    max-width: 460px;
-
-    padding: 34px 30px;
-
-    border-radius: 24px;
-  }
-
-  .auth-heading {
-    margin-top: 40px;
-  }
-
-  .auth-heading h1 {
-    font-size: 54px;
-
-    letter-spacing: -3px;
-  }
-}
-
-
-/* =====================================================
+/* =========================================
    MOBILE
-===================================================== */
+========================================= */
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
 
-  .auth-page {
-    min-height: 100svh;
+  .booking-card {
+  width: 400px;
+  max-width: 100%;
 
-    padding: 16px;
+  padding: 28px;
+
+  background: #ebe9e2;
+
+  border: 1px solid #dedbd3;
+  border-radius: 24px;
+
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+}
+  .booking-header h2 {
+    font-size: 20px;
   }
 
-  .auth-card {
-    padding: 28px 22px;
-
-    border-radius: 20px;
-  }
-
-  .auth-logo {
-    margin-top: 32px;
-  }
-
-  .auth-logo .logo-mark {
-    width: 32px;
-    height: 32px;
-  }
-
-  .auth-heading {
-    margin-top: 34px;
-  }
-
-  .auth-heading h1 {
-    margin-top: 17px;
-
-    font-size: 48px;
-
-    letter-spacing: -2.8px;
-  }
-
-  .auth-heading > p:last-child {
-    font-size: 12px;
-  }
-
-  .auth-form {
-    gap: 19px;
-
-    margin-top: 32px;
-  }
-
-  .auth-form input {
+  .location-field input {
     font-size: 14px;
-
-    padding: 12px 0;
   }
-
-  .auth-button {
-    padding: 15px 18px;
-  }
-}
-
-
-/* =====================================================
-   VERY SMALL PHONES
-===================================================== */
-
-@media (max-width: 360px) {
-
-  .auth-card {
-    padding: 24px 18px;
-  }
-
-  .auth-heading h1 {
-    font-size: 42px;
-
-    letter-spacing: -2.2px;
-  }
-
-  .auth-heading {
-    margin-top: 30px;
-  }
-
-}
-/* =====================================================
-   PASSWORD INPUT
-===================================================== */
-
-.password-input {
-  position: relative;
-
+.booking-wrapper {
   width: 100%;
 
   display: flex;
-  align-items: center;
+  justify-content: center;
 
-  border-bottom: 1px solid #c8c4bc;
-
-  transition: border-color 0.25s ease;
+  padding: 80px 7%;
 }
-
-.password-input:focus-within {
-  border-bottom-color: #111;
-}
-
-
-/* INPUT */
-
-.password-input input {
-  flex: 1;
-
-  width: 100%;
-
-  padding: 13px 42px 13px 0;
-
-  border: none !important;
-
-  outline: none;
-
-  background: transparent;
-}
-
-
-/* EYE BUTTON */
-
-.password-toggle {
-  position: absolute;
-
-  right: 0;
-
-  width: 32px;
-  height: 32px;
-
-  display: grid;
-  place-items: center;
-
-  border: none;
-
-  background: transparent;
-
-  color: #858178;
-
-  cursor: pointer;
-
-  padding: 0;
-
-  transition:
-    color 0.2s ease,
-    transform 0.2s ease;
-}
-
-.password-toggle:hover {
-  color: #111;
-
-  transform: scale(1.08);
-}
-
-.password-toggle:active {
-  transform: scale(0.95);
 }

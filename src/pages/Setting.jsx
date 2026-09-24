@@ -14,7 +14,7 @@ import {
 
 import { Link } from "react-router-dom";
 
-import "../App.css";
+import "./Setting.css";
 
 function Settings() {
   const [rideUpdates, setRideUpdates] = useState(true);
