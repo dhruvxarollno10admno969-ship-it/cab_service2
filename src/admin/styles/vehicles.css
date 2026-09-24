@@ -1,0 +1,759 @@
+/* =========================================
+   VEHICLES PAGE
+========================================= */
+
+.vehicles-page {
+  width: 100%;
+  max-width: 100%;
+  padding: 30px 36px 40px;
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.vehicles-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 28px;
+}
+
+.vehicles-eyebrow {
+  display: block;
+  margin-bottom: 7px;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+
+  color: #7890aa;
+}
+
+.vehicles-header h1 {
+  margin: 0;
+
+  font-size: 34px;
+  line-height: 1.15;
+  font-weight: 700;
+
+  color: #111;
+}
+
+.vehicles-header p {
+  margin: 8px 0 0;
+
+  font-size: 14px;
+  color: #718096;
+}
+
+
+/* =========================================
+   TOTAL CARD
+========================================= */
+
+.vehicles-total-card {
+  min-width: 145px;
+  padding: 18px 22px;
+
+  border: 1px solid #e3e6ea;
+  border-radius: 13px;
+
+  background: #fff;
+
+  text-align: right;
+}
+
+.vehicles-total-card span {
+  display: block;
+
+  font-size: 12px;
+  color: #718096;
+}
+
+.vehicles-total-card strong {
+  display: block;
+
+  margin-top: 7px;
+
+  font-size: 26px;
+  line-height: 1;
+
+  color: #111;
+}
+
+
+/* =========================================
+   TOOLBAR
+========================================= */
+
+.vehicles-toolbar {
+  display: flex;
+  justify-content: flex-end;
+
+  margin-bottom: 14px;
+}
+
+.vehicles-search {
+  width: 310px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  padding: 0 12px;
+
+  border: 1px solid #dfe3e8;
+  border-radius: 9px;
+
+  background: #fff;
+
+  color: #8994a3;
+}
+
+.vehicles-search:focus-within {
+  border-color: #b7bec8;
+}
+
+.vehicles-search input {
+  width: 100%;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  font-size: 13px;
+  color: #222;
+}
+
+.vehicles-search input::placeholder {
+  color: #9aa4b2;
+}
+
+.vehicles-search button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  background: transparent;
+
+  cursor: pointer;
+  color: #8994a3;
+}
+
+
+/* =========================================
+   TABLE CARD
+========================================= */
+
+.vehicles-card {
+  overflow: hidden;
+
+  border: 1px solid #e1e4e8;
+  border-radius: 14px;
+
+  background: #fff;
+}
+
+.vehicles-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.vehicles-table {
+  width: 100%;
+  min-width: 950px;
+
+  border-collapse: collapse;
+}
+
+.vehicles-table thead {
+  background: #fafafa;
+}
+
+.vehicles-table th {
+  padding: 14px 18px;
+
+  border-bottom: 1px solid #e7e9ec;
+
+  text-align: left;
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+
+  color: #718096;
+
+  white-space: nowrap;
+}
+
+.vehicles-table td {
+  padding: 15px 18px;
+
+  border-bottom: 1px solid #edf0f2;
+
+  font-size: 13px;
+
+  color: #4a5568;
+}
+
+.vehicle-row {
+  cursor: pointer;
+
+  transition:
+    background 0.18s ease;
+}
+
+.vehicle-row:hover {
+  background: #fafbfc;
+}
+
+.vehicle-row:last-child td {
+  border-bottom: none;
+}
+
+
+/* =========================================
+   VEHICLE ID
+========================================= */
+
+.vehicle-id {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 6px 9px;
+
+  border: 1px solid #e1e6eb;
+  border-radius: 7px;
+
+  background: #f8fafb;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  color: #506070;
+}
+
+
+/* =========================================
+   VEHICLE NAME
+========================================= */
+
+.vehicle-name {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  min-width: 170px;
+}
+
+.vehicle-icon {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 10px;
+
+  background: #f3f4f5;
+
+  color: #252525;
+}
+
+.vehicle-name strong {
+  display: block;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  color: #171717;
+}
+
+.vehicle-name span {
+  display: block;
+
+  margin-top: 3px;
+
+  font-size: 11px;
+
+  color: #8994a3;
+}
+
+
+/* =========================================
+   OTHER DATA
+========================================= */
+
+.vehicle-number {
+  color: #536273;
+  white-space: nowrap;
+}
+
+.vehicle-type {
+  font-size: 12px;
+  font-weight: 500;
+
+  color: #536273;
+}
+
+.vehicle-driver {
+  color: #536273;
+  white-space: nowrap;
+}
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+.vehicle-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 6px 10px;
+
+  border-radius: 999px;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+.vehicle-status.available {
+  background: #eaf8f0;
+  color: #159447;
+}
+
+.vehicle-status.available svg {
+  fill: #159447;
+}
+
+.vehicle-status.on-trip {
+  background: #eef4ff;
+  color: #3974d8;
+}
+
+.vehicle-status.maintenance {
+  background: #fff4e5;
+  color: #c77b00;
+}
+
+
+/* =========================================
+   ACTIONS
+========================================= */
+
+.vehicle-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.vehicle-action-btn {
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #dfe4e9;
+  border-radius: 7px;
+
+  background: #fff;
+
+  color: #536273;
+
+  cursor: pointer;
+
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.vehicle-action-btn:hover {
+  background: #f5f6f7;
+  border-color: #cbd1d7;
+  color: #111;
+}
+
+.vehicle-delete-btn:hover {
+  background: #fff7f7;
+  border-color: #f1caca;
+  color: #dc3c3c;
+}
+
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.vehicles-footer {
+  padding: 14px 18px;
+
+  font-size: 12px;
+
+  color: #8290a0;
+}
+
+.vehicles-footer strong {
+  color: #566373;
+}
+
+
+/* =========================================
+   EMPTY
+========================================= */
+
+.vehicles-empty {
+  height: 250px;
+
+  text-align: center;
+
+  vertical-align: middle;
+}
+
+.vehicles-empty svg {
+  display: block;
+
+  margin: 0 auto 12px;
+
+  color: #b5bdc6;
+}
+
+.vehicles-empty strong {
+  display: block;
+
+  font-size: 14px;
+
+  color: #394554;
+}
+
+.vehicles-empty span {
+  display: block;
+
+  margin-top: 5px;
+
+  font-size: 12px;
+
+  color: #9aa4af;
+}
+
+
+/* =========================================
+   DETAILS PANEL OVERLAY
+========================================= */
+
+.vehicle-panel-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.18);
+
+  z-index: 999;
+}
+
+
+/* =========================================
+   DETAILS PANEL
+========================================= */
+
+.vehicle-details-panel {
+  position: fixed;
+
+  top: 0;
+  right: 0;
+
+  width: 390px;
+  max-width: 90vw;
+  height: 100vh;
+
+  padding: 28px;
+
+  box-sizing: border-box;
+
+  background: #fff;
+
+  border-left: 1px solid #e1e4e8;
+
+  box-shadow: -10px 0 35px rgba(0, 0, 0, 0.08);
+
+  z-index: 1000;
+
+  overflow-y: auto;
+
+  animation: vehiclePanelIn 0.22s ease;
+}
+
+@keyframes vehiclePanelIn {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+
+/* =========================================
+   PANEL HEADER
+========================================= */
+
+.vehicle-panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  padding-bottom: 22px;
+
+  border-bottom: 1px solid #edf0f2;
+}
+
+.vehicle-panel-header span {
+  display: block;
+
+  margin-bottom: 6px;
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+
+  color: #8290a0;
+}
+
+.vehicle-panel-header h2 {
+  margin: 0;
+
+  font-size: 22px;
+
+  color: #151515;
+}
+
+.vehicle-panel-header button {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #e0e4e8;
+  border-radius: 8px;
+
+  background: #fff;
+
+  cursor: pointer;
+
+  color: #5f6b78;
+}
+
+.vehicle-panel-header button:hover {
+  background: #f6f7f8;
+}
+
+
+/* =========================================
+   VEHICLE PROFILE
+========================================= */
+
+.vehicle-profile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding: 25px 0;
+}
+
+.vehicle-large-icon {
+  width: 62px;
+  height: 62px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+
+  background: #f2f3f4;
+
+  color: #222;
+}
+
+.vehicle-profile h3 {
+  margin: 0;
+
+  font-size: 17px;
+
+  color: #171717;
+}
+
+.vehicle-profile span {
+  display: block;
+
+  margin-top: 4px;
+
+  font-size: 12px;
+
+  color: #8793a1;
+}
+
+
+/* =========================================
+   DETAILS
+========================================= */
+
+.vehicle-details-list {
+  border-top: 1px solid #edf0f2;
+}
+
+.vehicle-details-list > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  padding: 17px 0;
+
+  border-bottom: 1px solid #edf0f2;
+}
+
+.vehicle-details-list span {
+  font-size: 12px;
+
+  color: #84909e;
+}
+
+.vehicle-details-list > div > strong {
+  text-align: right;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  color: #252525;
+}
+
+.vehicle-location {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+
+/* =========================================
+   PANEL ACTIONS
+========================================= */
+
+.vehicle-panel-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+
+  margin-top: 25px;
+}
+
+.vehicle-panel-actions button {
+  width: 100%;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  border-radius: 8px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.vehicle-edit-full {
+  border: 1px solid #dce1e6;
+
+  background: #fff;
+
+  color: #202020;
+}
+
+.vehicle-edit-full:hover {
+  background: #f7f8f9;
+}
+
+.vehicle-remove-full {
+  border: 1px solid #f0cccc;
+
+  background: #fff;
+
+  color: #dc3c3c;
+}
+
+.vehicle-remove-full:hover {
+  background: #fff6f6;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+  .vehicles-page {
+    padding: 24px 20px 30px;
+  }
+
+  .vehicles-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .vehicles-total-card {
+    width: fit-content;
+    min-width: 130px;
+
+    text-align: left;
+  }
+
+  .vehicles-toolbar {
+    justify-content: stretch;
+  }
+
+  .vehicles-search {
+    width: 100%;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .vehicles-page {
+    padding: 20px 14px 25px;
+  }
+
+  .vehicles-header h1 {
+    font-size: 28px;
+  }
+
+  .vehicle-details-panel {
+    width: 100%;
+    max-width: 100%;
+  }
+
+}

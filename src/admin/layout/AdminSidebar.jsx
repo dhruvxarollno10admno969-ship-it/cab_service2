@@ -44,11 +44,6 @@ function AdminSidebar({ isOpen, onClose }) {
       path: "/admin/pricing",
       icon: IndianRupee,
     },
-    {
-      label: "Settings",
-      path: "/admin/settings",
-      icon: Settings,
-    },
   ];
 
   return (

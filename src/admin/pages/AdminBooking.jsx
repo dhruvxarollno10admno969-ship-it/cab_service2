@@ -22,160 +22,55 @@ import {
   CircleAlert,
 } from "lucide-react";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
+
+import { collection, onSnapshot, orderBy, query, updateDoc, doc } from "firebase/firestore";
+import {db } from "../../firebase";
 
 import "../styles/adminbooking.css";
 
 function AdminBooking() {
-  const [activeTab, setActiveTab] = useState("All Bookings");
+  const [activeTab, setActiveTab] =
+    useState("All Bookings");
+
   const [search, setSearch] = useState("");
-  const [selectedBooking, setSelectedBooking] = useState(null);
 
-  const [bookings, setBookings] = useState([
-    {
-      id: "#BK-1028",
-      customer: "Rahul Sharma",
-      phone: "+91 98765 43210",
-      email: "rahul.sharma@example.com",
-      pickup: "Phagwara",
-      destination: "Delhi",
-      vehicle: "Sedan",
-      passengers: 2,
-      date: "23 Sep 2026",
-      time: "10:30 AM",
-      fare: 4200,
-      baseFare: 4000,
-      toll: 200,
-      status: "Confirmed",
-      bookedAt: "23 Sep 2026, 09:12 AM",
-    },
+  const [selectedBooking, setSelectedBooking] =
+    useState(null);
 
-    {
-      id: "#BK-1027",
-      customer: "Aman Kumar",
-      phone: "+91 98765 12345",
-      email: "aman.kumar@example.com",
-      pickup: "Jalandhar",
-      destination: "Chandigarh",
-      vehicle: "SUV",
-      passengers: 4,
-      date: "22 Sep 2026",
-      time: "09:00 AM",
-      fare: 2800,
-      baseFare: 2600,
-      toll: 200,
-      status: "Pending",
-      bookedAt: "22 Sep 2026, 08:15 AM",
-    },
+  const [bookings, setBookings] = useState([]);
 
-    {
-      id: "#BK-1026",
-      customer: "Simran Kaur",
-      phone: "+91 99887 66554",
-      email: "simran.kaur@example.com",
-      pickup: "Ludhiana",
-      destination: "Amritsar",
-      vehicle: "Premium",
-      passengers: 3,
-      date: "21 Sep 2026",
-      time: "02:15 PM",
-      fare: 3600,
-      baseFare: 3400,
-      toll: 200,
-      status: "Completed",
-      bookedAt: "21 Sep 2026, 01:30 PM",
-    },
+  const [loading, setLoading] = useState(true);
 
-    {
-      id: "#BK-1025",
-      customer: "Vikram Singh",
-      phone: "+91 98765 11223",
-      email: "vikram.singh@example.com",
-      pickup: "Phagwara",
-      destination: "Ludhiana",
-      vehicle: "Sedan",
-      passengers: 2,
-      date: "20 Sep 2026",
-      time: "08:45 AM",
-      fare: 1950,
-      baseFare: 1800,
-      toll: 150,
-      status: "Confirmed",
-      bookedAt: "20 Sep 2026, 07:20 AM",
-    },
+ useEffect(() => {
+  const bookingsQuery = query(
+    collection(db, "bookings"),
+    orderBy("createdAt", "desc")
+  );
 
-    {
-      id: "#BK-1024",
-      customer: "Neha Gupta",
-      phone: "+91 98765 94321",
-      email: "neha.gupta@example.com",
-      pickup: "Delhi",
-      destination: "Phagwara",
-      vehicle: "SUV",
-      passengers: 5,
-      date: "19 Sep 2026",
-      time: "11:30 AM",
-      fare: 4800,
-      baseFare: 4500,
-      toll: 300,
-      status: "Cancelled",
-      bookedAt: "19 Sep 2026, 10:10 AM",
-    },
+  const unsubscribe = onSnapshot(
+    bookingsQuery,
+    (snapshot) => {
+      const bookingData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
-    {
-      id: "#BK-1023",
-      customer: "Karan Malhotra",
-      phone: "+91 98765 77890",
-      email: "karan.m@example.com",
-      pickup: "Chandigarh",
-      destination: "Manali",
-      vehicle: "Premium",
-      passengers: 4,
-      date: "18 Sep 2026",
-      time: "07:15 AM",
-      fare: 6200,
-      baseFare: 5800,
-      toll: 400,
-      status: "Completed",
-      bookedAt: "18 Sep 2026, 06:40 AM",
+      setBookings(bookingData);
+      setLoading(false);
     },
+    (error) => {
+      console.error(
+        "Failed to load bookings:",
+        error
+      );
 
-    {
-      id: "#BK-1022",
-      customer: "Pooja Verma",
-      phone: "+91 98765 66778",
-      email: "pooja.verma@example.com",
-      pickup: "Amritsar",
-      destination: "Delhi",
-      vehicle: "Sedan",
-      passengers: 2,
-      date: "17 Sep 2026",
-      time: "12:00 PM",
-      fare: 3900,
-      baseFare: 3600,
-      toll: 300,
-      status: "Pending",
-      bookedAt: "17 Sep 2026, 10:30 AM",
-    },
+      setLoading(false);
+    }
+  );
 
-    {
-      id: "#BK-1021",
-      customer: "Arjun Mehta",
-      phone: "+91 98765 55667",
-      email: "arjun.mehta@example.com",
-      pickup: "Ludhiana",
-      destination: "Shimla",
-      vehicle: "SUV",
-      passengers: 4,
-      date: "16 Sep 2026",
-      time: "06:30 AM",
-      fare: 5400,
-      baseFare: 5000,
-      toll: 400,
-      status: "Confirmed",
-      bookedAt: "16 Sep 2026, 05:50 AM",
-    },
-  ]);
+  return () => unsubscribe();
+}, []);
 
   // =========================
   // COUNTS

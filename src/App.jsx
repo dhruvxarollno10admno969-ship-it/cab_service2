@@ -1,5 +1,9 @@
 import { Routes, Route, Outlet } from "react-router-dom";
 
+// ========================================
+// CUSTOMER WEBSITE PAGES
+// ========================================
+
 import Home from "./pages/Home";
 import Service from "./components/Service";
 import About from "./pages/booking/about/About";
@@ -18,10 +22,17 @@ import PrivateRoute from "./PrivateRoute";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
+// ========================================
+// ADMIN PANEL
+// ========================================
+
 import AdminLayout from "./admin/layout/AdminLayout";
 import Dashboard from "./admin/pages/Dashboard";
 import AdminBooking from "./admin/pages/AdminBooking";
-
+import Customer from "./admin/pages/AdminCustomers";
+import Drivers from "./admin/pages/AdminDriver";
+import Vehicles from "./admin/pages/AdminVehicles";
+import Pricing from "./admin/pages/AdminPricing";
 
 // ========================================
 // CUSTOMER WEBSITE LAYOUT
@@ -41,7 +52,6 @@ function CustomerLayout() {
   );
 }
 
-
 // ========================================
 // APP
 // ========================================
@@ -50,29 +60,53 @@ function App() {
   return (
     <Routes>
 
-      {/* ==================================
+      {/* ========================================
           CUSTOMER WEBSITE
-      ================================== */}
+      ======================================== */}
 
       <Route element={<CustomerLayout />}>
 
         {/* HOME */}
-        <Route path="/" element={<Home />} />
+        <Route
+          path="/"
+          element={<Home />}
+        />
 
-        {/* AUTH */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+        {/* AUTHENTICATION */}
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
+        <Route
+          path="/signup"
+          element={<Signup />}
+        />
 
         {/* MAIN PAGES */}
-        <Route path="/services" element={<Service />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/fleet" element={<Fleet />} />
-        <Route path="/contact" element={<Contact />} />
+        <Route
+          path="/services"
+          element={<Service />}
+        />
 
+        <Route
+          path="/about"
+          element={<About />}
+        />
 
-        {/* ==================================
+        <Route
+          path="/fleet"
+          element={<Fleet />}
+        />
+
+        <Route
+          path="/contact"
+          element={<Contact />}
+        />
+
+        {/* ========================================
             PROTECTED CUSTOMER PAGES
-        ================================== */}
+        ======================================== */}
 
         <Route element={<PrivateRoute />}>
 
@@ -96,28 +130,65 @@ function App() {
       </Route>
 
 
-   {/* ==================================
-    ADMIN PANEL
-================================== */}
+      {/* ========================================
+          ADMIN PANEL
+      ======================================== */}
 
-<Route
-  path="/admin"
+      {/* DASHBOARD */}
+      <Route
+        path="/admin"
+        element={
+          <AdminLayout>
+            <Dashboard />
+          </AdminLayout>
+        }
+      />
+
+      {/* BOOKINGS */}
+      <Route
+        path="/admin/bookings"
+        element={
+          <AdminLayout>
+            <AdminBooking />
+          </AdminLayout>
+        }
+      />
+
+      {/* CUSTOMERS */}
+      <Route
+        path="/admin/customers"
+        element={
+          <AdminLayout>
+            <Customer />
+          </AdminLayout>
+        }
+      />
+
+      {/* DRIVERS */}
+      <Route
+        path="/admin/drivers"
+        element={
+          <AdminLayout>
+            <Drivers />
+          </AdminLayout>
+        }
+      />
+      <Route
+  path="/admin/vehicles"
   element={
     <AdminLayout>
-      <Dashboard />
+      <Vehicles />
     </AdminLayout>
   }
 />
-
 <Route
-  path="/admin/bookings"
+  path="/admin/pricing"
   element={
     <AdminLayout>
-      <AdminBooking />
+      <Pricing />
     </AdminLayout>
   }
 />
-      
 
     </Routes>
   );

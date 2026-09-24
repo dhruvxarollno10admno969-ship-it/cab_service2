@@ -13,6 +13,9 @@ import {
   Plus,
 } from "lucide-react";
 
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import {db} from "../../firebase";
+
 import "./booking.css";
 
 
@@ -344,66 +347,91 @@ const location = useLocation();
   // SUBMIT
   // ===================================================
 
-  const handleSubmit = (
-    event
-  ) => {
+const handleSubmit = async (event) => {
+  event.preventDefault();
 
-    event.preventDefault();
+  setError("");
 
+  if (!pickup.trim()) {
+    setError("Please enter a pickup location.");
+    return;
+  }
 
-    if (!pickup.trim()) {
+  if (!destination.trim()) {
+    setError("Please enter a destination.");
+    return;
+  }
 
-      setError(
-        "Please enter a pickup location."
-      );
+  if (!distance) {
+    setError("Please calculate the route before continuing.");
+    return;
+  }
 
-      return;
-    }
+  if (!date || !time) {
+    setError("Please select your date and time.");
+    return;
+  }
 
+  try {
+    setLoading(true);
 
-    if (!destination.trim()) {
+    const bookingData = {
+      customerId: auth.currentUser?.uid || null,
 
-      setError(
-        "Please enter a destination."
-      );
+      customerName:
+        auth.currentUser?.displayName || "Guest",
 
-      return;
-    }
+      customerEmail:
+        auth.currentUser?.email || "",
 
+      pickup: pickup.trim(),
 
-    if (!distance) {
+      destination: destination.trim(),
 
-      setError(
-        "Please calculate the route before continuing."
-      );
+      vehicle: selectedVehicle.name,
 
-      return;
-    }
+      passengers,
 
+      date,
 
-    if (!date || !time) {
+      time,
 
-      setError(
-        "Please select your date and time."
-      );
+      distance: Number(distance.toFixed(1)),
 
-      return;
-    }
+      duration,
 
+      fare,
 
-    // TEMPORARY TEST
+      baseFare: selectedVehicle.baseFare,
 
-    alert(
-      `Ride ready!\n\n` +
-      `${pickup} → ${destination}\n\n` +
-      `Vehicle: ${selectedVehicle.name}\n` +
-      `Passengers: ${passengers}\n` +
-      `Distance: ${distance.toFixed(1)} km\n` +
-      `Time: ${duration} min\n` +
-      `Fare: ₹${fare}`
+      pricePerKm: selectedVehicle.price,
+
+      status: "Pending",
+
+      createdAt: serverTimestamp(),
+    };
+
+    const bookingRef = await addDoc(
+      collection(db, "bookings"),
+      bookingData
     );
 
-  };
+    console.log("Booking created:", bookingRef.id);
+
+    alert(
+      "Booking request submitted successfully!"
+    );
+
+  } catch (error) {
+    console.error("Booking creation error:", error);
+
+    setError(
+      "Unable to create booking. Please try again."
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
 
   // ===================================================

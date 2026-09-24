@@ -1,0 +1,780 @@
+/* =========================================================
+   DRIVER MANAGEMENT
+========================================================= */
+
+.driver-content {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 32px 32px 40px;
+  background: #f8f8f7;
+  min-height: calc(100vh - 76px);
+  color: #111;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.driver-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 26px;
+}
+
+.driver-page-label {
+  display: block;
+  margin-bottom: 7px;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  color: #8a98a9;
+}
+
+.driver-page-header h1 {
+  margin: 0;
+
+  font-size: 38px;
+  line-height: 1.12;
+  font-weight: 650;
+  letter-spacing: -1.4px;
+}
+
+.driver-page-header p {
+  margin: 9px 0 0;
+
+  font-size: 14px;
+  color: #667085;
+}
+
+/* =========================================================
+   TOTAL CARD
+========================================================= */
+
+.driver-total {
+  width: 150px;
+  height: 75px;
+  min-width: 150px;
+
+  padding: 12px 16px;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+
+  background: #fff;
+  border: 1px solid #e4e5e7;
+  border-radius: 12px;
+}
+
+.driver-total span {
+  font-size: 11px;
+  color: #7a8492;
+  margin-bottom: 5px;
+}
+
+.driver-total strong {
+  font-size: 24px;
+  line-height: 1;
+  font-weight: 650;
+}
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.driver-tools {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 14px;
+}
+
+.driver-search {
+  width: 300px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  padding: 0 13px;
+  box-sizing: border-box;
+
+  background: #fff;
+  border: 1px solid #dedfe2;
+  border-radius: 8px;
+}
+
+.driver-search span {
+  color: #8993a0;
+  font-size: 18px;
+}
+
+.driver-search input {
+  width: 100%;
+  height: 100%;
+
+  border: 0;
+  outline: 0;
+  background: transparent;
+
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.driver-search input::placeholder {
+  color: #9aa2ad;
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.driver-table-card {
+  width: 100%;
+
+  background: #fff;
+  border: 1px solid #e1e3e6;
+  border-radius: 12px;
+
+  overflow: hidden;
+}
+
+.driver-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.driver-table {
+  width: 100%;
+  min-width: 1050px;
+
+  border-collapse: collapse;
+}
+
+.driver-table th {
+  height: 52px;
+  padding: 0 18px;
+
+  text-align: left;
+  white-space: nowrap;
+
+  background: #fafafa;
+  border-bottom: 1px solid #e7e8ea;
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #727c88;
+}
+
+.driver-table td {
+  height: 76px;
+  padding: 0 18px;
+
+  border-bottom: 1px solid #eeeeef;
+
+  font-size: 13px;
+  color: #596575;
+  vertical-align: middle;
+}
+
+.driver-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.driver-row {
+  cursor: pointer;
+  transition: background 0.18s ease;
+}
+
+.driver-row:hover {
+  background: #fafafa;
+}
+
+/* =========================================================
+   DRIVER ID
+========================================================= */
+
+.driver-id {
+  display: inline-flex;
+  align-items: center;
+
+  min-height: 30px;
+  padding: 0 10px;
+
+  background: #f8f9fa;
+  border: 1px solid #e1e5e9;
+  border-radius: 7px;
+
+  font-size: 11px;
+  font-weight: 600;
+  color: #516174;
+}
+
+/* =========================================================
+   DRIVER
+========================================================= */
+
+.driver-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  min-width: 175px;
+}
+
+.driver-avatar {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #e2e5e8;
+  border-radius: 50%;
+
+  background: #f2f3f4;
+
+  font-size: 12px;
+  font-weight: 650;
+  color: #202124;
+}
+
+.driver-user > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.driver-user strong {
+  font-size: 13px;
+  color: #171717;
+}
+
+.driver-user span {
+  font-size: 11px;
+  color: #8a94a1;
+}
+
+/* =========================================================
+   VEHICLE
+========================================================= */
+
+.driver-vehicle {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.driver-vehicle strong {
+  font-size: 13px;
+  font-weight: 600;
+  color: #25282c;
+}
+
+.driver-vehicle span {
+  font-size: 11px;
+  color: #8a94a1;
+}
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.driver-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  min-height: 28px;
+  padding: 0 11px;
+
+  border-radius: 999px;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.driver-status i {
+  width: 6px;
+  height: 6px;
+
+  display: block;
+
+  border-radius: 50%;
+}
+
+.status-active {
+  background: #eaf8f0;
+  color: #149447;
+}
+
+.status-active i {
+  background: #20ad57;
+}
+
+.status-inactive {
+  background: #f0f1f3;
+  color: #66717f;
+}
+
+.status-inactive i {
+  background: #8b949e;
+}
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.driver-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.driver-actions button {
+  height: 34px;
+
+  padding: 0 12px;
+
+  border-radius: 7px;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.driver-edit-btn {
+  background: #fff;
+  border: 1px solid #dce0e4;
+  color: #252a30;
+}
+
+.driver-edit-btn:hover {
+  background: #f6f7f8;
+}
+
+.driver-delete-btn {
+  background: #fff;
+  border: 1px solid #f0d5d5;
+  color: #dc4444;
+}
+
+.driver-delete-btn:hover {
+  background: #fff6f6;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.driver-table-footer {
+  min-height: 50px;
+  padding: 0 18px;
+
+  display: flex;
+  align-items: center;
+
+  border-top: 1px solid #eeeeef;
+
+  font-size: 11px;
+  color: #818b97;
+}
+
+.driver-table-footer strong {
+  margin: 0 3px;
+  color: #3f4852;
+}
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.driver-empty {
+  height: 230px !important;
+  text-align: center;
+}
+
+.driver-empty > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+}
+
+.driver-empty strong {
+  font-size: 14px;
+  color: #252525;
+}
+
+.driver-empty span {
+  font-size: 12px;
+  color: #9299a2;
+}
+
+/* =========================================================
+   DRAWER
+========================================================= */
+
+.driver-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+
+  background: rgba(15, 18, 22, 0.32);
+  backdrop-filter: blur(2px);
+}
+
+.driver-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1000;
+
+  width: min(420px, 92vw);
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #fff;
+  border-left: 1px solid #e4e5e7;
+
+  box-shadow: -18px 0 45px rgba(0, 0, 0, 0.12);
+
+  overflow-y: auto;
+
+  animation: driverDrawerIn 0.28s ease;
+}
+
+@keyframes driverDrawerIn {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* =========================================================
+   DRAWER HEADER
+========================================================= */
+
+.drawer-header {
+  min-height: 78px;
+  padding: 0 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom: 1px solid #ececee;
+}
+
+.drawer-header span {
+  display: block;
+  margin-bottom: 5px;
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+
+  color: #8b96a4;
+}
+
+.drawer-header h2 {
+  margin: 0;
+
+  font-size: 18px;
+  font-weight: 650;
+}
+
+.drawer-close {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #e1e3e6;
+  border-radius: 8px;
+
+  background: #fff;
+
+  font-size: 22px;
+  color: #59616c;
+
+  cursor: pointer;
+}
+
+/* =========================================================
+   DRAWER PROFILE
+========================================================= */
+
+.drawer-profile {
+  padding: 26px 22px 24px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  border-bottom: 1px solid #ececee;
+}
+
+.drawer-avatar {
+  width: 68px;
+  height: 68px;
+
+  margin-bottom: 13px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #e0e3e6;
+  border-radius: 50%;
+
+  background: #f3f4f5;
+
+  font-size: 22px;
+  font-weight: 650;
+}
+
+.drawer-profile h3 {
+  margin: 0 0 7px;
+
+  font-size: 19px;
+  font-weight: 650;
+}
+
+.drawer-driver-id {
+  margin-bottom: 11px;
+
+  font-size: 11px;
+  color: #87909b;
+}
+
+/* =========================================================
+   DRAWER SECTIONS
+========================================================= */
+
+.drawer-section {
+  padding: 21px 22px;
+
+  border-bottom: 1px solid #ececee;
+}
+
+.drawer-section h4 {
+  margin: 0 0 15px;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+
+  color: #7e8996;
+}
+
+.drawer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.drawer-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.drawer-info-item span {
+  font-size: 10px;
+  color: #929ba6;
+}
+
+.drawer-info-item strong {
+  font-size: 13px;
+  font-weight: 600;
+  color: #25282c;
+  word-break: break-word;
+}
+
+/* =========================================================
+   DRAWER ACTIONS
+========================================================= */
+
+.drawer-actions {
+  margin-top: auto;
+  padding: 20px 22px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.drawer-actions button {
+  width: 100%;
+  height: 42px;
+
+  border-radius: 8px;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.drawer-edit-btn {
+  border: 1px solid #dfe2e5;
+  background: #fff;
+  color: #202124;
+}
+
+.drawer-delete-btn {
+  border: 1px solid #f0d2d2;
+  background: #fff;
+  color: #d73d3d;
+}
+
+/* =========================================================
+   DELETE MODAL
+========================================================= */
+
+.delete-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(15, 18, 22, 0.42);
+  backdrop-filter: blur(3px);
+}
+
+.delete-modal {
+  width: min(390px, 100%);
+
+  padding: 26px;
+
+  background: #fff;
+  border: 1px solid #e2e4e7;
+  border-radius: 14px;
+
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.16);
+
+  text-align: center;
+}
+
+.delete-icon {
+  width: 44px;
+  height: 44px;
+
+  margin: 0 auto 15px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #fff1f1;
+  color: #dc4141;
+
+  font-weight: 700;
+}
+
+.delete-modal h3 {
+  margin: 0 0 9px;
+
+  font-size: 18px;
+}
+
+.delete-modal p {
+  margin: 0;
+
+  font-size: 13px;
+  line-height: 1.55;
+  color: #737c87;
+}
+
+.delete-modal-actions {
+  display: flex;
+  gap: 9px;
+
+  margin-top: 22px;
+}
+
+.delete-modal-actions button {
+  flex: 1;
+  height: 40px;
+
+  border-radius: 8px;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.cancel-delete {
+  border: 1px solid #dfe2e5;
+  background: #fff;
+}
+
+.confirm-delete {
+  border: 1px solid #df4444;
+  background: #df4444;
+  color: #fff;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+  .driver-content {
+    padding: 26px 22px 32px;
+  }
+
+  .driver-page-header h1 {
+    font-size: 34px;
+  }
+}
+
+@media (max-width: 650px) {
+  .driver-content {
+    padding: 20px 16px 28px;
+  }
+
+  .driver-page-header {
+    flex-direction: column;
+  }
+
+  .driver-total {
+    width: 150px;
+  }
+
+  .driver-tools {
+    justify-content: stretch;
+  }
+
+  .driver-search {
+    width: 100%;
+  }
+}
