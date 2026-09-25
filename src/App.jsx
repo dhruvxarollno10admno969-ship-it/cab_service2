@@ -34,6 +34,8 @@ import Drivers from "./admin/pages/AdminDriver";
 import Vehicles from "./admin/pages/AdminVehicles";
 import Pricing from "./admin/pages/AdminPricing";
 
+import NotFound from "./admin/pages/NotFound";
+
 // ========================================
 // CUSTOMER WEBSITE LAYOUT
 // ========================================
@@ -189,7 +191,10 @@ function App() {
     </AdminLayout>
   }
 />
-
+<Route 
+path="*"
+element={<NotFound />}
+/>
     </Routes>
   );
 }

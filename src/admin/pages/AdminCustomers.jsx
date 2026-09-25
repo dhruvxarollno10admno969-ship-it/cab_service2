@@ -28,8 +28,8 @@ const initialCustomers = [
   },
   {
     id: "CUS-004",
-    name: "Neha Verma",
-    email: "neha@gmail.com",
+    name: "gitanjli Verma",
+    email: "gitanjali@gmail.com",
     phone: "+91 98712 34567",
     status: "Active",
     joined: "01 September 2026",

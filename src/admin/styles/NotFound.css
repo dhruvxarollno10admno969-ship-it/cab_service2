@@ -1,0 +1,278 @@
+.not-found-page {
+  min-height: 100vh;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 30px;
+
+  background: #111111;
+  color: #fff;
+
+  overflow: hidden;
+
+  position: relative;
+}
+
+
+/* ========================================
+   BACKGROUND ANIMATION
+======================================== */
+
+.not-found-page::before,
+.not-found-page::after {
+  content: "";
+
+  position: absolute;
+
+  width: 420px;
+  height: 420px;
+
+  border-radius: 50%;
+
+  filter: blur(100px);
+
+  opacity: 0.12;
+
+  pointer-events: none;
+}
+
+
+/* Left glow */
+
+.not-found-page::before {
+  background: #ffffff;
+
+  top: -180px;
+  left: -150px;
+
+  animation: floatGlowOne 8s ease-in-out infinite;
+}
+
+
+/* Right glow */
+
+.not-found-page::after {
+  background: #777777;
+
+  right: -150px;
+  bottom: -180px;
+
+  animation: floatGlowTwo 10s ease-in-out infinite;
+}
+
+
+/* ========================================
+   404 CONTENT
+======================================== */
+
+.not-found-content {
+  width: 100%;
+  max-width: 650px;
+
+  text-align: center;
+
+  position: relative;
+  z-index: 2;
+}
+
+
+/* ========================================
+   SMALL ERROR TEXT
+======================================== */
+
+.not-found-small {
+  display: inline-block;
+
+  margin-bottom: 20px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  letter-spacing: 3px;
+
+  color: #858585;
+}
+
+
+/* ========================================
+   HEADING
+======================================== */
+
+.not-found-content h1 {
+  margin: 0;
+
+  font-size: clamp(55px, 9vw, 110px);
+
+  line-height: 0.9;
+
+  letter-spacing: -6px;
+
+  font-weight: 600;
+
+  animation: titleFloat 5s ease-in-out infinite;
+}
+
+
+/* ========================================
+   DESCRIPTION
+======================================== */
+
+.not-found-content p {
+  max-width: 460px;
+
+  margin: 28px auto 0;
+
+  color: #999999;
+
+  font-size: 16px;
+
+  line-height: 1.6;
+}
+
+
+/* ========================================
+   BUTTONS
+======================================== */
+
+.not-found-buttons {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 14px;
+
+  margin-top: 35px;
+}
+
+.not-found-buttons button {
+  height: 50px;
+
+  padding: 0 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  border-radius: 12px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  transition: 0.25s ease;
+}
+
+
+/* HOME */
+
+.not-found-home {
+  border: 1px solid #fff;
+
+  background: #fff;
+
+  color: #111;
+}
+
+.not-found-home:hover {
+  transform: translateY(-3px);
+}
+
+
+/* BACK */
+
+.not-found-back {
+  border: 1px solid #333;
+
+  background: #1b1b1b;
+
+  color: #fff;
+}
+
+.not-found-back:hover {
+  transform: translateY(-3px);
+
+  border-color: #555;
+}
+
+
+/* ========================================
+   ANIMATIONS
+======================================== */
+
+@keyframes floatGlowOne {
+
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(80px, 60px);
+  }
+
+}
+
+
+@keyframes floatGlowTwo {
+
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(-70px, -50px);
+  }
+
+}
+
+
+@keyframes titleFloat {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+
+}
+
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 600px) {
+
+  .not-found-page {
+    padding: 20px;
+  }
+
+  .not-found-content h1 {
+    font-size: 58px;
+
+    letter-spacing: -3px;
+  }
+
+  .not-found-content p {
+    font-size: 14px;
+  }
+
+  .not-found-buttons {
+    flex-direction: column;
+  }
+
+  .not-found-buttons button {
+    width: 100%;
+    max-width: 260px;
+  }
+
+}
