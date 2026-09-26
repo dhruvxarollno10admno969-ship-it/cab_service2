@@ -644,3 +644,113 @@
   }
 
 }
+/* ========================================
+   ADMIN PROFILE DROPDOWN - FIX
+======================================== */
+
+.admin-profile-wrapper {
+  position: relative !important;
+}
+
+.admin-profile-dropdown {
+  position: absolute !important;
+
+  top: calc(100% + 10px) !important;
+  right: 0 !important;
+
+  width: 190px !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+
+  gap: 4px !important;
+
+  padding: 8px !important;
+
+  background: #ffffff !important;
+
+  border: 1px solid #e5e5e5 !important;
+  border-radius: 14px !important;
+
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12) !important;
+
+  z-index: 9999 !important;
+
+  animation: adminDropdown 0.18s ease;
+}
+
+
+/* DROPDOWN BUTTONS */
+
+.admin-profile-dropdown button {
+  width: 100% !important;
+  height: 42px !important;
+
+  margin: 0 !important;
+  padding: 0 12px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+
+  gap: 10px !important;
+
+  border: none !important;
+  outline: none !important;
+
+  border-radius: 9px !important;
+
+  background: transparent !important;
+
+  color: #222 !important;
+
+  font-family: inherit !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+
+  cursor: pointer !important;
+
+  appearance: none !important;
+
+  box-shadow: none !important;
+}
+
+
+/* HOVER */
+
+.admin-profile-dropdown button:hover {
+  background: #f3f3f3 !important;
+}
+
+
+/* LOGOUT */
+
+.admin-profile-dropdown .admin-logout-button {
+  color: #d33 !important;
+}
+
+.admin-profile-dropdown .admin-logout-button:hover {
+  background: #fff0f0 !important;
+}
+
+
+/* ICON */
+
+.admin-profile-dropdown svg {
+  flex-shrink: 0;
+}
+
+
+/* ANIMATION */
+
+@keyframes adminDropdown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

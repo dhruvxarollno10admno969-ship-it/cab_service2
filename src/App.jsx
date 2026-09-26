@@ -25,6 +25,7 @@ import Footer from "./components/Footer";
 // ========================================
 // ADMIN PANEL
 // ========================================
+import AdminPrivateRoute from "./admin/AdminPrivateRoute";
 import AdminLogin from "./admin/pages/AdminLogin";
 import AdminLayout from "./admin/layout/AdminLayout";
 import Dashboard from "./admin/pages/Dashboard";
@@ -34,7 +35,6 @@ import Drivers from "./admin/pages/AdminDriver";
 import Vehicles from "./admin/pages/AdminVehicles";
 import Pricing from "./admin/pages/AdminPricing";
 import NotFound from "./admin/pages/NotFound";
-
 
 // ========================================
 // CUSTOMER WEBSITE LAYOUT
@@ -99,66 +99,71 @@ function App() {
       {/* ========================================
           ADMIN PANEL
       ======================================== */}
+      {/* ========================================
+    ADMIN LOGIN - PUBLIC
+======================================== */}
 
-      <Route 
-      path="/admin/login" 
-      element={<AdminLogin />} />
+      <Route path="/admin/login" element={<AdminLogin />} />
 
-      {/* DASHBOARD */}
-      <Route
-        path="/admin"
-        element={
-          <AdminLayout>
-            <Dashboard />
-          </AdminLayout>
-        }
-      />
+      {/* ========================================
+    ADMIN PANEL - PRIVATE
+======================================== */}
 
-      {/* BOOKINGS */}
-      <Route
-        path="/admin/bookings"
-        element={
-          <AdminLayout>
-            <AdminBooking />
-          </AdminLayout>
-        }
-      />
+      <Route element={<AdminPrivateRoute />}>
+        <Route
+          path="/admin"
+          element={
+            <AdminLayout>
+              <Dashboard />
+            </AdminLayout>
+          }
+        />
 
-      {/* CUSTOMERS */}
-      <Route
-        path="/admin/customers"
-        element={
-          <AdminLayout>
-            <Customer />
-          </AdminLayout>
-        }
-      />
+        <Route
+          path="/admin/bookings"
+          element={
+            <AdminLayout>
+              <AdminBooking />
+            </AdminLayout>
+          }
+        />
 
-      {/* DRIVERS */}
-      <Route
-        path="/admin/drivers"
-        element={
-          <AdminLayout>
-            <Drivers />
-          </AdminLayout>
-        }
-      />
-      <Route
-        path="/admin/vehicles"
-        element={
-          <AdminLayout>
-            <Vehicles />
-          </AdminLayout>
-        }
-      />
-      <Route
-        path="/admin/pricing"
-        element={
-          <AdminLayout>
-            <Pricing />
-          </AdminLayout>
-        }
-      />
+        <Route
+          path="/admin/customers"
+          element={
+            <AdminLayout>
+              <Customer />
+            </AdminLayout>
+          }
+        />
+
+        <Route
+          path="/admin/drivers"
+          element={
+            <AdminLayout>
+              <Drivers />
+            </AdminLayout>
+          }
+        />
+
+        <Route
+          path="/admin/vehicles"
+          element={
+            <AdminLayout>
+              <Vehicles />
+            </AdminLayout>
+          }
+        />
+
+        <Route
+          path="/admin/pricing"
+          element={
+            <AdminLayout>
+              <Pricing />
+            </AdminLayout>
+          }
+        />
+      </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

@@ -1,11 +1,51 @@
-import {
-  Search,
-  Bell,
-  ChevronDown,
-  Menu,
-} from "lucide-react";
+import { ChevronDown, Menu, User, LogOut } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase";
 
 function AdminTopbar({ onMenuClick }) {
+  const [profileOpen, setProfileOpen] = useState(false);
+
+  const profileRef = useRef(null);
+  const navigate = useNavigate();
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(event.target)
+      ) {
+        setProfileOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutside
+      );
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    try{
+      await signOut(auth);
+
+      setProfileOpen(false);
+
+      navigate("/admin/login",{
+        replace : true,
+      });
+
+    }catch (error) {
+      console.error ("Logout failed", error);
+    }
+  };
+
   return (
     <header className="admin-topbar">
 
@@ -27,46 +67,68 @@ function AdminTopbar({ onMenuClick }) {
 
       </div>
 
+
       {/* RIGHT */}
       <div className="admin-topbar-right">
 
-        {/* SEARCH */}
-        <button
-          className="admin-topbar-icon"
-          aria-label="Search"
+        {/* ADMIN PROFILE */}
+        <div
+          className="admin-profile-wrapper"
+          ref={profileRef}
         >
-          <Search size={22} strokeWidth={1.8} />
-        </button>
 
-        {/* NOTIFICATIONS */}
-        <button
-          className="admin-topbar-icon admin-notification"
-          aria-label="Notifications"
-        >
-          <Bell size={22} strokeWidth={1.8} />
+          <button
+            className="admin-profile"
+            onClick={() => setProfileOpen(!profileOpen)}
+            aria-expanded={profileOpen}
+          >
 
-          <span className="admin-notification-dot"></span>
-        </button>
+            <div className="admin-profile-avatar">
+              A
+            </div>
 
-        {/* PROFILE */}
-        <button className="admin-profile">
+            <div className="admin-profile-info">
+              <strong>Administrator</strong>
+              <span>Admin</span>
+            </div>
 
-          <div className="admin-profile-avatar">
-            A
-          </div>
+            <ChevronDown
+              className={`admin-profile-chevron ${
+                profileOpen ? "open" : ""
+              }`}
+              size={18}
+              strokeWidth={1.8}
+            />
 
-          <div className="admin-profile-info">
-            <strong>Administrator</strong>
-            <span>Admin</span>
-          </div>
+          </button>
 
-          <ChevronDown
-            className="admin-profile-chevron"
-            size={18}
-            strokeWidth={1.8}
-          />
 
-        </button>
+          {/* DROPDOWN */}
+          {profileOpen && (
+            <div className="admin-profile-dropdown">
+
+              <button
+                onClick={() => {
+                  setProfileOpen(false);
+                  navigate("/admin");
+                }}
+              >
+                <User size={17} />
+                <span>Dashboard</span>
+              </button>
+
+              <button
+                className="admin-logout-button"
+                onClick={handleLogout}
+              >
+                <LogOut size={17} />
+                <span>Logout</span>
+              </button>
+
+            </div>
+          )}
+
+        </div>
 
       </div>
 

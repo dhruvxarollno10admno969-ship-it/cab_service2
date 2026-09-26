@@ -23,7 +23,7 @@ function Hero() {
     
               <div className="hero-actions">
                 <Link to="/booking" className="primary-button">
-                  Book a Ride
+                 <span> Book a Ride </span>
                   <ArrowUpRight size={19} />
                 </Link>
     
