@@ -25,7 +25,7 @@ import Footer from "./components/Footer";
 // ========================================
 // ADMIN PANEL
 // ========================================
-
+import AdminLogin from "./admin/pages/AdminLogin";
 import AdminLayout from "./admin/layout/AdminLayout";
 import Dashboard from "./admin/pages/Dashboard";
 import AdminBooking from "./admin/pages/AdminBooking";
@@ -33,8 +33,8 @@ import Customer from "./admin/pages/AdminCustomers";
 import Drivers from "./admin/pages/AdminDriver";
 import Vehicles from "./admin/pages/AdminVehicles";
 import Pricing from "./admin/pages/AdminPricing";
-
 import NotFound from "./admin/pages/NotFound";
+
 
 // ========================================
 // CUSTOMER WEBSITE LAYOUT
@@ -61,80 +61,48 @@ function CustomerLayout() {
 function App() {
   return (
     <Routes>
-
       {/* ========================================
           CUSTOMER WEBSITE
       ======================================== */}
 
       <Route element={<CustomerLayout />}>
-
         {/* HOME */}
-        <Route
-          path="/"
-          element={<Home />}
-        />
+        <Route path="/" element={<Home />} />
 
         {/* AUTHENTICATION */}
-        <Route
-          path="/login"
-          element={<Login />}
-        />
+        <Route path="/login" element={<Login />} />
 
-        <Route
-          path="/signup"
-          element={<Signup />}
-        />
+        <Route path="/signup" element={<Signup />} />
 
         {/* MAIN PAGES */}
-        <Route
-          path="/services"
-          element={<Service />}
-        />
+        <Route path="/services" element={<Service />} />
 
-        <Route
-          path="/about"
-          element={<About />}
-        />
+        <Route path="/about" element={<About />} />
 
-        <Route
-          path="/fleet"
-          element={<Fleet />}
-        />
+        <Route path="/fleet" element={<Fleet />} />
 
-        <Route
-          path="/contact"
-          element={<Contact />}
-        />
+        <Route path="/contact" element={<Contact />} />
 
         {/* ========================================
             PROTECTED CUSTOMER PAGES
         ======================================== */}
 
         <Route element={<PrivateRoute />}>
+          <Route path="/booking" element={<Booking />} />
 
-          <Route
-            path="/booking"
-            element={<Booking />}
-          />
+          <Route path="/profile" element={<Profile />} />
 
-          <Route
-            path="/profile"
-            element={<Profile />}
-          />
-
-          <Route
-            path="/settings"
-            element={<Setting />}
-          />
-
+          <Route path="/settings" element={<Setting />} />
         </Route>
-
       </Route>
-
 
       {/* ========================================
           ADMIN PANEL
       ======================================== */}
+
+      <Route 
+      path="/admin/login" 
+      element={<AdminLogin />} />
 
       {/* DASHBOARD */}
       <Route
@@ -176,25 +144,22 @@ function App() {
         }
       />
       <Route
-  path="/admin/vehicles"
-  element={
-    <AdminLayout>
-      <Vehicles />
-    </AdminLayout>
-  }
-/>
-<Route
-  path="/admin/pricing"
-  element={
-    <AdminLayout>
-      <Pricing />
-    </AdminLayout>
-  }
-/>
-<Route 
-path="*"
-element={<NotFound />}
-/>
+        path="/admin/vehicles"
+        element={
+          <AdminLayout>
+            <Vehicles />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/admin/pricing"
+        element={
+          <AdminLayout>
+            <Pricing />
+          </AdminLayout>
+        }
+      />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

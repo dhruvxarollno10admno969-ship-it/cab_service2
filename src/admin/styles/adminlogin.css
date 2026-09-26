@@ -1,0 +1,617 @@
+/* =========================================
+   ADMIN LOGIN PAGE
+========================================= */
+
+.admin-login-page {
+  min-height: 100vh;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+  overflow: hidden;
+
+  background: #080808;
+  color: #fff;
+}
+
+
+/* =========================================
+   BACKGROUND
+========================================= */
+
+.admin-login-bg {
+  position: absolute;
+  inset: 0;
+
+  overflow: hidden;
+
+  pointer-events: none;
+}
+
+.admin-login-bg span {
+  position: absolute;
+
+  display: block;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.035);
+
+  filter: blur(10px);
+
+  animation: adminFloat 8s ease-in-out infinite;
+}
+
+.admin-login-bg span:nth-child(1) {
+  width: 500px;
+  height: 500px;
+
+  top: -250px;
+  left: -150px;
+}
+
+.admin-login-bg span:nth-child(2) {
+  width: 450px;
+  height: 450px;
+
+  right: -200px;
+  bottom: -200px;
+
+  background: rgba(255, 255, 255, 0.025);
+
+  animation-duration: 10s;
+  animation-direction: reverse;
+}
+
+.admin-login-bg span:nth-child(3) {
+  width: 180px;
+  height: 180px;
+
+  left: 50%;
+  top: 45%;
+
+  background: rgba(255, 255, 255, 0.018);
+
+  animation-duration: 12s;
+}
+
+
+@keyframes adminFloat {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(25px, -20px);
+  }
+}
+
+
+/* =========================================
+   CARD
+========================================= */
+
+.admin-login-card {
+  width: min(430px, calc(100% - 40px));
+
+  padding: 42px;
+
+  position: relative;
+  z-index: 2;
+
+  background: rgba(18, 18, 18, 0.92);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  border-radius: 22px;
+
+  backdrop-filter: blur(20px);
+
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.5);
+
+  animation: adminCardIn 0.6s ease;
+}
+
+
+@keyframes adminCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.admin-login-header {
+  text-align: center;
+
+  margin-bottom: 32px;
+}
+
+.admin-lock {
+  width: 52px;
+  height: 52px;
+
+  margin: 0 auto 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+
+  background: #fff;
+  color: #000;
+}
+
+.admin-label {
+  margin: 0 0 8px;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 2px;
+
+  opacity: 0.45;
+}
+
+.admin-login-header h1 {
+  margin: 0;
+
+  font-size: 38px;
+  line-height: 1.1;
+
+  letter-spacing: -1.5px;
+}
+
+.admin-login-header h1 span {
+  opacity: 0.4;
+}
+
+.admin-subtitle {
+  margin: 10px auto 0;
+
+  color: rgba(255, 255, 255, 0.45);
+
+  font-size: 14px;
+}
+
+
+/* =========================================
+   INPUT GROUP
+========================================= */
+
+.admin-input-group {
+  width: 100%;
+
+  margin-bottom: 18px;
+}
+
+
+/* LABEL */
+
+.admin-input-group > label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: rgba(255, 255, 255, 0.7);
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+
+/* =========================================
+   INPUT BOX
+========================================= */
+
+.admin-input {
+  width: 100%;
+  height: 54px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 0 15px;
+
+  box-sizing: border-box;
+
+  background: #111;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  border-radius: 12px;
+
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease;
+}
+
+.admin-input:focus-within {
+  border-color: rgba(255, 255, 255, 0.35);
+
+  background: #151515;
+}
+
+
+/* INPUT ICON */
+
+.admin-input > svg {
+  width: 18px;
+  height: 18px;
+
+  color: rgba(255, 255, 255, 0.4);
+
+  flex-shrink: 0;
+}
+
+
+/* INPUT */
+
+.admin-input input {
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+
+  padding: 0;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #fff;
+
+  font-family: inherit;
+
+  font-size: 14px;
+}
+
+.admin-input input::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+
+/* =========================================
+   PASSWORD TOGGLE
+========================================= */
+
+.admin-login-card .password-toggle {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+
+  width: 30px !important;
+  height: 30px !important;
+
+  min-width: 30px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border: 0 !important;
+  border-radius: 6px !important;
+
+  outline: none !important;
+
+  background: transparent !important;
+
+  color: rgba(255, 255, 255, 0.4) !important;
+
+  cursor: pointer;
+
+  box-shadow: none !important;
+
+  transform: none !important;
+
+  flex-shrink: 0;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.admin-login-card .password-toggle svg {
+  width: 18px;
+  height: 18px;
+
+  color: inherit;
+}
+
+.admin-login-card .password-toggle:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+
+  color: #fff !important;
+
+  box-shadow: none !important;
+
+  transform: none !important;
+}
+
+.admin-login-card .password-toggle:focus,
+.admin-login-card .password-toggle:focus-visible,
+.admin-login-card .password-toggle:active {
+  outline: none !important;
+
+  background: rgba(255, 255, 255, 0.06) !important;
+
+  box-shadow: none !important;
+}
+
+
+/* =========================================
+   FORGOT PASSWORD
+   BELOW PASSWORD INPUT
+========================================= */
+
+.admin-login-card .forgot-password {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+
+  width: auto !important;
+  height: auto !important;
+
+  display: block !important;
+
+  margin: 8px 0 0 !important;
+  padding: 0 !important;
+
+  border: none !important;
+  border-radius: 0 !important;
+
+  outline: none !important;
+
+  background: transparent !important;
+
+  color: rgba(255, 255, 255, 0.4) !important;
+
+  font-family: inherit;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  line-height: 1.4;
+
+  cursor: pointer;
+
+  box-shadow: none !important;
+
+  transform: none !important;
+
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.admin-login-card .forgot-password:hover {
+  background: transparent !important;
+
+  color: #fff !important;
+
+  box-shadow: none !important;
+
+  transform: none !important;
+}
+
+.admin-login-card .forgot-password:focus,
+.admin-login-card .forgot-password:focus-visible,
+.admin-login-card .forgot-password:active {
+  outline: none !important;
+
+  background: transparent !important;
+
+  box-shadow: none !important;
+}
+
+.admin-login-card .forgot-password:disabled {
+  opacity: 0.45;
+
+  cursor: not-allowed;
+}
+
+
+/* =========================================
+   ERROR
+========================================= */
+
+.admin-login-error {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  margin-bottom: 16px;
+
+  padding: 11px 13px;
+
+  border-radius: 10px;
+
+  background: rgba(255, 70, 70, 0.07);
+
+  border: 1px solid rgba(255, 70, 70, 0.14);
+
+  color: #ff8585;
+
+  font-size: 13px;
+}
+
+
+/* =========================================
+   SUCCESS
+========================================= */
+
+.admin-login-success {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  margin-bottom: 16px;
+
+  padding: 11px 13px;
+
+  border-radius: 10px;
+
+  background: rgba(70, 200, 120, 0.07);
+
+  border: 1px solid rgba(70, 200, 120, 0.14);
+
+  color: #7ee2a8;
+
+  font-size: 13px;
+}
+
+
+/* =========================================
+   LOGIN BUTTON
+========================================= */
+
+.admin-login-card .admin-login-btn {
+  width: 100%;
+  height: 54px;
+
+  margin: 0;
+  padding: 0 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: #fff;
+
+  color: #000;
+
+  font-family: inherit;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow: none;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    opacity 0.25s ease;
+}
+
+.admin-login-card .admin-login-btn:hover {
+  background: #fff;
+
+  color: #000;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 12px 30px rgba(255, 255, 255, 0.12);
+}
+
+.admin-login-card .admin-login-btn:focus,
+.admin-login-card .admin-login-btn:focus-visible {
+  outline: none;
+
+  background: #fff;
+
+  color: #000;
+}
+
+.admin-login-card .admin-login-btn:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+
+  transform: none;
+
+  box-shadow: none;
+}
+
+
+/* =========================================
+   BACK TO WEBSITE
+========================================= */
+
+.admin-login-card .back-to-website {
+  display: block;
+
+  width: auto;
+  height: auto;
+
+  margin: 22px auto 0;
+  padding: 0;
+
+  border: none;
+
+  background: transparent !important;
+
+  color: rgba(255, 255, 255, 0.4);
+
+  font-family: inherit;
+
+  font-size: 13px;
+
+  cursor: pointer;
+
+  box-shadow: none !important;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.admin-login-card .back-to-website:hover {
+  background: transparent !important;
+
+  color: #fff;
+
+  transform: none;
+
+  box-shadow: none !important;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .admin-login-card {
+    width: calc(100% - 30px);
+
+    padding: 30px 22px;
+
+    border-radius: 18px;
+  }
+
+  .admin-login-header h1 {
+    font-size: 32px;
+  }
+
+  .admin-login-card .forgot-password {
+    font-size: 11px;
+  }
+}
