@@ -6,6 +6,7 @@ import {
   Car,
   IndianRupee,
   Settings,
+  MessageSquareQuote,
   ArrowLeft,
   X,
 } from "lucide-react";
@@ -39,6 +40,13 @@ function AdminSidebar({ isOpen, onClose }) {
       path: "/admin/vehicles",
       icon: Car,
     },
+
+    {
+  label: "Feedback",
+  path: "/admin/feedback",
+  icon: MessageSquareQuote,
+},
+
     {
       label: "Pricing",
       path: "/admin/pricing",

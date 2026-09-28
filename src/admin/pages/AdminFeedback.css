@@ -1,0 +1,562 @@
+.admin-feedback-page {
+  width: 100%;
+  padding: 32px;
+}
+
+
+/* ================================
+   HEADER
+================================ */
+
+.admin-feedback-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+
+  margin-bottom: 30px;
+}
+
+.admin-feedback-eyebrow {
+  display: block;
+
+  margin-bottom: 10px;
+
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+
+  color: #77736c;
+}
+
+.admin-feedback-header h1 {
+  margin: 0;
+
+  font-size: 38px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+
+  color: #111;
+}
+
+.admin-feedback-header p {
+  margin: 12px 0 0;
+
+  font-size: 14px;
+  color: #77736c;
+}
+
+
+/* ================================
+   REFRESH
+================================ */
+
+.feedback-refresh-btn {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  height: 42px;
+  padding: 0 17px;
+
+  border: 1px solid #dedbd4;
+  border-radius: 10px;
+
+  background: #fff;
+  color: #222;
+
+  font-size: 13px;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+.feedback-refresh-btn:hover {
+  border-color: #111;
+  background: #111;
+  color: #fff;
+}
+
+.feedback-refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.feedback-spin {
+  animation: feedbackSpin 0.8s linear infinite;
+}
+
+@keyframes feedbackSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* ================================
+   STATS
+================================ */
+
+.feedback-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+
+  margin-bottom: 30px;
+}
+
+.feedback-stat-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding: 20px;
+
+  border: 1px solid #e1ded7;
+  border-radius: 14px;
+
+  background: #fff;
+}
+
+.feedback-stat-icon {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 11px;
+}
+
+.feedback-stat-icon.pending {
+  background: #f5efe2;
+}
+
+.feedback-stat-icon.approved {
+  background: #e7f2e9;
+}
+
+.feedback-stat-icon.rejected {
+  background: #f4e7e5;
+}
+
+.feedback-stat-icon.total {
+  background: #eceae5;
+}
+
+.feedback-stat-card span {
+  display: block;
+
+  margin-bottom: 3px;
+
+  font-size: 11px;
+  color: #85817a;
+}
+
+.feedback-stat-card strong {
+  font-size: 23px;
+  font-weight: 500;
+  color: #111;
+}
+
+
+/* ================================
+   FEEDBACK LIST
+================================ */
+
+.admin-feedback-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.admin-feedback-card {
+  padding: 25px;
+
+  border: 1px solid #e0ddd6;
+  border-radius: 16px;
+
+  background: #fff;
+
+  transition:
+    border-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.admin-feedback-card:hover {
+  border-color: #c5c1b9;
+  transform: translateY(-2px);
+}
+
+
+/* ================================
+   CARD TOP
+================================ */
+
+.feedback-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
+.feedback-customer {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.feedback-avatar {
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #111;
+  color: #fff;
+
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.feedback-customer h3 {
+  margin: 0 0 4px;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.feedback-customer span {
+  font-size: 11px;
+  color: #8a867f;
+}
+
+
+/* ================================
+   STATUS
+================================ */
+
+.feedback-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 7px 10px;
+
+  border-radius: 20px;
+
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.feedback-status.pending {
+  background: #f5efe2;
+  color: #806a3e;
+}
+
+.feedback-status.approved {
+  background: #e7f2e9;
+  color: #47724f;
+}
+
+.feedback-status.rejected {
+  background: #f4e7e5;
+  color: #8b514b;
+}
+
+
+/* ================================
+   MESSAGE
+================================ */
+
+.feedback-message {
+  display: flex;
+  gap: 13px;
+
+  margin: 25px 0;
+
+  padding: 20px;
+
+  border-radius: 12px;
+
+  background: #f7f6f2;
+
+  color: #77736c;
+}
+
+.feedback-message svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #111;
+}
+
+.feedback-message p {
+  margin: 0;
+
+  font-size: 15px;
+  line-height: 1.7;
+
+  color: #333;
+}
+
+
+/* ================================
+   CONTACT INFO
+================================ */
+
+.feedback-contact {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+
+  padding-bottom: 22px;
+
+  border-bottom: 1px solid #e5e2dc;
+}
+
+.feedback-contact span {
+  display: block;
+
+  margin-bottom: 6px;
+
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+
+  color: #89857e;
+}
+
+.feedback-contact strong {
+  font-size: 13px;
+  font-weight: 500;
+
+  color: #222;
+}
+
+
+/* ================================
+   ACTIONS
+================================ */
+
+.feedback-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+
+  padding-top: 18px;
+}
+
+.feedback-actions button {
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 0 15px;
+
+  border-radius: 8px;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+.feedback-approve {
+  border: 1px solid #111;
+  background: #111;
+  color: #fff;
+}
+
+.feedback-approve:hover {
+  background: #2a2a2a;
+}
+
+.feedback-reject {
+  border: 1px solid #ddd9d2;
+  background: #fff;
+  color: #333;
+}
+
+.feedback-reject:hover {
+  border-color: #b8b4ad;
+}
+
+.feedback-actions button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+
+/* ================================
+   LOADING
+================================ */
+
+.feedback-loading {
+  min-height: 280px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  color: #77736c;
+
+  font-size: 13px;
+}
+
+.feedback-loader {
+  width: 18px;
+  height: 18px;
+
+  border: 2px solid #ddd;
+  border-top-color: #111;
+
+  border-radius: 50%;
+
+  animation: feedbackSpin 0.8s linear infinite;
+}
+
+
+/* ================================
+   EMPTY
+================================ */
+
+.feedback-empty {
+  min-height: 300px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  text-align: center;
+
+  border: 1px dashed #d5d1c9;
+  border-radius: 16px;
+}
+
+.feedback-empty-icon {
+  width: 56px;
+  height: 56px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 15px;
+
+  border-radius: 50%;
+
+  background: #f0eee9;
+}
+
+.feedback-empty h2 {
+  margin: 0;
+
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.feedback-empty p {
+  max-width: 360px;
+
+  margin: 8px 0 0;
+
+  font-size: 13px;
+  line-height: 1.6;
+
+  color: #85817a;
+}
+
+
+/* ================================
+   ERROR
+================================ */
+
+.feedback-error {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  margin-bottom: 20px;
+  padding: 15px 18px;
+
+  border: 1px solid #ead2cf;
+  border-radius: 10px;
+
+  background: #faf0ef;
+}
+
+.feedback-error strong {
+  font-size: 13px;
+}
+
+.feedback-error span {
+  font-size: 12px;
+  color: #8b514b;
+}
+
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 900px) {
+
+  .feedback-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+@media (max-width: 600px) {
+
+  .admin-feedback-page {
+    padding: 20px;
+  }
+
+  .admin-feedback-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .admin-feedback-header h1 {
+    font-size: 32px;
+  }
+
+  .feedback-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .feedback-card-top {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .feedback-contact {
+    grid-template-columns: 1fr;
+  }
+
+  .feedback-actions {
+    justify-content: stretch;
+  }
+
+  .feedback-actions button {
+    flex: 1;
+    justify-content: center;
+  }
+
+}

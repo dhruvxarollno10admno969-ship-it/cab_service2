@@ -139,6 +139,11 @@ function Navbar() {
           About
         </a>
 
+
+<a href="#testimonials">
+         Testimonials
+        </a>
+
         <a href="#contact">
           Contact
         </a>

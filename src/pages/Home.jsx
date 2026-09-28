@@ -14,6 +14,7 @@ import "../App.css";
 import QuickBooking from "../components/QuickBooking";
 import Service from "../components/Service";
 import About from "../components/About";
+import Testimonials from "../components/Testimonials";
 
 function Home() {
   // =====================================================
@@ -40,13 +41,14 @@ function Home() {
       setSending(true);
 
       // Send data to Firebase Firestore
-      await addDoc(collection(db, "feedback"), {
-        name: name.trim(),
-        phone: phone.trim(),
-        email: email.trim(),
-        message: message.trim(),
-        createdAt: serverTimestamp(),
-      });
+     await addDoc(collection(db, "feedback"), {
+  name: name.trim(),
+  phone: phone.trim(),
+  email: email.trim(),
+  message: message.trim(),
+  status: "pending",
+  createdAt: serverTimestamp(),
+});
 
       // Success message
       alert("Thanks! We'll contact you shortly.");
@@ -263,6 +265,18 @@ function Home() {
 
         </div>
       </section>
+
+            
+
+      {/* =====================================================
+          TESTIMONIALS
+      ===================================================== */}
+
+      <Testimonials />
+
+      {/* =====================================================
+          CONTACT
+      ===================================================== */}
 
       {/* =====================================================
           CONTACT

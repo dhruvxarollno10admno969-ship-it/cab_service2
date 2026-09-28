@@ -20,6 +20,7 @@ import Setting from "./pages/Setting";
 import PrivateRoute from "./PrivateRoute";
 
 import Navbar from "./components/Navbar";
+
 import Footer from "./components/Footer";
 
 // ========================================
@@ -35,7 +36,9 @@ import Drivers from "./admin/pages/AdminDriver";
 import Vehicles from "./admin/pages/AdminVehicles";
 import Pricing from "./admin/pages/AdminPricing";
 import NotFound from "./admin/pages/NotFound";
-import Authentication from "./admin/pages/Authentication";
+
+import AdminFeedback from "./admin/pages/AdminFeedback";
+
 
 // ========================================
 // CUSTOMER WEBSITE LAYOUT
@@ -156,11 +159,22 @@ function App() {
           }
         />
 
+        {/* FEEDBACK */}
+  <Route
+    path="/admin/feedback"
+    element={
+      <AdminLayout>
+        <AdminFeedback />
+      </AdminLayout>
+    }
+  />
+
+
          <Route
           path="/admin/auth"
           element={
             <AdminLayout>
-              <Authentication />
+           
             </AdminLayout>
           }
         />
