@@ -35,6 +35,7 @@ import Drivers from "./admin/pages/AdminDriver";
 import Vehicles from "./admin/pages/AdminVehicles";
 import Pricing from "./admin/pages/AdminPricing";
 import NotFound from "./admin/pages/NotFound";
+import Authentication from "./admin/pages/Authentication";
 
 // ========================================
 // CUSTOMER WEBSITE LAYOUT
@@ -151,6 +152,15 @@ function App() {
           element={
             <AdminLayout>
               <Vehicles />
+            </AdminLayout>
+          }
+        />
+
+         <Route
+          path="/admin/auth"
+          element={
+            <AdminLayout>
+              <Authentication />
             </AdminLayout>
           }
         />

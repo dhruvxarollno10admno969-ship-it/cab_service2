@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 import { useNavigate } from "react-router-dom";
 
 import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
   signOut,
+  onAuthStateChanged,
 } from "firebase/auth";
 
 import { auth } from "../../firebase";
@@ -19,39 +21,120 @@ import {
 
 import "../styles/adminLogin.css";
 
+
+// =====================================================
+// ADMIN EMAIL
+// =====================================================
+
 const ADMIN_EMAIL = "admin@gmail.com";
 
+
 const AdminLogin = () => {
+
   const navigate = useNavigate();
 
+
+  // =====================================================
+  // STATE
+  // =====================================================
+
   const [email, setEmail] = useState("");
+
   const [password, setPassword] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
 
   const [error, setError] = useState("");
+
   const [success, setSuccess] = useState("");
 
   const [loading, setLoading] = useState(false);
+
   const [resetLoading, setResetLoading] = useState(false);
 
-  // ========================================
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+
+  // =====================================================
+  // CHECK EXISTING FIREBASE LOGIN
+  // =====================================================
+
+  useEffect(() => {
+
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (currentUser) => {
+
+        // -----------------------------------------------
+        // ADMIN ALREADY LOGGED IN
+        // -----------------------------------------------
+
+        if (
+          currentUser &&
+          currentUser.email === ADMIN_EMAIL
+        ) {
+
+          navigate("/admin", {
+            replace: true,
+          });
+
+          return;
+        }
+
+
+        // -----------------------------------------------
+        // CUSTOMER LOGGED IN
+        //
+        // Customer is NOT allowed into admin panel.
+        // We simply keep them on admin login page.
+        // -----------------------------------------------
+
+        setCheckingAuth(false);
+      }
+    );
+
+
+    return () => unsubscribe();
+
+  }, [navigate]);
+
+
+  // =====================================================
   // ADMIN LOGIN
-  // ========================================
+  // =====================================================
 
   const handleLogin = async (e) => {
+
     e.preventDefault();
 
+
     setError("");
+
     setSuccess("");
 
+
+    // ---------------------------------------------------
+    // VALIDATION
+    // ---------------------------------------------------
+
     if (!email || !password) {
-      setError("Please enter your email and password.");
+
+      setError(
+        "Please enter your email and password."
+      );
+
       return;
     }
 
+
     try {
+
       setLoading(true);
+
+
+      // -------------------------------------------------
+      // FIREBASE LOGIN
+      // -------------------------------------------------
 
       const userCredential =
         await signInWithEmailAndPassword(
@@ -60,48 +143,120 @@ const AdminLogin = () => {
           password
         );
 
+
       const user = userCredential.user;
 
-      // Only the admin email can access admin panel
+
+      // -------------------------------------------------
+      // ADMIN EMAIL CHECK
+      // -------------------------------------------------
+
       if (user.email !== ADMIN_EMAIL) {
+
         await signOut(auth);
+
 
         setError(
           "You are not authorized to access the admin panel."
         );
 
+
         return;
       }
 
-      // Admin successfully logged in
-      navigate("/admin");
+
+      // -------------------------------------------------
+      // ADMIN VERIFIED
+      // -------------------------------------------------
+
+      navigate("/admin", {
+        replace: true,
+      });
 
     } catch (error) {
-      console.error("Admin login error:", error);
 
-      setError("Invalid email or password.");
+      console.error(
+        "Admin login error:",
+        error
+      );
+
+
+      // Firebase errors
+
+      if (
+        error.code ===
+        "auth/invalid-credential"
+      ) {
+
+        setError(
+          "Invalid admin email or password."
+        );
+
+      } else if (
+        error.code ===
+        "auth/user-not-found"
+      ) {
+
+        setError(
+          "Admin account does not exist."
+        );
+
+      } else if (
+        error.code ===
+        "auth/wrong-password"
+      ) {
+
+        setError(
+          "Incorrect admin password."
+        );
+
+      } else {
+
+        setError(
+          "Unable to login. Please try again."
+        );
+
+      }
 
     } finally {
+
       setLoading(false);
+
     }
   };
 
 
-  // ========================================
+  // =====================================================
   // FORGOT PASSWORD
-  // ========================================
+  // =====================================================
 
   const handleForgotPassword = async () => {
+
     setError("");
+
     setSuccess("");
 
+
+    // ---------------------------------------------------
+    // EMAIL REQUIRED
+    // ---------------------------------------------------
+
     if (!email) {
-      setError("Enter your admin email first.");
+
+      setError(
+        "Enter your admin email first."
+      );
+
       return;
     }
 
-    // Only allow reset for admin email
+
+    // ---------------------------------------------------
+    // ONLY ADMIN EMAIL
+    // ---------------------------------------------------
+
     if (email !== ADMIN_EMAIL) {
+
       setError(
         "Password reset is only available for the admin account."
       );
@@ -109,90 +264,130 @@ const AdminLogin = () => {
       return;
     }
 
+
     try {
+
       setResetLoading(true);
+
 
       await sendPasswordResetEmail(
         auth,
         email
       );
 
+
       setSuccess(
         "Password reset email has been sent."
       );
 
     } catch (error) {
+
       console.error(
         "Password reset error:",
         error
       );
+
 
       setError(
         "Unable to send password reset email."
       );
 
     } finally {
+
       setResetLoading(false);
+
     }
   };
 
 
+  // =====================================================
+  // CHECKING AUTH
+  // =====================================================
+
+  if (checkingAuth) {
+
+    return (
+      <div className="admin-auth-loading">
+        Checking admin access...
+      </div>
+    );
+
+  }
+
+
+  // =====================================================
+  // UI
+  // =====================================================
+
   return (
+
     <div className="admin-login-page">
 
-      {/* ========================================
+
+      {/* =================================================
           BACKGROUND
-      ======================================== */}
+      ================================================= */}
 
       <div className="admin-login-bg">
+
         <span></span>
+
         <span></span>
+
         <span></span>
+
       </div>
 
 
-      {/* ========================================
+      {/* =================================================
           LOGIN CARD
-      ======================================== */}
+      ================================================= */}
 
       <div className="admin-login-card">
 
 
-        {/* ========================================
+        {/* =================================================
             HEADER
-        ======================================== */}
+        ================================================= */}
 
         <div className="admin-login-header">
 
+
           <div className="admin-lock">
+
             <LockKeyhole size={24} />
+
           </div>
+
 
           <p className="admin-label">
             ADMIN PANEL
           </p>
 
+
           <h1>
             Welcome <span>Back.</span>
           </h1>
+
 
           <p className="admin-subtitle">
             Sign in to access the admin panel.
           </p>
 
+
         </div>
 
 
-        {/* ========================================
+        {/* =================================================
             LOGIN FORM
-        ======================================== */}
+        ================================================= */}
 
         <form onSubmit={handleLogin}>
 
 
-          {/* ======================================
+          {/* =================================================
               EMAIL
-          ====================================== */}
+          ================================================= */}
 
           <div className="admin-input-group">
 
@@ -200,9 +395,11 @@ const AdminLogin = () => {
               Email Address
             </label>
 
+
             <div className="admin-input">
 
               <Mail size={18} />
+
 
               <input
                 id="admin-email"
@@ -220,9 +417,9 @@ const AdminLogin = () => {
           </div>
 
 
-          {/* ======================================
+          {/* =================================================
               PASSWORD
-          ====================================== */}
+          ================================================= */}
 
           <div className="admin-input-group">
 
@@ -231,11 +428,10 @@ const AdminLogin = () => {
             </label>
 
 
-            {/* PASSWORD INPUT */}
-
             <div className="admin-input">
 
               <LockKeyhole size={18} />
+
 
               <input
                 id="admin-password"
@@ -253,7 +449,7 @@ const AdminLogin = () => {
               />
 
 
-              {/* SHOW / HIDE */}
+              {/* SHOW / HIDE PASSWORD */}
 
               <button
                 type="button"
@@ -299,31 +495,35 @@ const AdminLogin = () => {
           </div>
 
 
-          {/* ======================================
+          {/* =================================================
               ERROR
-          ====================================== */}
+          ================================================= */}
 
           {error && (
+
             <div className="admin-login-error">
               {error}
             </div>
+
           )}
 
 
-          {/* ======================================
+          {/* =================================================
               SUCCESS
-          ====================================== */}
+          ================================================= */}
 
           {success && (
+
             <div className="admin-login-success">
               {success}
             </div>
+
           )}
 
 
-          {/* ======================================
+          {/* =================================================
               LOGIN BUTTON
-          ====================================== */}
+          ================================================= */}
 
           <button
             type="submit"
@@ -335,31 +535,39 @@ const AdminLogin = () => {
               ? "Signing in..."
               : "Admin Sign In"}
 
+
             {!loading && (
               <ArrowRight size={18} />
             )}
 
           </button>
 
+
         </form>
 
 
-        {/* ========================================
+        {/* =================================================
             BACK TO WEBSITE
-        ======================================== */}
+        ================================================= */}
 
         <button
           type="button"
           className="back-to-website"
           onClick={() => navigate("/")}
         >
+
           ← Back to website
+
         </button>
+
 
       </div>
 
+
     </div>
+
   );
 };
+
 
 export default AdminLogin;
