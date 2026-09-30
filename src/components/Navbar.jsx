@@ -141,7 +141,7 @@ function Navbar() {
 
 
 <a href="#testimonials">
-         Testimonials
+         Rating
         </a>
 
         <a href="#contact">

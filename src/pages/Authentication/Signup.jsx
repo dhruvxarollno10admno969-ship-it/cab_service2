@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -14,181 +15,391 @@ import {
   updateProfile,
 } from "firebase/auth";
 
-import { auth } from "../../firebase";
+import {
+  doc,
+  setDoc,
+  serverTimestamp,
+} from "firebase/firestore";
+
+import { auth, db } from "../../firebase";
 
 import "./signup.css";
 
+
 function Signup() {
+
   const navigate = useNavigate();
 
-  const [showPassword, setShowPassword] = useState(false);
+
+  // ========================================
+  // FORM STATE
+  // ========================================
+
+  const [showPassword, setShowPassword] =
+    useState(false);
+
   const [showConfirmPassword, setShowConfirmPassword] =
     useState(false);
 
+
   const [name, setName] = useState("");
+
   const [email, setEmail] = useState("");
+
+  const [phone, setPhone] = useState("");
+
+  const [address, setAddress] = useState("");
+
+  const [city, setCity] = useState("");
+
+  const [state, setState] = useState("");
+
+  const [country, setCountry] = useState("India");
+
   const [password, setPassword] = useState("");
+
   const [confirmPassword, setConfirmPassword] =
     useState("");
 
+
+  // ========================================
+  // UI STATE
+  // ========================================
+
   const [error, setError] = useState("");
+
   const [loading, setLoading] = useState(false);
 
+
+  // ========================================
+  // SIGNUP
+  // ========================================
+
   const handleSubmit = async (event) => {
+
     event.preventDefault();
 
     setError("");
+
+
+    // ======================================
+    // VALIDATION
+    // ======================================
 
     if (!name.trim()) {
       setError("Please enter your full name.");
       return;
     }
 
+
+    if (!email.trim()) {
+      setError("Please enter your email.");
+      return;
+    }
+
+
+    if (!phone.trim()) {
+      setError("Please enter your phone number.");
+      return;
+    }
+
+
     if (!password || !confirmPassword) {
       setError("Please enter your password.");
       return;
     }
+
 
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
 
+
     if (password.length < 6) {
-      setError("Password must be at least 6 characters.");
+      setError(
+        "Password must be at least 6 characters."
+      );
       return;
     }
 
+
     try {
+
       setLoading(true);
+
+
+      // ======================================
+      // 1. CREATE FIREBASE AUTH ACCOUNT
+      // ======================================
 
       const userCredential =
         await createUserWithEmailAndPassword(
           auth,
-          email,
+          email.trim(),
           password
         );
 
+
       const user = userCredential.user;
+
+
+      // ======================================
+      // 2. UPDATE FIREBASE AUTH PROFILE
+      // ======================================
 
       await updateProfile(user, {
         displayName: name.trim(),
       });
 
+
+      // ======================================
+      // 3. CREATE CUSTOMER DOCUMENT
+      // ======================================
+
+      await setDoc(
+        doc(db, "customers", user.uid),
+        {
+
+          uid: user.uid,
+
+          name: name.trim(),
+
+          email: user.email,
+
+          phone: phone.trim(),
+
+          address: address.trim(),
+
+          city: city.trim(),
+
+          state: state.trim(),
+
+          country: country.trim(),
+
+          role: "customer",
+
+          createdAt: serverTimestamp(),
+
+          updatedAt: serverTimestamp(),
+
+        }
+      );
+
+
+      // ======================================
+      // 4. SUCCESS
+      // ======================================
+
       navigate("/");
+
     } catch (error) {
-      console.error("Signup error:", error);
+
+      console.error(
+        "Signup error:",
+        error
+      );
+
+
+      // ======================================
+      // AUTH ERRORS
+      // ======================================
 
       switch (error.code) {
+
         case "auth/email-already-in-use":
+
           setError(
             "An account already exists with this email."
           );
+
           break;
 
+
         case "auth/invalid-email":
+
           setError(
             "Please enter a valid email address."
           );
+
           break;
+
 
         case "auth/weak-password":
-          setError("Password is too weak.");
+
+          setError(
+            "Password is too weak."
+          );
+
           break;
 
-        default:
+
+        case "auth/network-request-failed":
+
           setError(
-            "Something went wrong. Please try again."
+            "Network error. Please check your internet connection."
           );
+
+          break;
+
+
+        default:
+
+          setError(
+            "Unable to create account. Please try again."
+          );
+
       }
+
     } finally {
+
       setLoading(false);
+
     }
+
   };
 
+
   return (
+
     <main className="signup-page">
 
-      {/* ================= BACKGROUND ================= */}
+
+      {/* ========================================
+          BACKGROUND
+      ======================================== */}
 
       <div className="signup-orb signup-orb-one" />
+
       <div className="signup-orb signup-orb-two" />
 
       <div className="signup-grid" />
 
 
-      {/* ================= TOP BAR ================= */}
+      {/* ========================================
+          TOP BAR
+      ======================================== */}
 
       <header className="signup-topbar">
 
-        <Link to="/" className="signup-back">
+        <Link
+          to="/"
+          className="signup-back"
+        >
+
           <ArrowLeft size={16} />
-          <span>Back to Home</span>
+
+          <span>
+            Back to Home
+          </span>
+
         </Link>
 
+
         <div className="signup-security">
+
           <ShieldCheck size={15} />
+
           Secure Registration
+
         </div>
 
       </header>
 
 
-      {/* ================= MAIN CARD ================= */}
+      {/* ========================================
+          MAIN CARD
+      ======================================== */}
 
       <section className="signup-card">
 
+
         {/* LOGO */}
 
-        <Link to="/" className="signup-logo">
+        <Link
+          to="/"
+          className="signup-logo"
+        >
 
           <span className="signup-logo-mark">
             M
           </span>
 
+
           <span className="signup-logo-text">
-            MANZILL <strong>777</strong>
+
+            MANZILL{" "}
+
+            <strong>
+              777
+            </strong>
+
           </span>
 
         </Link>
 
 
-        {/* HEADING */}
+        {/* ========================================
+            HEADING
+        ======================================== */}
 
         <div className="signup-heading">
 
           <div className="signup-eyebrow">
+
             <span />
+
             CREATE ACCOUNT
+
           </div>
 
+
           <h1>
+
             Start your
+
             <br />
-            <em>journey.</em>
+
+            <em>
+              journey.
+            </em>
+
           </h1>
 
+
           <p>
+
             Create your account and get ready
+
             <br />
+
             for your next ride.
+
           </p>
 
         </div>
 
 
-        {/* FORM */}
+        {/* ========================================
+            FORM
+        ======================================== */}
 
         <form
           className="signup-form"
           onSubmit={handleSubmit}
         >
 
-          {/* NAME */}
+
+          {/* ======================================
+              NAME
+          ====================================== */}
 
           <label className="signup-field">
 
-            <span>FULL NAME</span>
+            <span>
+              FULL NAME
+            </span>
+
 
             <input
               type="text"
@@ -204,11 +415,16 @@ function Signup() {
           </label>
 
 
-          {/* EMAIL */}
+          {/* ======================================
+              EMAIL
+          ====================================== */}
 
           <label className="signup-field">
 
-            <span>EMAIL ADDRESS</span>
+            <span>
+              EMAIL ADDRESS
+            </span>
+
 
             <input
               type="email"
@@ -224,15 +440,143 @@ function Signup() {
           </label>
 
 
-          {/* PASSWORD ROW */}
+          {/* ======================================
+              PHONE
+          ====================================== */}
+
+          <label className="signup-field">
+
+            <span>
+              PHONE NUMBER
+            </span>
+
+
+            <input
+              type="tel"
+              value={phone}
+              onChange={(event) =>
+                setPhone(event.target.value)
+              }
+              placeholder="+91 98765 43210"
+              autoComplete="tel"
+              required
+            />
+
+          </label>
+
+
+          {/* ======================================
+              ADDRESS
+          ====================================== */}
+
+          <label className="signup-field">
+
+            <span>
+              ADDRESS
+            </span>
+
+
+            <input
+              type="text"
+              value={address}
+              onChange={(event) =>
+                setAddress(event.target.value)
+              }
+              placeholder="Street / House address"
+              autoComplete="street-address"
+            />
+
+          </label>
+
+
+          {/* ======================================
+              CITY / STATE
+          ====================================== */}
 
           <div className="signup-password-row">
+
+
+            <label className="signup-field">
+
+              <span>
+                CITY
+              </span>
+
+
+              <input
+                type="text"
+                value={city}
+                onChange={(event) =>
+                  setCity(event.target.value)
+                }
+                placeholder="City"
+                autoComplete="address-level2"
+              />
+
+            </label>
+
+
+            <label className="signup-field">
+
+              <span>
+                STATE
+              </span>
+
+
+              <input
+                type="text"
+                value={state}
+                onChange={(event) =>
+                  setState(event.target.value)
+                }
+                placeholder="State"
+                autoComplete="address-level1"
+              />
+
+            </label>
+
+          </div>
+
+
+          {/* ======================================
+              COUNTRY
+          ====================================== */}
+
+          <label className="signup-field">
+
+            <span>
+              COUNTRY
+            </span>
+
+
+            <input
+              type="text"
+              value={country}
+              onChange={(event) =>
+                setCountry(event.target.value)
+              }
+              placeholder="Country"
+              autoComplete="country-name"
+            />
+
+          </label>
+
+
+          {/* ======================================
+              PASSWORD ROW
+          ====================================== */}
+
+          <div className="signup-password-row">
+
 
             {/* PASSWORD */}
 
             <label className="signup-field">
 
-              <span>PASSWORD</span>
+              <span>
+                PASSWORD
+              </span>
+
 
               <div className="signup-input-wrap">
 
@@ -251,12 +595,14 @@ function Signup() {
                   required
                 />
 
+
                 <button
                   type="button"
                   className="signup-eye"
                   onClick={() =>
                     setShowPassword(
-                      (previous) => !previous
+                      (previous) =>
+                        !previous
                     )
                   }
                   aria-label={
@@ -265,11 +611,13 @@ function Signup() {
                       : "Show password"
                   }
                 >
+
                   {showPassword ? (
                     <EyeOff size={17} />
                   ) : (
                     <Eye size={17} />
                   )}
+
                 </button>
 
               </div>
@@ -281,7 +629,10 @@ function Signup() {
 
             <label className="signup-field">
 
-              <span>CONFIRM PASSWORD</span>
+              <span>
+                CONFIRM PASSWORD
+              </span>
+
 
               <div className="signup-input-wrap">
 
@@ -302,12 +653,14 @@ function Signup() {
                   required
                 />
 
+
                 <button
                   type="button"
                   className="signup-eye"
                   onClick={() =>
                     setShowConfirmPassword(
-                      (previous) => !previous
+                      (previous) =>
+                        !previous
                     )
                   }
                   aria-label={
@@ -316,11 +669,13 @@ function Signup() {
                       : "Show password"
                   }
                 >
+
                   {showConfirmPassword ? (
                     <EyeOff size={17} />
                   ) : (
                     <Eye size={17} />
                   )}
+
                 </button>
 
               </div>
@@ -330,9 +685,12 @@ function Signup() {
           </div>
 
 
-          {/* PASSWORD STATUS */}
+          {/* ======================================
+              PASSWORD STATUS
+          ====================================== */}
 
           {password && (
+
             <div
               className={
                 password.length >= 6
@@ -340,25 +698,38 @@ function Signup() {
                   : "password-status"
               }
             >
+
               <span />
+
               {password.length >= 6
                 ? "Password meets the minimum requirement"
                 : "Password must contain at least 6 characters"}
+
             </div>
+
           )}
 
 
-          {/* ERROR */}
+          {/* ======================================
+              ERROR
+          ====================================== */}
 
           {error && (
+
             <div className="signup-error">
+
               <span />
+
               {error}
+
             </div>
+
           )}
 
 
-          {/* SUBMIT */}
+          {/* ======================================
+              SUBMIT
+          ====================================== */}
 
           <button
             type="submit"
@@ -367,17 +738,26 @@ function Signup() {
           >
 
             <span>
+
               {loading
                 ? "CREATING ACCOUNT..."
                 : "CREATE ACCOUNT"}
+
             </span>
 
+
             {loading ? (
+
               <span className="signup-loader" />
+
             ) : (
+
               <span className="signup-button-icon">
+
                 <ArrowUpRight size={18} />
+
               </span>
+
             )}
 
           </button>
@@ -385,7 +765,9 @@ function Signup() {
         </form>
 
 
-        {/* LOGIN */}
+        {/* ========================================
+            LOGIN
+        ======================================== */}
 
         <div className="signup-switch">
 
@@ -393,30 +775,50 @@ function Signup() {
             Already have an account?
           </span>
 
+
           <Link to="/login">
+
             Log in
+
             <ArrowUpRight size={14} />
+
           </Link>
 
         </div>
 
 
-        {/* LEGAL */}
+        {/* ========================================
+            LEGAL
+        ======================================== */}
 
         <p className="signup-legal">
+
           By creating an account, you agree to our{" "}
-          <span>Terms</span> and{" "}
-          <span>Privacy Policy</span>.
+
+          <span>
+            Terms
+          </span>
+
+          {" "}and{" "}
+
+          <span>
+            Privacy Policy
+          </span>.
+
         </p>
 
       </section>
 
 
-      {/* ================= BOTTOM BRAND ================= */}
+      {/* ========================================
+          BOTTOM BRAND
+      ======================================== */}
 
       <div className="signup-bottom">
 
-        <span>MANZILL 777</span>
+        <span>
+          MANZILL 777
+        </span>
 
         <i />
 
@@ -426,8 +828,11 @@ function Signup() {
 
       </div>
 
+
     </main>
+
   );
+
 }
 
 export default Signup;
