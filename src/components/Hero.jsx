@@ -27,9 +27,7 @@ function Hero() {
                   <ArrowUpRight size={19} />
                 </Link>
     
-                <a href="#services" className="secondary-button">
-                  Explore Services
-                </a>
+                
               </div>
             </div>
 

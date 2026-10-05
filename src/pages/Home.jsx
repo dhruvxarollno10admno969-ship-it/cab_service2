@@ -101,9 +101,7 @@ function Home() {
               <ArrowUpRight size={19} />
             </Link>
 
-            <Link to="/services" className="secondary-button">
-              Explore Services
-            </Link>
+            
           </div>
         </div>
 

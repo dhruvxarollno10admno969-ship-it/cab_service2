@@ -1353,3 +1353,113 @@
     font-size: 10px;
   }
 }
+/* =========================================
+   RIDE BOOKED POPUP
+========================================= */
+
+.ride-popup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.55);
+
+  padding: 20px;
+}
+
+
+.ride-popup {
+  width: 100%;
+  max-width: 420px;
+
+  background: #ffffff;
+
+  border-radius: 24px;
+
+  padding: 40px 30px;
+
+  text-align: center;
+
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.25);
+
+  animation: ridePopupIn 0.25s ease-out;
+}
+
+
+.ride-popup-icon {
+  width: 70px;
+  height: 70px;
+
+  margin: 0 auto 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #16a34a;
+  color: white;
+
+  font-size: 36px;
+  font-weight: 700;
+}
+
+
+.ride-popup h2 {
+  margin: 0 0 10px;
+
+  font-size: 28px;
+}
+
+
+.ride-popup p {
+  margin: 0 0 25px;
+
+  color: #666;
+
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+
+.ride-popup button {
+  width: 100%;
+
+  border: none;
+
+  padding: 14px 20px;
+
+  border-radius: 12px;
+
+  background: #111;
+  color: white;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+
+.ride-popup button:hover {
+  opacity: 0.9;
+}
+
+
+@keyframes ridePopupIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

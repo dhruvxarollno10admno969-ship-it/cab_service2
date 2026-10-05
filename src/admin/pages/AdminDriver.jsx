@@ -1,98 +1,363 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/Drivers.css";
 
-const initialDrivers = [
-  {
-    id: "DRV-001",
-    name: "Raj Kumar",
-    email: "raj.kumar@gmail.com",
-    phone: "+91 98765 43210",
-    vehicle: "Swift Dzire",
-    vehicleNumber: "PB-08-AB-1234",
-    status: "Active",
-    joined: "12 September 2026",
-  },
-  {
-    id: "DRV-002",
-    name: "Aman Sharma",
-    email: "aman.sharma@gmail.com",
-    phone: "+91 98123 45678",
-    vehicle: "Toyota Etios",
-    vehicleNumber: "PB-09-CD-5678",
-    status: "Active",
-    joined: "10 September 2026",
-  },
-  {
-    id: "DRV-003",
-    name: "Gurpreet Singh",
-    email: "gurpreet@gmail.com",
-    phone: "+91 99887 66554",
-    vehicle: "Hyundai Aura",
-    vehicleNumber: "PB-10-EF-9012",
-    status: "Inactive",
-    joined: "05 September 2026",
-  },
-  {
-    id: "DRV-004",
-    name: "Arjun Verma",
-    email: "arjun.verma@gmail.com",
-    phone: "+91 97654 32109",
-    vehicle: "Maruti Ertiga",
-    vehicleNumber: "PB-07-GH-3456",
-    status: "Active",
-    joined: "01 September 2026",
-  },
-];
+import {
+  collection,
+  onSnapshot,
+  addDoc,
+  deleteDoc,
+  updateDoc,
+  doc,
+  serverTimestamp,
+} from "firebase/firestore";
+
+import { db } from "../../firebase";
 
 const AdminDrivers = () => {
-  const [drivers, setDrivers] = useState(initialDrivers);
+  // =========================================================
+  // STATE
+  // =========================================================
+
+  const [drivers, setDrivers] = useState([]);
   const [search, setSearch] = useState("");
+
   const [selectedDriver, setSelectedDriver] = useState(null);
   const [driverToDelete, setDriverToDelete] = useState(null);
 
+  const [showAddDriver, setShowAddDriver] = useState(false);
+
+  const [loading, setLoading] = useState(true);
+  const [firebaseError, setFirebaseError] = useState("");
+
+  const [savingDriver, setSavingDriver] = useState(false);
+  const [deletingDriver, setDeletingDriver] = useState(false);
+  const [updatingStatus, setUpdatingStatus] = useState(false);
+
+  // =========================================================
+  // ADD DRIVER FORM
+  // =========================================================
+
+  const [newDriver, setNewDriver] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    vehicle: "",
+    vehicleNumber: "",
+    status: "Active",
+  });
+
+  // =========================================================
+  // REAL-TIME FIREBASE LISTENER
+  // =========================================================
+
+  useEffect(() => {
+    const driversRef = collection(db, "drivers");
+
+    const unsubscribe = onSnapshot(
+      driversRef,
+      (snapshot) => {
+        const driverList = snapshot.docs.map((firebaseDoc) => {
+          const data = firebaseDoc.data();
+
+          return {
+            firebaseId: firebaseDoc.id,
+
+            id: data.id || "N/A",
+            name: data.name || "",
+            email: data.email || "",
+            phone: data.phone || "",
+            vehicle: data.vehicle || "",
+            vehicleNumber: data.vehicleNumber || "",
+            status: data.status || "Inactive",
+            joined: data.joined || "",
+            createdAt: data.createdAt || null,
+          };
+        });
+
+        // Newest drivers first
+        driverList.sort((a, b) => {
+          const aTime = a.createdAt?.seconds || 0;
+          const bTime = b.createdAt?.seconds || 0;
+
+          return bTime - aTime;
+        });
+
+        setDrivers(driverList);
+        setLoading(false);
+        setFirebaseError("");
+      },
+      (error) => {
+        console.error("Firebase drivers listener error:", error);
+
+        setFirebaseError(
+          "Unable to load drivers from Firebase. Please check your Firebase configuration and Firestore rules."
+        );
+
+        setLoading(false);
+      }
+    );
+
+    // Stop listener when page unmounts
+    return () => unsubscribe();
+  }, []);
+
+  // =========================================================
+  // KEEP SELECTED DRIVER UPDATED IN REAL TIME
+  // =========================================================
+
+  useEffect(() => {
+    if (!selectedDriver) return;
+
+    const latestDriver = drivers.find(
+      (driver) => driver.firebaseId === selectedDriver.firebaseId
+    );
+
+    if (latestDriver) {
+      setSelectedDriver(latestDriver);
+    } else {
+      // Driver was deleted
+      setSelectedDriver(null);
+    }
+  }, [drivers]);
+
+  // =========================================================
+  // SEARCH
+  // =========================================================
+
   const filteredDrivers = drivers.filter((driver) => {
-    const query = search.toLowerCase();
+    const query = search.toLowerCase().trim();
+
+    if (!query) return true;
 
     return (
       driver.name.toLowerCase().includes(query) ||
       driver.id.toLowerCase().includes(query) ||
       driver.email.toLowerCase().includes(query) ||
       driver.phone.toLowerCase().includes(query) ||
-      driver.vehicle.toLowerCase().includes(query)
+      driver.vehicle.toLowerCase().includes(query) ||
+      driver.vehicleNumber.toLowerCase().includes(query)
     );
   });
 
+  // =========================================================
+  // COUNTS
+  // =========================================================
+
+  const totalDrivers = drivers.length;
+
+  const activeDrivers = drivers.filter(
+    (driver) => driver.status === "Active"
+  ).length;
+
+  // =========================================================
+  // INITIALS
+  // =========================================================
+
   const getInitials = (name) => {
+    if (!name) return "DR";
+
     return name
       .split(" ")
+      .filter(Boolean)
       .map((word) => word[0])
       .join("")
       .slice(0, 2)
       .toUpperCase();
   };
 
-  const handleDelete = () => {
-    if (!driverToDelete) return;
+  // =========================================================
+  // GENERATE NEXT DRIVER ID
+  // =========================================================
 
-    setDrivers((currentDrivers) =>
-      currentDrivers.filter(
-        (driver) => driver.id !== driverToDelete.id
-      )
-    );
+  const generateDriverId = () => {
+    let highestNumber = 0;
 
-    if (selectedDriver?.id === driverToDelete.id) {
-      setSelectedDriver(null);
+    drivers.forEach((driver) => {
+      const match = String(driver.id).match(/^DRV-(\d+)$/);
+
+      if (match) {
+        const number = parseInt(match[1], 10);
+
+        if (number > highestNumber) {
+          highestNumber = number;
+        }
+      }
+    });
+
+    return `DRV-${String(highestNumber + 1).padStart(3, "0")}`;
+  };
+
+  // =========================================================
+  // ADD DRIVER
+  // =========================================================
+
+  const handleAddDriver = async (e) => {
+    e.preventDefault();
+
+    if (savingDriver) return;
+
+    const name = newDriver.name.trim();
+    const email = newDriver.email.trim();
+    const phone = newDriver.phone.trim();
+    const vehicle = newDriver.vehicle.trim();
+    const vehicleNumber = newDriver.vehicleNumber.trim();
+
+    if (!name || !email || !phone || !vehicle || !vehicleNumber) {
+      alert("Please fill in all driver fields.");
+      return;
     }
 
-    setDriverToDelete(null);
+    try {
+      setSavingDriver(true);
+
+      const driverId = generateDriverId();
+
+      const today = new Date();
+
+      const joined = today.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      });
+
+      await addDoc(collection(db, "drivers"), {
+        id: driverId,
+        name,
+        email,
+        phone,
+        vehicle,
+        vehicleNumber,
+        status: newDriver.status,
+        joined,
+        createdAt: serverTimestamp(),
+      });
+
+      // IMPORTANT:
+      // We do NOT manually update drivers here.
+      //
+      // Firebase onSnapshot() will detect the new document
+      // and update the table automatically.
+
+      setNewDriver({
+        name: "",
+        email: "",
+        phone: "",
+        vehicle: "",
+        vehicleNumber: "",
+        status: "Active",
+      });
+
+      setShowAddDriver(false);
+    } catch (error) {
+      console.error("Error adding driver:", error);
+
+      alert("Failed to add driver. Please try again.");
+    } finally {
+      setSavingDriver(false);
+    }
   };
+
+  // =========================================================
+  // DELETE DRIVER
+  // =========================================================
+
+  const handleDelete = async () => {
+    if (!driverToDelete || deletingDriver) return;
+
+    try {
+      setDeletingDriver(true);
+
+      await deleteDoc(
+        doc(db, "drivers", driverToDelete.firebaseId)
+      );
+
+      // onSnapshot() automatically removes the driver
+      // from the table after Firebase deletes it.
+
+      if (
+        selectedDriver?.firebaseId ===
+        driverToDelete.firebaseId
+      ) {
+        setSelectedDriver(null);
+      }
+
+      setDriverToDelete(null);
+    } catch (error) {
+      console.error("Error deleting driver:", error);
+
+      alert("Failed to remove driver. Please try again.");
+    } finally {
+      setDeletingDriver(false);
+    }
+  };
+
+  // =========================================================
+  // TOGGLE DRIVER STATUS
+  // =========================================================
+
+  const handleToggleStatus = async (driver) => {
+    if (!driver || updatingStatus) return;
+
+    try {
+      setUpdatingStatus(true);
+
+      const newStatus =
+        driver.status === "Active" ? "Inactive" : "Active";
+
+      await updateDoc(
+        doc(db, "drivers", driver.firebaseId),
+        {
+          status: newStatus,
+        }
+      );
+
+      // onSnapshot() automatically updates the UI.
+    } catch (error) {
+      console.error("Error updating driver status:", error);
+
+      alert("Failed to update driver status.");
+    } finally {
+      setUpdatingStatus(false);
+    }
+  };
+
+  // =========================================================
+  // OPEN ADD DRIVER
+  // =========================================================
+
+  const openAddDriver = () => {
+    setNewDriver({
+      name: "",
+      email: "",
+      phone: "",
+      vehicle: "",
+      vehicleNumber: "",
+      status: "Active",
+    });
+
+    setShowAddDriver(true);
+  };
+
+  // =========================================================
+  // CLOSE ADD DRIVER
+  // =========================================================
+
+  const closeAddDriver = () => {
+    if (savingDriver) return;
+
+    setShowAddDriver(false);
+  };
+
+  // =========================================================
+  // RENDER
+  // =========================================================
 
   return (
     <div className="driver-content">
 
-      {/* =========================
+      {/* =====================================================
           HEADER
-      ========================= */}
+      ===================================================== */}
 
       <div className="driver-page-header">
 
@@ -110,16 +375,83 @@ const AdminDrivers = () => {
 
         <div className="driver-total">
           <span>Total Drivers</span>
-          <strong>{drivers.length}</strong>
+          <strong>{totalDrivers}</strong>
         </div>
 
       </div>
 
-      {/* =========================
-          SEARCH
-      ========================= */}
+      {/* =====================================================
+          REAL-TIME SUMMARY
+      ===================================================== */}
 
-      <div className="driver-tools">
+      <div
+        style={{
+          display: "flex",
+          gap: "12px",
+          marginBottom: "20px",
+          flexWrap: "wrap",
+        }}
+      >
+        <div
+          style={{
+            padding: "10px 16px",
+            borderRadius: "10px",
+            background: "#ecfdf3",
+            color: "#087443",
+            fontSize: "13px",
+            fontWeight: "600",
+          }}
+        >
+          ● {activeDrivers} Active Drivers
+        </div>
+
+        <div
+          style={{
+            padding: "10px 16px",
+            borderRadius: "10px",
+            background: "#f3f4f6",
+            color: "#6b7280",
+            fontSize: "13px",
+            fontWeight: "600",
+          }}
+        >
+          ● {totalDrivers - activeDrivers} Inactive Drivers
+        </div>
+      </div>
+
+      {/* =====================================================
+          FIREBASE ERROR
+      ===================================================== */}
+
+      {firebaseError && (
+        <div
+          style={{
+            padding: "14px 16px",
+            marginBottom: "18px",
+            borderRadius: "10px",
+            background: "#fef2f2",
+            border: "1px solid #fecaca",
+            color: "#b91c1c",
+            fontSize: "14px",
+          }}
+        >
+          {firebaseError}
+        </div>
+      )}
+
+      {/* =====================================================
+          SEARCH + ADD DRIVER
+      ===================================================== */}
+
+      <div
+        className="driver-tools"
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          gap: "12px",
+          alignItems: "center",
+        }}
+      >
 
         <div className="driver-search">
           <span>⌕</span>
@@ -132,155 +464,221 @@ const AdminDrivers = () => {
           />
         </div>
 
+        <button
+          type="button"
+          onClick={openAddDriver}
+          style={{
+            border: "none",
+            background: "#111111",
+            color: "#ffffff",
+            borderRadius: "9px",
+            padding: "12px 18px",
+            fontSize: "14px",
+            fontWeight: "600",
+            cursor: "pointer",
+            whiteSpace: "nowrap",
+          }}
+        >
+          + Add Driver
+        </button>
+
       </div>
 
-      {/* =========================
+      {/* =====================================================
           TABLE
-      ========================= */}
+      ===================================================== */}
 
       <div className="driver-table-card">
 
         <div className="driver-table-scroll">
 
-          <table className="driver-table">
+          {loading ? (
+            <div
+              style={{
+                padding: "60px 20px",
+                textAlign: "center",
+                color: "#6b7280",
+              }}
+            >
+              Loading drivers...
+            </div>
+          ) : (
+            <table className="driver-table">
 
-            <thead>
-              <tr>
-                <th>DRIVER ID</th>
-                <th>DRIVER</th>
-                <th>EMAIL</th>
-                <th>PHONE</th>
-                <th>VEHICLE</th>
-                <th>STATUS</th>
-                <th>ACTION</th>
-              </tr>
-            </thead>
-
-            <tbody>
-
-              {filteredDrivers.length === 0 ? (
-
+              <thead>
                 <tr>
-                  <td
-                    colSpan="7"
-                    className="driver-empty"
-                  >
-                    <div>
-                      <strong>No drivers found</strong>
-                      <span>
-                        Try searching with a different name or ID.
-                      </span>
-                    </div>
-                  </td>
+                  <th>DRIVER ID</th>
+                  <th>DRIVER</th>
+                  <th>EMAIL</th>
+                  <th>PHONE</th>
+                  <th>VEHICLE</th>
+                  <th>STATUS</th>
+                  <th>ACTION</th>
                 </tr>
+              </thead>
 
-              ) : (
+              <tbody>
 
-                filteredDrivers.map((driver) => (
+                {filteredDrivers.length === 0 ? (
 
-                  <tr
-                    key={driver.id}
-                    className="driver-row"
-                    onClick={() => setSelectedDriver(driver)}
-                  >
+                  <tr>
+                    <td
+                      colSpan="7"
+                      className="driver-empty"
+                    >
+                      <div>
+                        <strong>No drivers found</strong>
 
-                    <td>
-                      <span className="driver-id">
-                        {driver.id}
-                      </span>
-                    </td>
-
-                    <td>
-
-                      <div className="driver-user">
-
-                        <div className="driver-avatar">
-                          {getInitials(driver.name)}
-                        </div>
-
-                        <div>
-                          <strong>{driver.name}</strong>
-                          <span>Driver</span>
-                        </div>
-
-                      </div>
-
-                    </td>
-
-                    <td>
-                      <span className="driver-email">
-                        {driver.email}
-                      </span>
-                    </td>
-
-                    <td>
-                      <span className="driver-phone">
-                        {driver.phone}
-                      </span>
-                    </td>
-
-                    <td>
-
-                      <div className="driver-vehicle">
-                        <strong>{driver.vehicle}</strong>
-                        <span>{driver.vehicleNumber}</span>
-                      </div>
-
-                    </td>
-
-                    <td>
-
-                      <span
-                        className={`driver-status ${
-                          driver.status === "Active"
-                            ? "status-active"
-                            : "status-inactive"
-                        }`}
-                      >
-                        <i></i>
-                        {driver.status}
-                      </span>
-
-                    </td>
-
-                    <td>
-
-                      <div
-                        className="driver-actions"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-
-                        <button
-                          className="driver-edit-btn"
-                          onClick={() =>
-                            setSelectedDriver(driver)
+                        <span>
+                          {drivers.length === 0
+                            ? "No drivers have been added yet."
+                            : "Try searching with a different name or ID."
                           }
-                        >
-                          View
-                        </button>
-
-                        <button
-                          className="driver-delete-btn"
-                          onClick={() =>
-                            setDriverToDelete(driver)
-                          }
-                        >
-                          Delete
-                        </button>
-
+                        </span>
                       </div>
-
                     </td>
-
                   </tr>
 
-                ))
+                ) : (
 
-              )}
+                  filteredDrivers.map((driver) => (
 
-            </tbody>
+                    <tr
+                      key={driver.firebaseId}
+                      className="driver-row"
+                      onClick={() =>
+                        setSelectedDriver(driver)
+                      }
+                    >
 
-          </table>
+                      {/* DRIVER ID */}
+
+                      <td>
+                        <span className="driver-id">
+                          {driver.id}
+                        </span>
+                      </td>
+
+                      {/* DRIVER */}
+
+                      <td>
+
+                        <div className="driver-user">
+
+                          <div className="driver-avatar">
+                            {getInitials(driver.name)}
+                          </div>
+
+                          <div>
+                            <strong>
+                              {driver.name}
+                            </strong>
+
+                            <span>
+                              Driver
+                            </span>
+                          </div>
+
+                        </div>
+
+                      </td>
+
+                      {/* EMAIL */}
+
+                      <td>
+                        <span className="driver-email">
+                          {driver.email}
+                        </span>
+                      </td>
+
+                      {/* PHONE */}
+
+                      <td>
+                        <span className="driver-phone">
+                          {driver.phone}
+                        </span>
+                      </td>
+
+                      {/* VEHICLE */}
+
+                      <td>
+
+                        <div className="driver-vehicle">
+
+                          <strong>
+                            {driver.vehicle}
+                          </strong>
+
+                          <span>
+                            {driver.vehicleNumber}
+                          </span>
+
+                        </div>
+
+                      </td>
+
+                      {/* STATUS */}
+
+                      <td>
+
+                        <span
+                          className={`driver-status ${
+                            driver.status === "Active"
+                              ? "status-active"
+                              : "status-inactive"
+                          }`}
+                        >
+                          <i></i>
+                          {driver.status}
+                        </span>
+
+                      </td>
+
+                      {/* ACTION */}
+
+                      <td>
+
+                        <div
+                          className="driver-actions"
+                          onClick={(e) =>
+                            e.stopPropagation()
+                          }
+                        >
+
+                          <button
+                            type="button"
+                            className="driver-edit-btn"
+                            onClick={() =>
+                              setSelectedDriver(driver)
+                            }
+                          >
+                            View
+                          </button>
+
+                          <button
+                            type="button"
+                            className="driver-delete-btn"
+                            onClick={() =>
+                              setDriverToDelete(driver)
+                            }
+                          >
+                            Delete
+                          </button>
+
+                        </div>
+
+                      </td>
+
+                    </tr>
+
+                  ))
+
+                )}
+
+              </tbody>
+
+            </table>
+          )}
 
         </div>
 
@@ -291,16 +689,19 @@ const AdminDrivers = () => {
 
       </div>
 
-      {/* =========================
+      {/* =====================================================
           DRIVER SIDE DRAWER
-      ========================= */}
+      ===================================================== */}
 
       {selectedDriver && (
 
         <>
+
           <div
             className="driver-drawer-overlay"
-            onClick={() => setSelectedDriver(null)}
+            onClick={() =>
+              setSelectedDriver(null)
+            }
           ></div>
 
           <aside className="driver-drawer drawer-open">
@@ -309,17 +710,23 @@ const AdminDrivers = () => {
 
               <div>
                 <span>DRIVER DETAILS</span>
+
                 <h2>Driver Profile</h2>
               </div>
 
               <button
+                type="button"
                 className="drawer-close"
-                onClick={() => setSelectedDriver(null)}
+                onClick={() =>
+                  setSelectedDriver(null)
+                }
               >
                 ×
               </button>
 
             </div>
+
+            {/* PROFILE */}
 
             <div className="drawer-profile">
 
@@ -327,7 +734,9 @@ const AdminDrivers = () => {
                 {getInitials(selectedDriver.name)}
               </div>
 
-              <h3>{selectedDriver.name}</h3>
+              <h3>
+                {selectedDriver.name}
+              </h3>
 
               <span className="drawer-driver-id">
                 {selectedDriver.id}
@@ -346,6 +755,8 @@ const AdminDrivers = () => {
 
             </div>
 
+            {/* CONTACT */}
+
             <div className="drawer-section">
 
               <h4>Contact Information</h4>
@@ -354,17 +765,25 @@ const AdminDrivers = () => {
 
                 <div className="drawer-info-item">
                   <span>Email</span>
-                  <strong>{selectedDriver.email}</strong>
+
+                  <strong>
+                    {selectedDriver.email}
+                  </strong>
                 </div>
 
                 <div className="drawer-info-item">
                   <span>Phone</span>
-                  <strong>{selectedDriver.phone}</strong>
+
+                  <strong>
+                    {selectedDriver.phone}
+                  </strong>
                 </div>
 
               </div>
 
             </div>
+
+            {/* VEHICLE */}
 
             <div className="drawer-section">
 
@@ -374,17 +793,25 @@ const AdminDrivers = () => {
 
                 <div className="drawer-info-item">
                   <span>Vehicle</span>
-                  <strong>{selectedDriver.vehicle}</strong>
+
+                  <strong>
+                    {selectedDriver.vehicle}
+                  </strong>
                 </div>
 
                 <div className="drawer-info-item">
                   <span>Vehicle Number</span>
-                  <strong>{selectedDriver.vehicleNumber}</strong>
+
+                  <strong>
+                    {selectedDriver.vehicleNumber}
+                  </strong>
                 </div>
 
               </div>
 
             </div>
+
+            {/* ACCOUNT */}
 
             <div className="drawer-section">
 
@@ -394,25 +821,45 @@ const AdminDrivers = () => {
 
                 <div className="drawer-info-item">
                   <span>Driver ID</span>
-                  <strong>{selectedDriver.id}</strong>
+
+                  <strong>
+                    {selectedDriver.id}
+                  </strong>
                 </div>
 
                 <div className="drawer-info-item">
                   <span>Joined</span>
-                  <strong>{selectedDriver.joined}</strong>
+
+                  <strong>
+                    {selectedDriver.joined || "—"}
+                  </strong>
                 </div>
 
               </div>
 
             </div>
 
+            {/* ACTIONS */}
+
             <div className="drawer-actions">
 
-              <button className="drawer-edit-btn">
-                Edit Driver
+              <button
+                type="button"
+                className="drawer-edit-btn"
+                disabled={updatingStatus}
+                onClick={() =>
+                  handleToggleStatus(selectedDriver)
+                }
+              >
+                {updatingStatus
+                  ? "Updating..."
+                  : selectedDriver.status === "Active"
+                  ? "Set Inactive"
+                  : "Set Active"}
               </button>
 
               <button
+                type="button"
                 className="drawer-delete-btn"
                 onClick={() =>
                   setDriverToDelete(selectedDriver)
@@ -424,13 +871,320 @@ const AdminDrivers = () => {
             </div>
 
           </aside>
+
         </>
 
       )}
 
-      {/* =========================
+      {/* =====================================================
+          ADD DRIVER MODAL
+      ===================================================== */}
+
+      {showAddDriver && (
+
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0, 0, 0, 0.45)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999,
+            padding: "20px",
+          }}
+          onClick={closeAddDriver}
+        >
+
+          <div
+            style={{
+              width: "100%",
+              maxWidth: "520px",
+              background: "#ffffff",
+              borderRadius: "16px",
+              padding: "26px",
+              boxShadow: "0 20px 60px rgba(0,0,0,0.2)",
+            }}
+            onClick={(e) =>
+              e.stopPropagation()
+            }
+          >
+
+            {/* MODAL HEADER */}
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-start",
+                marginBottom: "22px",
+              }}
+            >
+
+              <div>
+                <span
+                  style={{
+                    fontSize: "11px",
+                    fontWeight: "700",
+                    letterSpacing: "1.5px",
+                    color: "#7a8ca3",
+                  }}
+                >
+                  DRIVER MANAGEMENT
+                </span>
+
+                <h2
+                  style={{
+                    margin: "5px 0 0",
+                    fontSize: "24px",
+                    color: "#111827",
+                  }}
+                >
+                  Add Driver
+                </h2>
+              </div>
+
+              <button
+                type="button"
+                onClick={closeAddDriver}
+                style={{
+                  border: "none",
+                  background: "#f3f4f6",
+                  width: "36px",
+                  height: "36px",
+                  borderRadius: "50%",
+                  fontSize: "22px",
+                  cursor: "pointer",
+                }}
+              >
+                ×
+              </button>
+
+            </div>
+
+            {/* FORM */}
+
+            <form onSubmit={handleAddDriver}>
+
+              {/* DRIVER NAME */}
+
+              <div style={formGroupStyle}>
+                <label style={labelStyle}>
+                  Driver Name
+                </label>
+
+                <input
+                  style={inputStyle}
+                  type="text"
+                  placeholder="Enter driver name"
+                  value={newDriver.name}
+                  onChange={(e) =>
+                    setNewDriver({
+                      ...newDriver,
+                      name: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </div>
+
+              {/* EMAIL */}
+
+              <div style={formGroupStyle}>
+                <label style={labelStyle}>
+                  Email
+                </label>
+
+                <input
+                  style={inputStyle}
+                  type="email"
+                  placeholder="driver@example.com"
+                  value={newDriver.email}
+                  onChange={(e) =>
+                    setNewDriver({
+                      ...newDriver,
+                      email: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </div>
+
+              {/* PHONE */}
+
+              <div style={formGroupStyle}>
+                <label style={labelStyle}>
+                  Phone
+                </label>
+
+                <input
+                  style={inputStyle}
+                  type="text"
+                  placeholder="+91 98765 43210"
+                  value={newDriver.phone}
+                  onChange={(e) =>
+                    setNewDriver({
+                      ...newDriver,
+                      phone: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </div>
+
+              {/* VEHICLE */}
+
+              <div style={formRowStyle}>
+
+                <div style={{ flex: 1 }}>
+                  <label style={labelStyle}>
+                    Vehicle
+                  </label>
+
+                  <input
+                    style={inputStyle}
+                    type="text"
+                    placeholder="Swift Dzire"
+                    value={newDriver.vehicle}
+                    onChange={(e) =>
+                      setNewDriver({
+                        ...newDriver,
+                        vehicle: e.target.value,
+                      })
+                    }
+                    required
+                  />
+                </div>
+
+                <div style={{ flex: 1 }}>
+                  <label style={labelStyle}>
+                    Vehicle Number
+                  </label>
+
+                  <input
+                    style={inputStyle}
+                    type="text"
+                    placeholder="PB-08-AB-1234"
+                    value={newDriver.vehicleNumber}
+                    onChange={(e) =>
+                      setNewDriver({
+                        ...newDriver,
+                        vehicleNumber:
+                          e.target.value.toUpperCase(),
+                      })
+                    }
+                    required
+                  />
+                </div>
+
+              </div>
+
+              {/* STATUS */}
+
+              <div style={formGroupStyle}>
+                <label style={labelStyle}>
+                  Status
+                </label>
+
+                <select
+                  style={inputStyle}
+                  value={newDriver.status}
+                  onChange={(e) =>
+                    setNewDriver({
+                      ...newDriver,
+                      status: e.target.value,
+                    })
+                  }
+                >
+                  <option value="Active">
+                    Active
+                  </option>
+
+                  <option value="Inactive">
+                    Inactive
+                  </option>
+                </select>
+              </div>
+
+              {/* AUTO DRIVER ID */}
+
+              <div
+                style={{
+                  padding: "12px 14px",
+                  borderRadius: "8px",
+                  background: "#f8fafc",
+                  marginBottom: "20px",
+                  fontSize: "13px",
+                  color: "#64748b",
+                }}
+              >
+                Driver ID will be automatically generated as{" "}
+                <strong style={{ color: "#111827" }}>
+                  {generateDriverId()}
+                </strong>
+              </div>
+
+              {/* BUTTONS */}
+
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: "10px",
+                }}
+              >
+
+                <button
+                  type="button"
+                  onClick={closeAddDriver}
+                  disabled={savingDriver}
+                  style={{
+                    border: "1px solid #e5e7eb",
+                    background: "#ffffff",
+                    color: "#374151",
+                    padding: "11px 18px",
+                    borderRadius: "8px",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                  }}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={savingDriver}
+                  style={{
+                    border: "none",
+                    background: "#111111",
+                    color: "#ffffff",
+                    padding: "11px 20px",
+                    borderRadius: "8px",
+                    fontWeight: "600",
+                    cursor: savingDriver
+                      ? "not-allowed"
+                      : "pointer",
+                    opacity: savingDriver ? 0.6 : 1,
+                  }}
+                >
+                  {savingDriver
+                    ? "Adding..."
+                    : "Add Driver"}
+                </button>
+
+              </div>
+
+            </form>
+
+          </div>
+
+        </div>
+
+      )}
+
+      {/* =====================================================
           DELETE MODAL
-      ========================= */}
+      ===================================================== */}
 
       {driverToDelete && (
 
@@ -442,28 +1196,42 @@ const AdminDrivers = () => {
               !
             </div>
 
-            <h3>Remove Driver?</h3>
+            <h3>
+              Remove Driver?
+            </h3>
 
             <p>
               Are you sure you want to remove{" "}
-              <strong>{driverToDelete.name}</strong>?
+              <strong>
+                {driverToDelete.name}
+              </strong>
+              ?
+              <br />
               This action cannot be undone.
             </p>
 
             <div className="delete-modal-actions">
 
               <button
+                type="button"
                 className="cancel-delete"
-                onClick={() => setDriverToDelete(null)}
+                disabled={deletingDriver}
+                onClick={() =>
+                  setDriverToDelete(null)
+                }
               >
                 Cancel
               </button>
 
               <button
+                type="button"
                 className="confirm-delete"
+                disabled={deletingDriver}
                 onClick={handleDelete}
               >
-                Remove Driver
+                {deletingDriver
+                  ? "Removing..."
+                  : "Remove Driver"}
               </button>
 
             </div>
@@ -476,6 +1244,40 @@ const AdminDrivers = () => {
 
     </div>
   );
+};
+
+// =========================================================
+// FORM STYLES
+// =========================================================
+
+const formGroupStyle = {
+  marginBottom: "15px",
+};
+
+const formRowStyle = {
+  display: "flex",
+  gap: "12px",
+  marginBottom: "15px",
+};
+
+const labelStyle = {
+  display: "block",
+  fontSize: "12px",
+  fontWeight: "600",
+  color: "#374151",
+  marginBottom: "7px",
+};
+
+const inputStyle = {
+  width: "100%",
+  boxSizing: "border-box",
+  border: "1px solid #e5e7eb",
+  borderRadius: "8px",
+  padding: "11px 12px",
+  fontSize: "14px",
+  color: "#111827",
+  outline: "none",
+  background: "#ffffff",
 };
 
 export default AdminDrivers;

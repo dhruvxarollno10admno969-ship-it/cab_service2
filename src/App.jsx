@@ -93,7 +93,7 @@ function App() {
 
         <Route element={<PrivateRoute />}>
           <Route path="/booking" element={<Booking />} />
-
+          
           <Route path="/profile" element={<Profile />} />
 
           <Route path="/settings" element={<Setting />} />
