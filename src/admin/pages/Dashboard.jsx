@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import {
   CalendarCheck,
@@ -18,6 +19,8 @@ import {
 import { db } from "../../firebase";
 
 function Dashboard() {
+  const navigate = useNavigate();
+
   /* =====================================================
      STATE
   ===================================================== */
@@ -31,7 +34,6 @@ function Dashboard() {
   const [firebaseError, setFirebaseError] = useState("");
 
   const [chartPeriod, setChartPeriod] = useState("7");
-
 
   /* =====================================================
      REAL-TIME FIRESTORE DATA
@@ -57,7 +59,6 @@ function Dashboard() {
       }
     };
 
-
     /* ================= CUSTOMERS ================= */
 
     const unsubscribeCustomers = onSnapshot(
@@ -76,10 +77,7 @@ function Dashboard() {
       },
 
       (error) => {
-        console.error(
-          "Customers Firestore error:",
-          error
-        );
+        console.error("Customers Firestore error:", error);
 
         setFirebaseError(
           "Unable to load customers from Firebase."
@@ -89,7 +87,6 @@ function Dashboard() {
         checkLoading();
       }
     );
-
 
     /* ================= BOOKINGS ================= */
 
@@ -109,10 +106,7 @@ function Dashboard() {
       },
 
       (error) => {
-        console.error(
-          "Bookings Firestore error:",
-          error
-        );
+        console.error("Bookings Firestore error:", error);
 
         setFirebaseError(
           "Unable to load bookings from Firebase."
@@ -122,7 +116,6 @@ function Dashboard() {
         checkLoading();
       }
     );
-
 
     /* ================= DRIVERS ================= */
 
@@ -142,10 +135,7 @@ function Dashboard() {
       },
 
       (error) => {
-        console.error(
-          "Drivers Firestore error:",
-          error
-        );
+        console.error("Drivers Firestore error:", error);
 
         setFirebaseError(
           "Unable to load drivers from Firebase."
@@ -155,7 +145,6 @@ function Dashboard() {
         checkLoading();
       }
     );
-
 
     /* ================= VEHICLES ================= */
 
@@ -175,10 +164,7 @@ function Dashboard() {
       },
 
       (error) => {
-        console.error(
-          "Vehicles Firestore error:",
-          error
-        );
+        console.error("Vehicles Firestore error:", error);
 
         setFirebaseError(
           "Unable to load vehicles from Firebase."
@@ -189,7 +175,6 @@ function Dashboard() {
       }
     );
 
-
     /* ================= CLEANUP ================= */
 
     return () => {
@@ -199,7 +184,6 @@ function Dashboard() {
       unsubscribeVehicles();
     };
   }, []);
-
 
   /* =====================================================
      DATE FORMATTER
@@ -229,7 +213,6 @@ function Dashboard() {
     }
   };
 
-
   /* =====================================================
      SORT BOOKINGS
   ===================================================== */
@@ -254,13 +237,42 @@ function Dashboard() {
     });
   }, [bookings]);
 
-
   /* =====================================================
      TOTAL REVENUE
+     
+     ONLY CONFIRMED + COMPLETED BOOKINGS COUNT
   ===================================================== */
 
   const totalRevenue = useMemo(() => {
     return bookings.reduce((total, booking) => {
+      const status = String(
+        booking.status || ""
+      )
+        .trim()
+        .toLowerCase();
+
+      /*
+        Revenue rules:
+
+        confirmed -> COUNT
+        accepted  -> COUNT
+        completed -> COUNT
+
+        pending   -> DON'T COUNT
+        cancelled -> DON'T COUNT
+      */
+
+      const revenueStatuses = [
+        "confirmed",
+        "accepted",
+        "completed",
+        "complete",
+      ];
+
+      if (!revenueStatuses.includes(status)) {
+        return total;
+      }
+
       const fare =
         booking.fare ??
         booking.price ??
@@ -272,12 +284,13 @@ function Dashboard() {
         String(fare).replace(/[₹,\s]/g, "")
       );
 
-      return total + (Number.isFinite(numericFare)
-        ? numericFare
-        : 0);
+      return total + (
+        Number.isFinite(numericFare)
+          ? numericFare
+          : 0
+      );
     }, 0);
   }, [bookings]);
-
 
   /* =====================================================
      ACTIVE DRIVERS
@@ -286,7 +299,9 @@ function Dashboard() {
   const activeDrivers = useMemo(() => {
     return drivers.filter((driver) => {
       const status = String(
-        driver.status || driver.driverStatus || ""
+        driver.status ||
+          driver.driverStatus ||
+          ""
       ).toLowerCase();
 
       return (
@@ -296,7 +311,6 @@ function Dashboard() {
       );
     }).length;
   }, [drivers]);
-
 
   /* =====================================================
      VEHICLE GROUPS
@@ -312,8 +326,7 @@ function Dashboard() {
         vehicle.category ||
         "Other";
 
-      const normalizedType =
-        String(type).trim();
+      const normalizedType = String(type).trim();
 
       if (!groups[normalizedType]) {
         groups[normalizedType] = {
@@ -344,17 +357,15 @@ function Dashboard() {
       .slice(0, 3);
   }, [vehicles]);
 
-
   /* =====================================================
-     LAST 7 DAYS CHART
+     BOOKING CHART
   ===================================================== */
 
   const chartData = useMemo(() => {
     const days = [];
     const today = new Date();
 
-    const numberOfDays =
-      Number(chartPeriod);
+    const numberOfDays = Number(chartPeriod);
 
     for (
       let i = numberOfDays - 1;
@@ -364,6 +375,7 @@ function Dashboard() {
       const date = new Date(today);
 
       date.setHours(0, 0, 0, 0);
+
       date.setDate(
         today.getDate() - i
       );
@@ -407,16 +419,16 @@ function Dashboard() {
     return days;
   }, [bookings, chartPeriod]);
 
-
   /* =====================================================
      CHART MAX
   ===================================================== */
 
   const chartMax = Math.max(
-    ...chartData.map((item) => item.count),
+    ...chartData.map(
+      (item) => item.count
+    ),
     1
   );
-
 
   /* =====================================================
      CURRENT DATE
@@ -433,7 +445,6 @@ function Dashboard() {
       }
     );
 
-
   /* =====================================================
      STATISTICS
   ===================================================== */
@@ -441,21 +452,30 @@ function Dashboard() {
   const stats = [
     {
       title: "Total Bookings",
-      value: bookings.length.toLocaleString("en-IN"),
+      value:
+        bookings.length.toLocaleString(
+          "en-IN"
+        ),
       change: "LIVE",
       icon: CalendarCheck,
     },
 
     {
       title: "Customers",
-      value: customers.length.toLocaleString("en-IN"),
+      value:
+        customers.length.toLocaleString(
+          "en-IN"
+        ),
       change: "LIVE",
       icon: Users,
     },
 
     {
       title: "Active Drivers",
-      value: activeDrivers.toLocaleString("en-IN"),
+      value:
+        activeDrivers.toLocaleString(
+          "en-IN"
+        ),
       change: "LIVE",
       icon: UserRoundCog,
     },
@@ -470,7 +490,6 @@ function Dashboard() {
     },
   ];
 
-
   /* =====================================================
      BOOKING HELPERS
   ===================================================== */
@@ -484,7 +503,6 @@ function Dashboard() {
     );
   };
 
-
   const getPickup = (booking) => {
     return (
       booking.pickup ||
@@ -494,7 +512,6 @@ function Dashboard() {
       "-"
     );
   };
-
 
   const getDestination = (booking) => {
     return (
@@ -507,7 +524,6 @@ function Dashboard() {
     );
   };
 
-
   const getVehicle = (booking) => {
     return (
       booking.vehicleType ||
@@ -516,7 +532,6 @@ function Dashboard() {
       "-"
     );
   };
-
 
   const getFare = (booking) => {
     const fare =
@@ -539,14 +554,12 @@ function Dashboard() {
     )}`;
   };
 
-
   const getStatus = (booking) => {
     return (
       booking.status ||
       "Pending"
     );
   };
-
 
   /* =====================================================
      LOADING
@@ -555,7 +568,6 @@ function Dashboard() {
   if (loading) {
     return (
       <div className="admin-dashboard">
-
         <div
           style={{
             minHeight: "500px",
@@ -599,11 +611,9 @@ function Dashboard() {
             }
           `}
         </style>
-
       </div>
     );
   }
-
 
   /* =====================================================
      MAIN DASHBOARD
@@ -617,9 +627,7 @@ function Dashboard() {
       ================================================= */}
 
       <div className="admin-content-heading">
-
         <div>
-
           <span className="admin-eyebrow">
             OVERVIEW
           </span>
@@ -632,19 +640,13 @@ function Dashboard() {
             Welcome back. Here's what's happening
             with MANZILL 777.
           </p>
-
         </div>
 
         <div className="admin-dashboard-date">
-
           <span>▣</span>
-
           {currentDate}
-
         </div>
-
       </div>
-
 
       {/* =================================================
           FIREBASE ERROR
@@ -666,15 +668,12 @@ function Dashboard() {
         </div>
       )}
 
-
       {/* =================================================
           STAT CARDS
       ================================================= */}
 
       <div className="admin-stat-grid">
-
         {stats.map((stat) => {
-
           const Icon = stat.icon;
 
           return (
@@ -682,9 +681,7 @@ function Dashboard() {
               className="admin-stat-card"
               key={stat.title}
             >
-
               <div className="admin-stat-top">
-
                 <div className="admin-stat-icon">
                   <Icon size={19} />
                 </div>
@@ -697,25 +694,19 @@ function Dashboard() {
                 >
                   {stat.change}
                 </span>
-
               </div>
-
 
               <div className="admin-stat-value">
                 {stat.value}
               </div>
 
-
               <div className="admin-stat-title">
                 {stat.title}
               </div>
-
             </div>
           );
         })}
-
       </div>
-
 
       {/* =================================================
           LOWER GRID
@@ -723,17 +714,13 @@ function Dashboard() {
 
       <div className="admin-dashboard-grid">
 
-
         {/* ===============================================
             BOOKING OVERVIEW
         =============================================== */}
 
         <section className="admin-panel admin-chart-panel">
-
           <div className="admin-panel-header">
-
             <div>
-
               <span>
                 ANALYTICS
               </span>
@@ -741,9 +728,7 @@ function Dashboard() {
               <h2>
                 Booking Overview
               </h2>
-
             </div>
-
 
             <select
               value={chartPeriod}
@@ -765,16 +750,11 @@ function Dashboard() {
                 Last 90 days
               </option>
             </select>
-
           </div>
 
-
           <div className="admin-chart-placeholder">
-
             <div className="chart-bars">
-
               {chartData.map((item) => {
-
                 const height =
                   item.count === 0
                     ? 0
@@ -799,12 +779,9 @@ function Dashboard() {
                   />
                 );
               })}
-
             </div>
 
-
             <div className="chart-labels">
-
               {chartData.map((item) => (
                 <span
                   key={item.date.toISOString()}
@@ -812,24 +789,17 @@ function Dashboard() {
                   {item.label}
                 </span>
               ))}
-
             </div>
-
           </div>
-
         </section>
-
 
         {/* ===============================================
             VEHICLES
         =============================================== */}
 
         <section className="admin-panel">
-
           <div className="admin-panel-header">
-
             <div>
-
               <span>
                 FLEET
               </span>
@@ -837,18 +807,13 @@ function Dashboard() {
               <h2>
                 Vehicles
               </h2>
-
             </div>
 
             <Car size={19} />
-
           </div>
 
-
           <div className="admin-vehicle-list">
-
             {vehicleGroups.length === 0 ? (
-
               <div
                 style={{
                   padding: "30px 0",
@@ -859,18 +824,13 @@ function Dashboard() {
               >
                 No vehicles found
               </div>
-
             ) : (
-
               vehicleGroups.map((vehicle) => (
-
                 <div
                   className="admin-vehicle-item"
                   key={vehicle.name}
                 >
-
                   <div>
-
                     <strong>
                       {vehicle.name}
                     </strong>
@@ -881,39 +841,27 @@ function Dashboard() {
                         ? "vehicle"
                         : "vehicles"}
                     </span>
-
                   </div>
-
 
                   <b>
                     {vehicle.available > 0
                       ? "Available"
                       : "Unavailable"}
                   </b>
-
                 </div>
-
               ))
-
             )}
-
           </div>
-
         </section>
-
       </div>
-
 
       {/* =================================================
           RECENT BOOKINGS
       ================================================= */}
 
       <section className="admin-panel admin-recent-bookings">
-
         <div className="admin-panel-header">
-
           <div>
-
             <span>
               ACTIVITY
             </span>
@@ -921,29 +869,25 @@ function Dashboard() {
             <h2>
               Recent Bookings
             </h2>
-
           </div>
 
-
-          <button className="admin-view-all">
-
+          {/* FIXED: VIEW ALL */}
+          <button
+            type="button"
+            className="admin-view-all"
+            onClick={() =>
+              navigate("/admin/bookings")
+            }
+          >
             View all
-
             <ArrowUpRight size={15} />
-
           </button>
-
         </div>
 
-
         <div className="admin-table-wrapper">
-
           <table className="admin-table">
-
             <thead>
-
               <tr>
-
                 <th>
                   BOOKING
                 </th>
@@ -967,18 +911,12 @@ function Dashboard() {
                 <th>
                   STATUS
                 </th>
-
               </tr>
-
             </thead>
 
-
             <tbody>
-
               {sortedBookings.length === 0 ? (
-
                 <tr>
-
                   <td
                     colSpan="6"
                     style={{
@@ -989,24 +927,17 @@ function Dashboard() {
                   >
                     No bookings found.
                   </td>
-
                 </tr>
-
               ) : (
-
                 sortedBookings
                   .slice(0, 10)
                   .map((booking, index) => {
-
                     const status =
-                      getStatus(
-                        booking
-                      );
+                      getStatus(booking);
 
                     const normalizedStatus =
-                      String(
-                        status
-                      ).toLowerCase();
+                      String(status)
+                        .toLowerCase();
 
                     let statusClass =
                       "pending";
@@ -1031,14 +962,22 @@ function Dashboard() {
                         "completed";
                     }
 
-                    return (
+                    if (
+                      normalizedStatus ===
+                        "cancelled" ||
+                      normalizedStatus ===
+                        "canceled"
+                    ) {
+                      statusClass =
+                        "cancelled";
+                    }
 
+                    return (
                       <tr
                         key={
                           booking.id
                         }
                       >
-
                         <td>
                           #
                           {booking.bookingId ||
@@ -1048,20 +987,15 @@ function Dashboard() {
                             index + 1}
                         </td>
 
-
                         <td>
-
                           <strong>
                             {getCustomerName(
                               booking
                             )}
                           </strong>
-
                         </td>
 
-
                         <td>
-
                           {getPickup(
                             booking
                           )}
@@ -1071,55 +1005,38 @@ function Dashboard() {
                           {getDestination(
                             booking
                           )}
-
                         </td>
 
-
                         <td>
-
                           {getVehicle(
                             booking
                           )}
-
                         </td>
 
-
                         <td>
-
                           {getFare(
                             booking
                           )}
-
                         </td>
 
-
                         <td>
-
                           <span
                             className={`status ${statusClass}`}
                           >
                             {status}
                           </span>
-
                         </td>
-
                       </tr>
-
                     );
                   })
-
               )}
-
             </tbody>
-
           </table>
-
         </div>
-
       </section>
-
     </div>
   );
 }
 
 export default Dashboard;
+
