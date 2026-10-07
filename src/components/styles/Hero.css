@@ -1,0 +1,314 @@
+/* =========================
+   HERO
+========================= */
+
+.hero-section {
+  position: relative;
+
+  width: 100%;
+  max-width: none;
+  min-height: 600px;
+
+  margin: 0;
+
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+
+  align-items: center;
+  gap: 100px;
+
+  padding: 40px 4vw;
+
+  box-sizing: border-box;
+
+  /* Deep premium background */
+  background:
+    radial-gradient(
+      circle at 20% 35%,
+      rgba(124, 58, 237, 0.18),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 80% 50%,
+      rgba(255, 159, 252, 0.10),
+      transparent 35%
+    ),
+    #08060d;
+
+  overflow: hidden;
+}
+
+
+/* =========================
+   EYEBROW
+========================= */
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin: -100px 0 24px;
+
+  color: #c4bdd4;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 1.8px;
+}
+
+.eyebrow span {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #ff9ffc;
+
+  box-shadow:
+    0 0 8px rgba(255, 159, 252, 0.8),
+    0 0 18px rgba(255, 159, 252, 0.45);
+}
+
+
+/* =========================
+   HERO HEADING
+========================= */
+
+.hero-content h1 {
+  margin: 0;
+
+  font-size: clamp(58px, 7vw, 94px);
+
+  line-height: 0.93;
+
+  letter-spacing: -5px;
+
+  color: #f7f5ff;
+
+  font-weight: 600;
+
+  text-shadow:
+    0 0 30px rgba(255, 255, 255, 0.05);
+}
+
+
+/* Accent word */
+
+.hero-content h1 span {
+  background: linear-gradient(
+    100deg,
+    #a78bfa 0%,
+    #c084fc 45%,
+    #ff9ffc 100%
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+
+  color: transparent;
+
+  filter: drop-shadow(
+    0 0 18px rgba(192, 132, 252, 0.18)
+  );
+}
+
+
+/* =========================
+   DESCRIPTION
+========================= */
+
+.hero-description {
+  max-width: 490px;
+
+  margin: 32px 0 36px;
+
+  color: #aaa4b8;
+
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+
+/* =========================
+   ACTIONS
+========================= */
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+}
+
+
+/* =========================
+   PRIMARY BUTTON
+========================= */
+
+.primary-button {
+  width: 20%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  padding: 14px 22px;
+
+  border-radius: 12px;
+
+  color: #ffffff;
+
+  text-decoration: none;
+
+  background: linear-gradient(
+    135deg,
+    #7c3aed,
+    #a855f7
+  );
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+
+  box-shadow:
+    0 10px 30px rgba(124, 58, 237, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.primary-button:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 14px 35px rgba(168, 85, 247, 0.38),
+    0 0 25px rgba(255, 159, 252, 0.15);
+}
+
+
+/* =========================
+   QUICK BOOKING CARD
+========================= */
+
+.booking-card {
+  background: rgba(15, 11, 24, 0.72);
+
+  border: 1px solid rgba(255, 255, 255, 0.10);
+
+  box-shadow:
+    0 25px 80px rgba(0, 0, 0, 0.45),
+    0 0 50px rgba(124, 58, 237, 0.08);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  border-radius: 24px;
+}
+
+
+/* =========================
+   BOOKING HEADER
+========================= */
+
+.booking-header {
+  color: #f7f5ff;
+}
+
+.booking-header span {
+  color: #b794ff;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 1.5px;
+}
+
+.booking-header h2 {
+  color: #ffffff;
+}
+
+
+/* =========================
+   LOCATION INPUT
+========================= */
+
+.location-input small {
+  color: #9f98aa;
+}
+
+.location-input p {
+  color: #e8e3ef;
+}
+
+
+/* Pickup */
+
+.input-dot.pickup {
+  background: #a78bfa;
+
+  box-shadow:
+    0 0 10px rgba(167, 139, 250, 0.7);
+}
+
+
+/* Destination */
+
+.input-dot.destination {
+  background: #ff9ffc;
+
+  box-shadow:
+    0 0 10px rgba(255, 159, 252, 0.7);
+}
+
+
+/* Connecting line */
+
+.location-line {
+  background: linear-gradient(
+    to bottom,
+    #a78bfa,
+    #ff9ffc
+  );
+}
+
+
+/* =========================
+   BOOKING BUTTON
+========================= */
+
+.booking-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  color: #ffffff;
+
+  background: linear-gradient(
+    135deg,
+    #6d28d9,
+    #a855f7
+  );
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  box-shadow:
+    0 8px 25px rgba(124, 58, 237, 0.25);
+
+  transition: all 0.25s ease;
+}
+
+.booking-button:hover {
+  background: linear-gradient(
+    135deg,
+    #7c3aed,
+    #c084fc
+  );
+
+  box-shadow:
+    0 10px 30px rgba(168, 85, 247, 0.35);
+}

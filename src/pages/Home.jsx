@@ -15,6 +15,7 @@ import QuickBooking from "../components/QuickBooking";
 import Service from "../components/Service";
 import About from "../components/About";
 import Testimonials from "../components/Testimonials";
+import Hero from "../components/pages/Hero";
 
 function Home() {
   // =====================================================
@@ -75,42 +76,7 @@ function Home() {
           HERO
       ===================================================== */}
 
-      <section className="hero-section" id="home">
-        {/* LEFT — HERO CONTENT */}
-
-        <div className="hero-content">
-          <p className="eyebrow">
-            <span></span>
-            PREMIUM CAB SERVICES
-          </p>
-
-          <h1>
-            Move smarter.
-            <br />
-            <span>Ride better.</span>
-          </h1>
-
-          <p className="hero-description">
-            Reliable rides for everyday journeys, airport transfers,
-            business trips and everything in between.
-          </p>
-
-          <div className="hero-actions">
-            <Link to="/booking" className="primary-button">
-              Book a Ride
-              <ArrowUpRight size={19} />
-            </Link>
-
-            
-          </div>
-        </div>
-
-        {/* RIGHT — QUICK BOOKING */}
-
-        <div className="hero-booking">
-          <QuickBooking />
-        </div>
-      </section>
+      <Hero/>
 
       {/* =====================================================
           SERVICES
