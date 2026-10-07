@@ -20,12 +20,12 @@ import {
   deleteDoc,
   doc,
   serverTimestamp,
+  writeBatch,
 } from "firebase/firestore";
 
 import { db } from "../../firebase";
 
 import "../styles/vehicles.css";
-
 
 function AdminVehicles() {
 
@@ -34,27 +34,21 @@ function AdminVehicles() {
   // =========================================================
 
   const [vehicles, setVehicles] = useState([]);
-
   const [drivers, setDrivers] = useState([]);
 
   const [search, setSearch] = useState("");
 
   const [selectedVehicle, setSelectedVehicle] = useState(null);
-
   const [vehicleToDelete, setVehicleToDelete] = useState(null);
 
   const [showVehicleModal, setShowVehicleModal] = useState(false);
-
   const [editingVehicle, setEditingVehicle] = useState(null);
 
   const [loading, setLoading] = useState(true);
-
   const [saving, setSaving] = useState(false);
-
   const [deleting, setDeleting] = useState(false);
 
   const [error, setError] = useState("");
-
 
   // =========================================================
   // VEHICLE FORM
@@ -69,7 +63,6 @@ function AdminVehicles() {
     status: "Available",
     location: "",
   });
-
 
   // =========================================================
   // REAL-TIME VEHICLES
@@ -115,8 +108,6 @@ function AdminVehicles() {
           }
         );
 
-
-        // Newest first
         vehicleList.sort((a, b) => {
 
           const aTime =
@@ -128,11 +119,9 @@ function AdminVehicles() {
           return bTime - aTime;
         });
 
-
         setVehicles(vehicleList);
 
         setLoading(false);
-
         setError("");
       },
 
@@ -151,11 +140,9 @@ function AdminVehicles() {
       }
     );
 
-
     return () => unsubscribe();
 
   }, []);
-
 
   // =========================================================
   // REAL-TIME DRIVERS
@@ -182,6 +169,12 @@ function AdminVehicles() {
 
               name: data.name || "",
 
+              email: data.email || "",
+
+              phone: data.phone || "",
+
+              vehicleId: data.vehicleId || "",
+
               status: data.status || "Inactive",
             };
           }
@@ -199,11 +192,9 @@ function AdminVehicles() {
       }
     );
 
-
     return () => unsubscribe();
 
   }, []);
-
 
   // =========================================================
   // KEEP SELECTED VEHICLE UPDATED
@@ -213,13 +204,11 @@ function AdminVehicles() {
 
     if (!selectedVehicle) return;
 
-
     const latestVehicle = vehicles.find(
       (vehicle) =>
         vehicle.firebaseId ===
         selectedVehicle.firebaseId
     );
-
 
     if (latestVehicle) {
 
@@ -233,7 +222,6 @@ function AdminVehicles() {
 
   }, [vehicles]);
 
-
   // =========================================================
   // SEARCH
   // =========================================================
@@ -245,7 +233,6 @@ function AdminVehicles() {
         search.toLowerCase().trim();
 
       if (!value) return true;
-
 
       return (
 
@@ -274,17 +261,14 @@ function AdminVehicles() {
           .includes(value)
 
       );
-
     }
   );
-
 
   // =========================================================
   // TOTAL VEHICLES
   // =========================================================
 
   const totalVehicles = vehicles.length;
-
 
   // =========================================================
   // GENERATE VEHICLE ID
@@ -294,7 +278,6 @@ function AdminVehicles() {
 
     let highestNumber = 0;
 
-
     vehicles.forEach((vehicle) => {
 
       const match =
@@ -302,28 +285,21 @@ function AdminVehicles() {
           /^VEH-(\d+)$/
         );
 
-
       if (match) {
 
         const number =
           parseInt(match[1], 10);
 
         if (number > highestNumber) {
-
           highestNumber = number;
-
         }
       }
-
     });
-
 
     return `VEH-${String(
       highestNumber + 1
     ).padStart(3, "0")}`;
-
   };
-
 
   // =========================================================
   // STATUS ICON
@@ -336,25 +312,19 @@ function AdminVehicles() {
       return (
         <CheckCircle2 size={14} />
       );
-
     }
-
 
     if (status === "Maintenance") {
 
       return (
         <Wrench size={14} />
       );
-
     }
-
 
     return (
       <Car size={14} />
     );
-
   };
-
 
   // =========================================================
   // OPEN ADD VEHICLE
@@ -363,7 +333,6 @@ function AdminVehicles() {
   const openAddVehicle = () => {
 
     setEditingVehicle(null);
-
 
     setVehicleForm({
       name: "",
@@ -375,11 +344,8 @@ function AdminVehicles() {
       location: "",
     });
 
-
     setShowVehicleModal(true);
-
   };
-
 
   // =========================================================
   // OPEN EDIT VEHICLE
@@ -389,12 +355,9 @@ function AdminVehicles() {
 
     setEditingVehicle(vehicle);
 
-
     setVehicleForm({
       name: vehicle.name || "",
-
       number: vehicle.number || "",
-
       type: vehicle.type || "Sedan",
 
       driverId: vehicle.driverId || "",
@@ -406,11 +369,8 @@ function AdminVehicles() {
       location: vehicle.location || "",
     });
 
-
     setShowVehicleModal(true);
-
   };
-
 
   // =========================================================
   // CLOSE VEHICLE MODAL
@@ -423,9 +383,7 @@ function AdminVehicles() {
     setShowVehicleModal(false);
 
     setEditingVehicle(null);
-
   };
-
 
   // =========================================================
   // FORM CHANGE
@@ -438,7 +396,6 @@ function AdminVehicles() {
       value,
     } = e.target;
 
-
     setVehicleForm((previous) => ({
 
       ...previous,
@@ -446,9 +403,7 @@ function AdminVehicles() {
       [name]: value,
 
     }));
-
   };
-
 
   // =========================================================
   // DRIVER SELECTION
@@ -459,31 +414,66 @@ function AdminVehicles() {
     const driverId =
       e.target.value;
 
+    if (!driverId) {
+
+      setVehicleForm((previous) => ({
+
+        ...previous,
+
+        driverId: "",
+
+        driver: "Unassigned",
+
+      }));
+
+      return;
+    }
 
     const selectedDriver =
       drivers.find(
         (driver) =>
-          driver.firebaseId === driverId ||
-          driver.id === driverId
+          driver.firebaseId === driverId
       );
 
+    if (!selectedDriver) return;
+
+    // -------------------------------------------------------
+    // Check whether selected driver already has another
+    // vehicle.
+    // -------------------------------------------------------
+
+    const existingVehicle = vehicles.find(
+      (vehicle) =>
+        vehicle.driverId ===
+        selectedDriver.firebaseId &&
+        vehicle.firebaseId !==
+          editingVehicle?.firebaseId
+    );
+
+    if (existingVehicle) {
+
+      const shouldReplace =
+        window.confirm(
+          `${selectedDriver.name} is already assigned to ${existingVehicle.name} (${existingVehicle.number}).\n\nDo you want to move the driver to this vehicle?`
+        );
+
+      if (!shouldReplace) {
+        return;
+      }
+    }
 
     setVehicleForm((previous) => ({
 
       ...previous,
 
       driverId:
-        selectedDriver?.firebaseId ||
-        "",
+        selectedDriver.firebaseId,
 
       driver:
-        selectedDriver?.name ||
-        "Unassigned",
+        selectedDriver.name,
 
     }));
-
   };
-
 
   // =========================================================
   // SAVE VEHICLE
@@ -493,9 +483,7 @@ function AdminVehicles() {
 
     e.preventDefault();
 
-
     if (saving) return;
-
 
     const name =
       vehicleForm.name.trim();
@@ -505,7 +493,6 @@ function AdminVehicles() {
 
     const location =
       vehicleForm.location.trim();
-
 
     if (
       !name ||
@@ -518,14 +505,13 @@ function AdminVehicles() {
       );
 
       return;
-
     }
-
 
     try {
 
       setSaving(true);
 
+      const batch = writeBatch(db);
 
       // =====================================================
       // EDIT EXISTING VEHICLE
@@ -533,13 +519,22 @@ function AdminVehicles() {
 
       if (editingVehicle) {
 
-        await updateDoc(
+        const previousDriverId =
+          editingVehicle.driverId || "";
+
+        const newDriverId =
+          vehicleForm.driverId || "";
+
+        // ---------------------------------------------------
+        // Update vehicle document
+        // ---------------------------------------------------
+
+        batch.update(
           doc(
             db,
             "vehicles",
             editingVehicle.firebaseId
           ),
-
           {
             name,
 
@@ -550,7 +545,7 @@ function AdminVehicles() {
               vehicleForm.type,
 
             driverId:
-              vehicleForm.driverId,
+              newDriverId,
 
             driver:
               vehicleForm.driver ||
@@ -566,8 +561,101 @@ function AdminVehicles() {
           }
         );
 
-      }
+        // ---------------------------------------------------
+        // Driver changed
+        // ---------------------------------------------------
 
+        if (
+          previousDriverId &&
+          previousDriverId !== newDriverId
+        ) {
+
+          const previousDriver =
+            drivers.find(
+              (driver) =>
+                driver.firebaseId ===
+                previousDriverId
+            );
+
+          if (previousDriver) {
+
+            batch.update(
+              doc(
+                db,
+                "drivers",
+                previousDriver.firebaseId
+              ),
+              {
+                vehicleId: "",
+              }
+            );
+          }
+        }
+
+        // ---------------------------------------------------
+        // Assign new driver
+        // ---------------------------------------------------
+
+        if (newDriverId) {
+
+          const newDriver =
+            drivers.find(
+              (driver) =>
+                driver.firebaseId ===
+                newDriverId
+            );
+
+          if (newDriver) {
+
+            // ------------------------------------------------
+            // If this driver was assigned to another vehicle,
+            // unassign that old vehicle.
+            // ------------------------------------------------
+
+            const oldVehicle =
+              vehicles.find(
+                (vehicle) =>
+                  vehicle.driverId ===
+                    newDriver.firebaseId &&
+                  vehicle.firebaseId !==
+                    editingVehicle.firebaseId
+              );
+
+            if (oldVehicle) {
+
+              batch.update(
+                doc(
+                  db,
+                  "vehicles",
+                  oldVehicle.firebaseId
+                ),
+                {
+                  driverId: "",
+                  driver: "Unassigned",
+                  updatedAt:
+                    serverTimestamp(),
+                }
+              );
+            }
+
+            // ------------------------------------------------
+            // Update driver
+            // ------------------------------------------------
+
+            batch.update(
+              doc(
+                db,
+                "drivers",
+                newDriver.firebaseId
+              ),
+              {
+                vehicleId:
+                  editingVehicle.firebaseId,
+              }
+            );
+          }
+        }
+      }
 
       // =====================================================
       // ADD NEW VEHICLE
@@ -578,10 +666,22 @@ function AdminVehicles() {
         const vehicleId =
           generateVehicleId();
 
+        const newVehicleRef =
+          doc(collection(db, "vehicles"));
 
-        await addDoc(
-          collection(db, "vehicles"),
+        const selectedDriver =
+          drivers.find(
+            (driver) =>
+              driver.firebaseId ===
+              vehicleForm.driverId
+          );
 
+        // ---------------------------------------------------
+        // Add vehicle
+        // ---------------------------------------------------
+
+        batch.set(
+          newVehicleRef,
           {
             id: vehicleId,
 
@@ -594,10 +694,11 @@ function AdminVehicles() {
               vehicleForm.type,
 
             driverId:
-              vehicleForm.driverId,
+              selectedDriver?.firebaseId ||
+              "",
 
             driver:
-              vehicleForm.driver ||
+              selectedDriver?.name ||
               "Unassigned",
 
             status:
@@ -613,11 +714,59 @@ function AdminVehicles() {
           }
         );
 
+        // ---------------------------------------------------
+        // Assign driver
+        // ---------------------------------------------------
+
+        if (selectedDriver) {
+
+          // Check if driver already has vehicle.
+
+          const oldVehicle =
+            vehicles.find(
+              (vehicle) =>
+                vehicle.driverId ===
+                selectedDriver.firebaseId
+            );
+
+          if (oldVehicle) {
+
+            batch.update(
+              doc(
+                db,
+                "vehicles",
+                oldVehicle.firebaseId
+              ),
+              {
+                driverId: "",
+                driver: "Unassigned",
+                updatedAt:
+                  serverTimestamp(),
+              }
+            );
+          }
+
+          batch.update(
+            doc(
+              db,
+              "drivers",
+              selectedDriver.firebaseId
+            ),
+            {
+              vehicleId:
+                newVehicleRef.id,
+            }
+          );
+        }
       }
 
+      // =====================================================
+      // COMMIT EVERYTHING TO FIREBASE
+      // =====================================================
+
+      await batch.commit();
 
       setShowVehicleModal(false);
-
       setEditingVehicle(null);
 
     } catch (firebaseError) {
@@ -636,9 +785,7 @@ function AdminVehicles() {
       setSaving(false);
 
     }
-
   };
-
 
   // =========================================================
   // DELETE VEHICLE
@@ -653,13 +800,45 @@ function AdminVehicles() {
       return;
     }
 
-
     try {
 
       setDeleting(true);
 
+      const batch = writeBatch(db);
 
-      await deleteDoc(
+      // -----------------------------------------------------
+      // Unassign driver
+      // -----------------------------------------------------
+
+      if (vehicleToDelete.driverId) {
+
+        const assignedDriver =
+          drivers.find(
+            (driver) =>
+              driver.firebaseId ===
+              vehicleToDelete.driverId
+          );
+
+        if (assignedDriver) {
+
+          batch.update(
+            doc(
+              db,
+              "drivers",
+              assignedDriver.firebaseId
+            ),
+            {
+              vehicleId: "",
+            }
+          );
+        }
+      }
+
+      // -----------------------------------------------------
+      // Delete vehicle
+      // -----------------------------------------------------
+
+      batch.delete(
         doc(
           db,
           "vehicles",
@@ -667,6 +846,7 @@ function AdminVehicles() {
         )
       );
 
+      await batch.commit();
 
       if (
         selectedVehicle?.firebaseId ===
@@ -674,9 +854,7 @@ function AdminVehicles() {
       ) {
 
         setSelectedVehicle(null);
-
       }
-
 
       setVehicleToDelete(null);
 
@@ -696,9 +874,7 @@ function AdminVehicles() {
       setDeleting(false);
 
     }
-
   };
-
 
   // =========================================================
   // RENDER
@@ -707,7 +883,6 @@ function AdminVehicles() {
   return (
 
     <div className="vehicles-page">
-
 
       {/* =====================================================
           HEADER
@@ -721,18 +896,15 @@ function AdminVehicles() {
             FLEET MANAGEMENT
           </span>
 
-
           <h1>
             Vehicles
           </h1>
-
 
           <p>
             Manage and monitor all vehicles in your fleet.
           </p>
 
         </div>
-
 
         <div className="vehicles-total-card">
 
@@ -747,7 +919,6 @@ function AdminVehicles() {
         </div>
 
       </div>
-
 
       {/* =====================================================
           TOOLBAR
@@ -767,7 +938,6 @@ function AdminVehicles() {
 
           <Search size={18} />
 
-
           <input
             type="text"
             placeholder="Search by vehicle, number, driver..."
@@ -776,7 +946,6 @@ function AdminVehicles() {
               setSearch(e.target.value)
             }
           />
-
 
           {search && (
 
@@ -792,7 +961,6 @@ function AdminVehicles() {
           )}
 
         </div>
-
 
         <button
           type="button"
@@ -813,7 +981,6 @@ function AdminVehicles() {
         </button>
 
       </div>
-
 
       {/* =====================================================
           ERROR
@@ -837,9 +1004,8 @@ function AdminVehicles() {
 
       )}
 
-
       {/* =====================================================
-          VEHICLES TABLE
+          TABLE
       ===================================================== */}
 
       <div className="vehicles-card">
@@ -898,7 +1064,6 @@ function AdminVehicles() {
 
               </thead>
 
-
               <tbody>
 
                 {filteredVehicles.length > 0 ? (
@@ -914,8 +1079,6 @@ function AdminVehicles() {
                         className="vehicle-row"
                       >
 
-                        {/* ID */}
-
                         <td>
 
                           <span className="vehicle-id">
@@ -924,9 +1087,6 @@ function AdminVehicles() {
 
                         </td>
 
-
-                        {/* VEHICLE */}
-
                         <td>
 
                           <div className="vehicle-name">
@@ -934,7 +1094,6 @@ function AdminVehicles() {
                             <div className="vehicle-icon">
                               <Car size={18} />
                             </div>
-
 
                             <div>
 
@@ -952,9 +1111,6 @@ function AdminVehicles() {
 
                         </td>
 
-
-                        {/* NUMBER */}
-
                         <td>
 
                           <span className="vehicle-number">
@@ -962,9 +1118,6 @@ function AdminVehicles() {
                           </span>
 
                         </td>
-
-
-                        {/* TYPE */}
 
                         <td>
 
@@ -974,19 +1127,14 @@ function AdminVehicles() {
 
                         </td>
 
-
-                        {/* DRIVER */}
-
                         <td>
 
                           <span className="vehicle-driver">
-                            {vehicle.driver}
+                            {vehicle.driver ||
+                              "Unassigned"}
                           </span>
 
                         </td>
-
-
-                        {/* STATUS */}
 
                         <td>
 
@@ -1011,9 +1159,6 @@ function AdminVehicles() {
 
                         </td>
 
-
-                        {/* ACTIONS */}
-
                         <td>
 
                           <div
@@ -1022,8 +1167,6 @@ function AdminVehicles() {
                               e.stopPropagation()
                             }
                           >
-
-                            {/* EDIT */}
 
                             <button
                               type="button"
@@ -1038,9 +1181,6 @@ function AdminVehicles() {
                               <Pencil size={15} />
                             </button>
 
-
-                            {/* DELETE */}
-
                             <button
                               type="button"
                               className="vehicle-action-btn vehicle-delete-btn"
@@ -1053,9 +1193,6 @@ function AdminVehicles() {
                             >
                               <Trash2 size={15} />
                             </button>
-
-
-                            {/* MORE */}
 
                             <button
                               type="button"
@@ -1117,9 +1254,6 @@ function AdminVehicles() {
 
         </div>
 
-
-        {/* FOOTER */}
-
         <div className="vehicles-footer">
 
           Showing{" "}
@@ -1140,9 +1274,8 @@ function AdminVehicles() {
 
       </div>
 
-
       {/* =====================================================
-          RIGHT SIDE DETAILS PANEL
+          DETAILS PANEL
       ===================================================== */}
 
       {selectedVehicle && (
@@ -1156,9 +1289,7 @@ function AdminVehicles() {
             }
           />
 
-
           <aside className="vehicle-details-panel">
-
 
             <div className="vehicle-panel-header">
 
@@ -1174,7 +1305,6 @@ function AdminVehicles() {
 
               </div>
 
-
               <button
                 type="button"
                 onClick={() =>
@@ -1186,7 +1316,6 @@ function AdminVehicles() {
 
             </div>
 
-
             {/* VEHICLE PROFILE */}
 
             <div className="vehicle-profile">
@@ -1196,7 +1325,6 @@ function AdminVehicles() {
                 <Car size={34} />
 
               </div>
-
 
               <div>
 
@@ -1212,11 +1340,9 @@ function AdminVehicles() {
 
             </div>
 
-
             {/* DETAILS */}
 
             <div className="vehicle-details-list">
-
 
               <div>
 
@@ -1230,7 +1356,6 @@ function AdminVehicles() {
 
               </div>
 
-
               <div>
 
                 <span>
@@ -1243,7 +1368,6 @@ function AdminVehicles() {
 
               </div>
 
-
               <div>
 
                 <span>
@@ -1251,11 +1375,11 @@ function AdminVehicles() {
                 </span>
 
                 <strong>
-                  {selectedVehicle.driver}
+                  {selectedVehicle.driver ||
+                    "Unassigned"}
                 </strong>
 
               </div>
-
 
               <div>
 
@@ -1272,7 +1396,6 @@ function AdminVehicles() {
                 </strong>
 
               </div>
-
 
               <div>
 
@@ -1305,14 +1428,11 @@ function AdminVehicles() {
 
               </div>
 
-
             </div>
-
 
             {/* PANEL ACTIONS */}
 
             <div className="vehicle-panel-actions">
-
 
               <button
                 type="button"
@@ -1330,7 +1450,6 @@ function AdminVehicles() {
 
               </button>
 
-
               <button
                 type="button"
                 className="vehicle-remove-full"
@@ -1347,16 +1466,13 @@ function AdminVehicles() {
 
               </button>
 
-
             </div>
-
 
           </aside>
 
         </>
 
       )}
-
 
       {/* =====================================================
           ADD / EDIT VEHICLE MODAL
@@ -1394,15 +1510,13 @@ function AdminVehicles() {
             }
           >
 
-
-            {/* MODAL HEADER */}
-
             <div
               style={{
                 display: "flex",
                 justifyContent:
                   "space-between",
-                alignItems: "flex-start",
+                alignItems:
+                  "flex-start",
                 marginBottom: "24px",
               }}
             >
@@ -1421,7 +1535,6 @@ function AdminVehicles() {
                   FLEET MANAGEMENT
                 </span>
 
-
                 <h2
                   style={{
                     margin:
@@ -1436,7 +1549,6 @@ function AdminVehicles() {
                 </h2>
 
               </div>
-
 
               <button
                 type="button"
@@ -1458,11 +1570,7 @@ function AdminVehicles() {
 
             </div>
 
-
-            {/* FORM */}
-
             <form onSubmit={saveVehicle}>
-
 
               {/* VEHICLE NAME */}
 
@@ -1486,7 +1594,6 @@ function AdminVehicles() {
 
               </div>
 
-
               {/* VEHICLE NUMBER */}
 
               <div style={formGroup}>
@@ -1508,7 +1615,6 @@ function AdminVehicles() {
                 />
 
               </div>
-
 
               {/* TYPE + STATUS */}
 
@@ -1563,7 +1669,6 @@ function AdminVehicles() {
 
                 </div>
 
-
                 <div
                   style={{
                     flex: 1,
@@ -1601,7 +1706,6 @@ function AdminVehicles() {
 
               </div>
 
-
               {/* DRIVER */}
 
               <div style={formGroup}>
@@ -1624,7 +1728,6 @@ function AdminVehicles() {
                     Unassigned
                   </option>
 
-
                   {drivers.map(
                     (driver) => (
 
@@ -1636,11 +1739,14 @@ function AdminVehicles() {
                           driver.firebaseId
                         }
                       >
+
                         {driver.name}
+
                         {driver.status !==
                           "Active"
                           ? " (Inactive)"
                           : ""}
+
                       </option>
 
                     )
@@ -1648,8 +1754,19 @@ function AdminVehicles() {
 
                 </select>
 
-              </div>
+                <div
+                  style={{
+                    marginTop: "7px",
+                    fontSize: "12px",
+                    color: "#64748b",
+                  }}
+                >
+                  Assigning a driver here will
+                  automatically update both the
+                  vehicle and driver records.
+                </div>
 
+              </div>
 
               {/* LOCATION */}
 
@@ -1675,7 +1792,6 @@ function AdminVehicles() {
 
               </div>
 
-
               {/* AUTO ID */}
 
               {!editingVehicle && (
@@ -1697,8 +1813,9 @@ function AdminVehicles() {
                   }}
                 >
 
-                  Vehicle ID will be automatically
-                  generated as{" "}
+                  Vehicle ID will be
+                  automatically generated
+                  as{" "}
 
                   <strong
                     style={{
@@ -1712,7 +1829,6 @@ function AdminVehicles() {
                 </div>
 
               )}
-
 
               {/* BUTTONS */}
 
@@ -1750,7 +1866,6 @@ function AdminVehicles() {
                 >
                   Cancel
                 </button>
-
 
                 <button
                   type="submit"
@@ -1795,7 +1910,6 @@ function AdminVehicles() {
         </div>
 
       )}
-
 
       {/* =====================================================
           DELETE CONFIRMATION
@@ -1849,13 +1963,11 @@ function AdminVehicles() {
                   "center",
                 fontWeight:
                   "700",
-                fontSize:
-                  "20px",
+                fontSize: "20px",
               }}
             >
               !
             </div>
-
 
             <h3
               style={{
@@ -1867,7 +1979,6 @@ function AdminVehicles() {
             >
               Remove Vehicle?
             </h3>
-
 
             <p
               style={{
@@ -1881,15 +1992,28 @@ function AdminVehicles() {
                   "1.6",
               }}
             >
-              Are you sure you want to remove{" "}
+
+              Are you sure you want to
+              remove{" "}
+
               <strong>
                 {vehicleToDelete.name}
               </strong>
               ?
-              <br />
-              This action cannot be undone.
-            </p>
 
+              <br />
+
+              {vehicleToDelete.driverId && (
+                <>
+                  The assigned driver will become
+                  <strong> Unassigned</strong>.
+                  <br />
+                </>
+              )}
+
+              This action cannot be undone.
+
+            </p>
 
             <div
               style={{
@@ -1928,11 +2052,12 @@ function AdminVehicles() {
                 Cancel
               </button>
 
-
               <button
                 type="button"
                 disabled={deleting}
-                onClick={deleteVehicle}
+                onClick={
+                  deleteVehicle
+                }
                 style={{
                   border: "none",
                   background:
@@ -1972,7 +2097,6 @@ function AdminVehicles() {
   );
 }
 
-
 // =========================================================
 // FORM STYLES
 // =========================================================
@@ -1981,7 +2105,6 @@ const formGroup = {
   marginBottom: "15px",
 };
 
-
 const formLabel = {
   display: "block",
   fontSize: "12px",
@@ -1989,7 +2112,6 @@ const formLabel = {
   color: "#374151",
   marginBottom: "7px",
 };
-
 
 const formInput = {
   width: "100%",
@@ -2002,6 +2124,5 @@ const formInput = {
   background: "#ffffff",
   outline: "none",
 };
-
 
 export default AdminVehicles;

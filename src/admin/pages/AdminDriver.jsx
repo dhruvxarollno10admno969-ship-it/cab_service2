@@ -9,6 +9,7 @@ import {
   updateDoc,
   doc,
   serverTimestamp,
+  writeBatch,
 } from "firebase/firestore";
 
 import { db } from "../../firebase";
@@ -19,6 +20,8 @@ const AdminDrivers = () => {
   // =========================================================
 
   const [drivers, setDrivers] = useState([]);
+  const [vehicles, setVehicles] = useState([]);
+
   const [search, setSearch] = useState("");
 
   const [selectedDriver, setSelectedDriver] = useState(null);
@@ -41,13 +44,11 @@ const AdminDrivers = () => {
     name: "",
     email: "",
     phone: "",
-    vehicle: "",
-    vehicleNumber: "",
     status: "Active",
   });
 
   // =========================================================
-  // REAL-TIME FIREBASE LISTENER
+  // REAL-TIME DRIVERS
   // =========================================================
 
   useEffect(() => {
@@ -66,15 +67,16 @@ const AdminDrivers = () => {
             name: data.name || "",
             email: data.email || "",
             phone: data.phone || "",
-            vehicle: data.vehicle || "",
-            vehicleNumber: data.vehicleNumber || "",
             status: data.status || "Inactive",
+
+            // New relationship
+            vehicleId: data.vehicleId || "",
+
             joined: data.joined || "",
             createdAt: data.createdAt || null,
           };
         });
 
-        // Newest drivers first
         driverList.sort((a, b) => {
           const aTime = a.createdAt?.seconds || 0;
           const bTime = b.createdAt?.seconds || 0;
@@ -97,34 +99,102 @@ const AdminDrivers = () => {
       }
     );
 
-    // Stop listener when page unmounts
     return () => unsubscribe();
   }, []);
 
   // =========================================================
-  // KEEP SELECTED DRIVER UPDATED IN REAL TIME
+  // REAL-TIME VEHICLES
+  // =========================================================
+
+  useEffect(() => {
+    const vehiclesRef = collection(db, "vehicles");
+
+    const unsubscribe = onSnapshot(
+      vehiclesRef,
+      (snapshot) => {
+        const vehicleList = snapshot.docs.map((firebaseDoc) => {
+          const data = firebaseDoc.data();
+
+          return {
+            firebaseId: firebaseDoc.id,
+
+            id: data.id || "",
+            name: data.name || "",
+            number: data.number || "",
+            type: data.type || "Sedan",
+
+            driverId: data.driverId || "",
+            driver: data.driver || "Unassigned",
+
+            status: data.status || "Available",
+            location: data.location || "",
+
+            createdAt: data.createdAt || null,
+          };
+        });
+
+        setVehicles(vehicleList);
+      },
+      (error) => {
+        console.error("Firebase vehicles listener error:", error);
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
+
+  // =========================================================
+  // ADD ASSIGNED VEHICLE DATA TO DRIVERS
+  // =========================================================
+
+  const getDriverVehicle = (driver) => {
+    if (!driver?.vehicleId) return null;
+
+    return (
+      vehicles.find(
+        (vehicle) =>
+          vehicle.firebaseId === driver.vehicleId ||
+          vehicle.id === driver.vehicleId
+      ) || null
+    );
+  };
+
+  const driversWithVehicles = drivers.map((driver) => {
+    const vehicle = getDriverVehicle(driver);
+
+    return {
+      ...driver,
+
+      assignedVehicle: vehicle,
+
+      vehicleName: vehicle?.name || "",
+      vehicleNumber: vehicle?.number || "",
+    };
+  });
+
+  // =========================================================
+  // KEEP SELECTED DRIVER UPDATED
   // =========================================================
 
   useEffect(() => {
     if (!selectedDriver) return;
 
-    const latestDriver = drivers.find(
+    const latestDriver = driversWithVehicles.find(
       (driver) => driver.firebaseId === selectedDriver.firebaseId
     );
 
     if (latestDriver) {
       setSelectedDriver(latestDriver);
     } else {
-      // Driver was deleted
       setSelectedDriver(null);
     }
-  }, [drivers]);
+  }, [drivers, vehicles]);
 
   // =========================================================
   // SEARCH
   // =========================================================
 
-  const filteredDrivers = drivers.filter((driver) => {
+  const filteredDrivers = driversWithVehicles.filter((driver) => {
     const query = search.toLowerCase().trim();
 
     if (!query) return true;
@@ -134,7 +204,7 @@ const AdminDrivers = () => {
       driver.id.toLowerCase().includes(query) ||
       driver.email.toLowerCase().includes(query) ||
       driver.phone.toLowerCase().includes(query) ||
-      driver.vehicle.toLowerCase().includes(query) ||
+      driver.vehicleName.toLowerCase().includes(query) ||
       driver.vehicleNumber.toLowerCase().includes(query)
     );
   });
@@ -148,6 +218,8 @@ const AdminDrivers = () => {
   const activeDrivers = drivers.filter(
     (driver) => driver.status === "Active"
   ).length;
+
+  const inactiveDrivers = totalDrivers - activeDrivers;
 
   // =========================================================
   // INITIALS
@@ -199,10 +271,8 @@ const AdminDrivers = () => {
     const name = newDriver.name.trim();
     const email = newDriver.email.trim();
     const phone = newDriver.phone.trim();
-    const vehicle = newDriver.vehicle.trim();
-    const vehicleNumber = newDriver.vehicleNumber.trim();
 
-    if (!name || !email || !phone || !vehicle || !vehicleNumber) {
+    if (!name || !email || !phone) {
       alert("Please fill in all driver fields.");
       return;
     }
@@ -222,28 +292,24 @@ const AdminDrivers = () => {
 
       await addDoc(collection(db, "drivers"), {
         id: driverId,
+
         name,
         email,
         phone,
-        vehicle,
-        vehicleNumber,
+
         status: newDriver.status,
+
+        // Driver starts without a vehicle.
+        vehicleId: "",
+
         joined,
         createdAt: serverTimestamp(),
       });
-
-      // IMPORTANT:
-      // We do NOT manually update drivers here.
-      //
-      // Firebase onSnapshot() will detect the new document
-      // and update the table automatically.
 
       setNewDriver({
         name: "",
         email: "",
         phone: "",
-        vehicle: "",
-        vehicleNumber: "",
         status: "Active",
       });
 
@@ -267,12 +333,29 @@ const AdminDrivers = () => {
     try {
       setDeletingDriver(true);
 
-      await deleteDoc(
-        doc(db, "drivers", driverToDelete.firebaseId)
-      );
+      const batch = writeBatch(db);
 
-      // onSnapshot() automatically removes the driver
-      // from the table after Firebase deletes it.
+      // -------------------------------------------------------
+      // If this driver has a vehicle, unassign it first.
+      // -------------------------------------------------------
+
+      const assignedVehicle = getDriverVehicle(driverToDelete);
+
+      if (assignedVehicle) {
+        batch.update(doc(db, "vehicles", assignedVehicle.firebaseId), {
+          driverId: "",
+          driver: "Unassigned",
+          updatedAt: serverTimestamp(),
+        });
+      }
+
+      // -------------------------------------------------------
+      // Delete driver
+      // -------------------------------------------------------
+
+      batch.delete(doc(db, "drivers", driverToDelete.firebaseId));
+
+      await batch.commit();
 
       if (
         selectedDriver?.firebaseId ===
@@ -302,7 +385,9 @@ const AdminDrivers = () => {
       setUpdatingStatus(true);
 
       const newStatus =
-        driver.status === "Active" ? "Inactive" : "Active";
+        driver.status === "Active"
+          ? "Inactive"
+          : "Active";
 
       await updateDoc(
         doc(db, "drivers", driver.firebaseId),
@@ -310,8 +395,6 @@ const AdminDrivers = () => {
           status: newStatus,
         }
       );
-
-      // onSnapshot() automatically updates the UI.
     } catch (error) {
       console.error("Error updating driver status:", error);
 
@@ -330,8 +413,6 @@ const AdminDrivers = () => {
       name: "",
       email: "",
       phone: "",
-      vehicle: "",
-      vehicleNumber: "",
       status: "Active",
     });
 
@@ -381,7 +462,7 @@ const AdminDrivers = () => {
       </div>
 
       {/* =====================================================
-          REAL-TIME SUMMARY
+          SUMMARY
       ===================================================== */}
 
       <div
@@ -415,7 +496,7 @@ const AdminDrivers = () => {
             fontWeight: "600",
           }}
         >
-          ● {totalDrivers - activeDrivers} Inactive Drivers
+          ● {inactiveDrivers} Inactive Drivers
         </div>
       </div>
 
@@ -440,7 +521,7 @@ const AdminDrivers = () => {
       )}
 
       {/* =====================================================
-          SEARCH + ADD DRIVER
+          TOOLBAR
       ===================================================== */}
 
       <div
@@ -551,18 +632,13 @@ const AdminDrivers = () => {
                       }
                     >
 
-                      {/* DRIVER ID */}
-
                       <td>
                         <span className="driver-id">
                           {driver.id}
                         </span>
                       </td>
 
-                      {/* DRIVER */}
-
                       <td>
-
                         <div className="driver-user">
 
                           <div className="driver-avatar">
@@ -580,10 +656,7 @@ const AdminDrivers = () => {
                           </div>
 
                         </div>
-
                       </td>
-
-                      {/* EMAIL */}
 
                       <td>
                         <span className="driver-email">
@@ -591,36 +664,41 @@ const AdminDrivers = () => {
                         </span>
                       </td>
 
-                      {/* PHONE */}
-
                       <td>
                         <span className="driver-phone">
                           {driver.phone}
                         </span>
                       </td>
 
-                      {/* VEHICLE */}
-
                       <td>
-
                         <div className="driver-vehicle">
 
-                          <strong>
-                            {driver.vehicle}
-                          </strong>
+                          {driver.assignedVehicle ? (
+                            <>
+                              <strong>
+                                {driver.assignedVehicle.name}
+                              </strong>
 
-                          <span>
-                            {driver.vehicleNumber}
-                          </span>
+                              <span>
+                                {driver.assignedVehicle.number}
+                              </span>
+                            </>
+                          ) : (
+                            <>
+                              <strong>
+                                Unassigned
+                              </strong>
+
+                              <span>
+                                No vehicle
+                              </span>
+                            </>
+                          )}
 
                         </div>
-
                       </td>
 
-                      {/* STATUS */}
-
                       <td>
-
                         <span
                           className={`driver-status ${
                             driver.status === "Active"
@@ -631,10 +709,7 @@ const AdminDrivers = () => {
                           <i></i>
                           {driver.status}
                         </span>
-
                       </td>
-
-                      {/* ACTION */}
 
                       <td>
 
@@ -690,13 +765,12 @@ const AdminDrivers = () => {
       </div>
 
       {/* =====================================================
-          DRIVER SIDE DRAWER
+          DRIVER DETAILS DRAWER
       ===================================================== */}
 
       {selectedDriver && (
 
         <>
-
           <div
             className="driver-drawer-overlay"
             onClick={() =>
@@ -787,7 +861,7 @@ const AdminDrivers = () => {
 
             <div className="drawer-section">
 
-              <h4>Vehicle Information</h4>
+              <h4>Assigned Vehicle</h4>
 
               <div className="drawer-info">
 
@@ -795,7 +869,8 @@ const AdminDrivers = () => {
                   <span>Vehicle</span>
 
                   <strong>
-                    {selectedDriver.vehicle}
+                    {selectedDriver.assignedVehicle?.name ||
+                      "Unassigned"}
                   </strong>
                 </div>
 
@@ -803,7 +878,26 @@ const AdminDrivers = () => {
                   <span>Vehicle Number</span>
 
                   <strong>
-                    {selectedDriver.vehicleNumber}
+                    {selectedDriver.assignedVehicle?.number ||
+                      "—"}
+                  </strong>
+                </div>
+
+                <div className="drawer-info-item">
+                  <span>Vehicle Type</span>
+
+                  <strong>
+                    {selectedDriver.assignedVehicle?.type ||
+                      "—"}
+                  </strong>
+                </div>
+
+                <div className="drawer-info-item">
+                  <span>Vehicle Status</span>
+
+                  <strong>
+                    {selectedDriver.assignedVehicle?.status ||
+                      "—"}
                   </strong>
                 </div>
 
@@ -871,7 +965,6 @@ const AdminDrivers = () => {
             </div>
 
           </aside>
-
         </>
 
       )}
@@ -903,14 +996,13 @@ const AdminDrivers = () => {
               background: "#ffffff",
               borderRadius: "16px",
               padding: "26px",
-              boxShadow: "0 20px 60px rgba(0,0,0,0.2)",
+              boxShadow:
+                "0 20px 60px rgba(0,0,0,0.2)",
             }}
             onClick={(e) =>
               e.stopPropagation()
             }
           >
-
-            {/* MODAL HEADER */}
 
             <div
               style={{
@@ -962,11 +1054,7 @@ const AdminDrivers = () => {
 
             </div>
 
-            {/* FORM */}
-
             <form onSubmit={handleAddDriver}>
-
-              {/* DRIVER NAME */}
 
               <div style={formGroupStyle}>
                 <label style={labelStyle}>
@@ -988,8 +1076,6 @@ const AdminDrivers = () => {
                 />
               </div>
 
-              {/* EMAIL */}
-
               <div style={formGroupStyle}>
                 <label style={labelStyle}>
                   Email
@@ -1010,8 +1096,6 @@ const AdminDrivers = () => {
                 />
               </div>
 
-              {/* PHONE */}
-
               <div style={formGroupStyle}>
                 <label style={labelStyle}>
                   Phone
@@ -1031,55 +1115,6 @@ const AdminDrivers = () => {
                   required
                 />
               </div>
-
-              {/* VEHICLE */}
-
-              <div style={formRowStyle}>
-
-                <div style={{ flex: 1 }}>
-                  <label style={labelStyle}>
-                    Vehicle
-                  </label>
-
-                  <input
-                    style={inputStyle}
-                    type="text"
-                    placeholder="Swift Dzire"
-                    value={newDriver.vehicle}
-                    onChange={(e) =>
-                      setNewDriver({
-                        ...newDriver,
-                        vehicle: e.target.value,
-                      })
-                    }
-                    required
-                  />
-                </div>
-
-                <div style={{ flex: 1 }}>
-                  <label style={labelStyle}>
-                    Vehicle Number
-                  </label>
-
-                  <input
-                    style={inputStyle}
-                    type="text"
-                    placeholder="PB-08-AB-1234"
-                    value={newDriver.vehicleNumber}
-                    onChange={(e) =>
-                      setNewDriver({
-                        ...newDriver,
-                        vehicleNumber:
-                          e.target.value.toUpperCase(),
-                      })
-                    }
-                    required
-                  />
-                </div>
-
-              </div>
-
-              {/* STATUS */}
 
               <div style={formGroupStyle}>
                 <label style={labelStyle}>
@@ -1106,7 +1141,26 @@ const AdminDrivers = () => {
                 </select>
               </div>
 
-              {/* AUTO DRIVER ID */}
+              <div
+                style={{
+                  padding: "12px 14px",
+                  borderRadius: "8px",
+                  background: "#f8fafc",
+                  marginBottom: "20px",
+                  fontSize: "13px",
+                  color: "#64748b",
+                }}
+              >
+                This driver will initially have
+                <strong style={{ color: "#111827" }}>
+                  {" "}no vehicle assigned.
+                </strong>
+
+                <br />
+
+                You can assign a vehicle from the
+                Vehicles page.
+              </div>
 
               <div
                 style={{
@@ -1118,13 +1172,13 @@ const AdminDrivers = () => {
                   color: "#64748b",
                 }}
               >
-                Driver ID will be automatically generated as{" "}
+                Driver ID will be automatically
+                generated as{" "}
+
                 <strong style={{ color: "#111827" }}>
                   {generateDriverId()}
                 </strong>
               </div>
-
-              {/* BUTTONS */}
 
               <div
                 style={{
@@ -1206,7 +1260,17 @@ const AdminDrivers = () => {
                 {driverToDelete.name}
               </strong>
               ?
+
               <br />
+
+              {getDriverVehicle(driverToDelete) && (
+                <>
+                  Their assigned vehicle will become
+                  <strong> Unassigned</strong>.
+                  <br />
+                </>
+              )}
+
               This action cannot be undone.
             </p>
 
@@ -1251,12 +1315,6 @@ const AdminDrivers = () => {
 // =========================================================
 
 const formGroupStyle = {
-  marginBottom: "15px",
-};
-
-const formRowStyle = {
-  display: "flex",
-  gap: "12px",
   marginBottom: "15px",
 };
 
