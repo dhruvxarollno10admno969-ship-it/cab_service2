@@ -42,23 +42,32 @@ function Services() {
     <section className="services-section" id="services">
 
       <div className="section-heading">
+        <span className="services-label">
+          OUR SERVICES
+        </span>
+
         <h2>
           One platform.
           <br />
           <span>Every journey.</span>
         </h2>
+
+        <p>
+          From everyday city rides to long-distance journeys,
+          MANZILL 777 makes every trip simple, comfortable and reliable.
+        </p>
       </div>
 
-      <div className="services-grid">
-        {services.map((service) => (
+      <div className="services-list">
+
+        {services.map((service, index) => (
           <ServiceCard
             key={service.id}
-            number={service.number}
-            title={service.title}
-            description={service.description}
-            image={service.image}
+            {...service}
+            reverse={index % 2 !== 0}
           />
         ))}
+
       </div>
 
     </section>
@@ -70,41 +79,47 @@ function ServiceCard({
   title,
   description,
   image,
+  reverse,
 }) {
   return (
-    <Link to="/booking" className="service-card">
+    <Link
+      to="/booking"
+      className={`service-card ${reverse ? "reverse" : ""}`}
+    >
 
-      {/* Full card image */}
-      <img
-        src={image}
-        alt={title}
-        className="service-image"
-      />
+      {/* IMAGE */}
+      <div className="service-image-box">
+        <img
+          src={image}
+          alt={title}
+          className="service-image"
+        />
+      </div>
 
-      {/* Dark gradient */}
-      <div className="service-overlay"></div>
-
-      {/* Text on image */}
+      {/* CONTENT */}
       <div className="service-content">
 
         <span className="service-number">
           {number}
         </span>
 
-        <div className="service-bottom">
+        <div className="service-info">
 
-          <div className="service-info">
-            <h3>{title}</h3>
+          <h3>{title}</h3>
 
-            <p>{description}</p>
-          </div>
+          <p>{description}</p>
 
-          <ArrowUpRight
-            className="service-arrow"
-            size={30}
-          />
+          <span className="service-link">
+            Explore service
+            <ArrowUpRight size={18} />
+          </span>
 
         </div>
+
+        <ArrowUpRight
+          className="service-arrow"
+          size={28}
+        />
 
       </div>
 

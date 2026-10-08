@@ -1,751 +1,230 @@
-/* =========================
+
+/* =========================================================
    ABOUT SECTION
-========================= */
+   PURPLE + WHITE THEME
+========================================================= */
 
 .about-section {
-   width:100%;
-   max-width: none;
-
-   min-height:700px;
-
-   
-  margin: 0 ;
-  padding: 40px 4vw;
-
-  box-sizing: border-box;
-}
-
-.about-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-margin-top: -30px;
-  margin-bottom: 70px;
-}
-
-.about-label {
-  color: #99968e;
-
-  font-size: 10px;
-  font-weight: 700;
-
-  letter-spacing: 1.5px;
-}
-
-.about-title {
-  display: grid;
-  grid-template-columns: 1.25fr 0.75fr;
-
-  gap: 100px;
-  margin-top: -120px;
-
-  align-items: end;
-
-  margin-bottom: 100px;
-}
-
-.about-title h2 {
-  margin: 0;
-
-  font-size: clamp(55px, 7vw, 92px);
-
-  line-height: 0.91;
-
-  letter-spacing: -5px;
-
-  font-weight: 600;
-}
-
-.about-title h2 span {
-  color: #88857d;
-}
-
-.about-title > p {
-  max-width: 390px;
-
-  margin: 0;
-
-  color: #716e67;
-
-  font-size: 16px;
-
-  line-height: 1.75;
-}
-
-
-/* =========================
-   JOURNEY LINE
-========================= */
-
-.journey-line {
-  display: flex;
-  align-items: center;
-
-  width: 100%;
-margin-top: -50px;
-  margin-bottom: 120px;
-}
-
-.journey-point {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-
-  min-width: max-content;
-}
-
-.journey-point > span {
-  width: 48px;
-  height: 48px;
-
-  display: grid;
-  place-items: center;
-
-  border: 1px solid #c9c7c0;
-
-  border-radius: 50%;
-
-  color: #77746d;
-
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.journey-point.active > span {
-  background: #111;
-  border-color: #111;
-
-  color: #fff;
-}
-
-.journey-point strong {
-  display: block;
-
-  font-size: 10px;
-
-  letter-spacing: 1.3px;
-}
-
-.journey-point p {
-  margin-top: 5px;
-
-  color: #85827b;
-
-  font-size: 11px;
-}
-
-.journey-track {
-  flex: 1;
-
-  height: 1px;
-
-  margin: 0 25px;
-
-  background: #d4d2cb;
-}
-
-.journey-progress {
-  width: 35%;
-  height: 100%;
-
-  background: #111;
-}
-
-
-/* =========================
-   ABOUT BOTTOM
-========================= */
-
-.about-bottom {
-  display: grid;
-margin-top: -110px;
-  grid-template-columns: 1fr 1fr;
-
-  gap: 100px;
-
-  padding-top: 80px;
-
-
-}
-
-.about-statement > span {
-  color: #89867f;
-
-  font-size: 10px;
-  font-weight: 700;
-
-  letter-spacing: 1.5px;
-}
-
-.about-statement h3 {
-  margin: 25px 0 0;
-
-  font-size: clamp(42px, 5vw, 65px);
-
-  line-height: 0.95;
-
-  letter-spacing: -3px;
-
-  font-weight: 600;
-}
-
-.about-statement em {
-  font-style: normal;
-
-  color: #8c8981;
-}
-
-
-/* =========================
-   STATS
-========================= */
-
-.about-stats {
-  display: grid;
-
-  grid-template-columns: repeat(3, 1fr);
-
-  align-self: end;
-
-
-  border-top: 1px solid #d4d2cb;
-}
-
-.about-stat {
-  min-height: 150px;
-
-  padding: 25px 20px;
-
-  border-right: 1px solid #d4d2cb;
-}
-
-.about-stat:last-child {
-  border-right: none;
-}
-
-.about-stat strong {
-  display: block;
-
-  margin-bottom: 12px;
-
-  font-size: 34px;
-
-  letter-spacing: -2px;
-}
-
-.about-stat span {
-  color: #85827b;
-
-  font-size: 9px;
-
-  font-weight: 700;
-
-  letter-spacing: 1.2px;
-}
-
-
-/* =========================
-   ABOUT CTA
-========================= */
-
-.about-cta {
-  display: flex;
-
-  align-items: center;
-  justify-content: space-between;
-
-  margin-top: 100px;
-
-  padding: 35px 0;
-
-  border-top: 1px solid #dcdad4;
-  border-bottom: 1px solid #dcdad4;
-}
-
-.about-cta p {
-  margin: 0;
-
-  color: #5f5c56;
-
-  font-size: 18px;
-
-  line-height: 1.4;
-}
-
-.about-cta-button {
-  display: flex;
-
-  align-items: center;
-  gap: 10px;
-
-  padding: 15px 22px;
-
-  background: #111;
-
-  color: #fff;
-
-  border-radius: 100px;
-
-  font-size: 13px;
-
-  text-decoration: none;
-
-  transition:
-    transform 0.25s ease,
-    background 0.25s ease;
-}
-
-.about-cta-button:hover {
-  transform: translateY(-3px);
-
-  background: #292929;
-}
-
-
-/* =========================
-   ABOUT RESPONSIVE
-========================= */
-
-@media (max-width: 800px) {
-  .about-section {
-    width: calc(100% - 32px);
-
-    padding: 90px 0;
-  }
-
-  .about-top {
-    margin-bottom: 50px;
-  }
-
-  .about-title {
-    grid-template-columns: 1fr;
-
-    gap: 35px;
-
-    margin-bottom: 70px;
-  }
-
-  .about-title h2 {
-    font-size: clamp(52px, 14vw, 75px);
-
-    letter-spacing: -4px;
-  }
-
-  .journey-line {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .journey-track {
-    width: 1px;
-    height: 45px;
-
-    flex: none;
-
-    margin: 8px 0 8px 24px;
-  }
-
-  .journey-progress {
-    width: 100%;
-    height: 40%;
-  }
-
-  .about-bottom {
-    grid-template-columns: 1fr;
-
-    gap: 60px;
-
-    padding-top: 60px;
-  }
-
-  .about-stats {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .about-stat {
-    min-height: 120px;
-
-    padding: 20px 12px;
-  }
-
-  .about-stat strong {
-    font-size: 25px;
-  }
-
-  .about-cta {
-    align-items: flex-start;
-    flex-direction: column;
-
-    gap: 25px;
-
-    margin-top: 70px;
-  }
-}
-
-@media (max-width: 500px) {
-  .about-label {
-    display: none;
-  }
-
-  .about-stats {
-    grid-template-columns: 1fr;
-  }
-
-  .about-stat {
-    min-height: auto;
-
-    border-right: none;
-    border-bottom: 1px solid #d4d2cb;
-  }
-
-  .about-stat:last-child {
-    border-bottom: none;
-  }
-}
-/* =========================
-   ABOUT VISUAL
-========================= */
-
-.about-visual {
   position: relative;
 
   width: 100%;
-  height: 520px;
 
-  margin-bottom: 110px;
+  padding: 110px 4vw 120px;
 
   overflow: hidden;
 
-  border-radius: 28px;
+  background:
+    radial-gradient(
+      circle at 10% 15%,
+      rgba(124, 58, 237, 0.10),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 90% 75%,
+      rgba(168, 85, 247, 0.08),
+      transparent 30%
+    ),
+    #ffffff;
 
-  background: #e9e7e0;
+  color: #111111;
 }
 
 
-/* GRID */
+/* =========================================================
+   BACKGROUND PURPLE GLOW
+========================================================= */
 
-.map-grid {
+.about-section::before {
+  content: "";
+
   position: absolute;
-  inset: 0;
 
-  background-image:
-    linear-gradient(
-      rgba(0, 0, 0, 0.055) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      rgba(0, 0, 0, 0.055) 1px,
-      transparent 1px
+  width: 500px;
+  height: 500px;
+
+  top: 10%;
+  left: -300px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(124, 58, 237, 0.08),
+      transparent 70%
     );
 
-  background-size: 45px 45px;
+  filter: blur(30px);
 
-  transform: rotate(-8deg) scale(1.2);
+  pointer-events: none;
 }
 
 
-/* ROADS */
+/* =========================================================
+   HEADING
+========================================================= */
 
-.map-road {
-  position: absolute;
+.about-heading {
+  position: relative;
 
-  height: 2px;
+  width: 100%;
+  max-width: 1500px;
 
-  background: rgba(40, 40, 40, 0.12);
-
-  transform-origin: left center;
-}
-
-.road-one {
-  width: 75%;
-
-  top: 25%;
-  left: -5%;
-
-  transform: rotate(12deg);
-}
-
-.road-two {
-  width: 80%;
-
-  top: 58%;
-  left: 10%;
-
-  transform: rotate(-18deg);
-}
-
-.road-three {
-  width: 65%;
-
-  top: 78%;
-  left: 40%;
-
-  transform: rotate(9deg);
-}
-
-
-/* ROUTE */
-
-.route-line {
-  position: absolute;
-
-  top: 48%;
-  left: 18%;
-  right: 18%;
+  margin: 0 auto 55px;
 
   display: flex;
 
-  align-items: center;
-}
+  align-items: flex-end;
 
-.route-start,
-.route-end {
-  position: relative;
+  justify-content: space-between;
 
-  z-index: 2;
-
-  width: 20px;
-  height: 20px;
-
-  display: grid;
-  place-items: center;
-
-  border-radius: 50%;
-}
-
-.route-start {
-  background: #111;
-
-  box-shadow:
-    0 0 0 8px rgba(17, 17, 17, 0.08);
-}
-
-.route-end {
-  width: 38px;
-  height: 38px;
-
-  background: #111;
-
-  color: white;
-
-  box-shadow:
-    0 0 0 10px rgba(17, 17, 17, 0.08);
-}
-
-.route-path {
-  position: relative;
-
-  flex: 1;
-
-  height: 2px;
-
-  margin: 0 10px;
-
-  background: repeating-linear-gradient(
-    90deg,
-    #111 0,
-    #111 8px,
-    transparent 8px,
-    transparent 16px
-  );
+  gap: 50px;
 }
 
 
-/* LOCATION CARDS */
+.about-heading-left {
+  min-width: 0;
+}
 
-.location-card {
-  position: absolute;
 
+/* =========================================================
+   EYEBROW
+========================================================= */
+
+.about-eyebrow {
   display: flex;
 
   align-items: center;
 
-  gap: 12px;
+  margin: 0 0 22px;
 
-  padding: 15px 18px;
-
-  border: 1px solid rgba(0, 0, 0, 0.08);
-
-  border-radius: 12px;
-
-  background: rgba(255, 255, 255, 0.78);
-
-  backdrop-filter: blur(12px);
-
-  box-shadow:
-    0 15px 35px rgba(0, 0, 0, 0.08);
-}
-
-.location-card small {
-  display: block;
-
-  margin-bottom: 4px;
-
-  color: #8a877f;
-
-  font-size: 8px;
-
-  font-weight: 700;
-
-  letter-spacing: 1.2px;
-}
-
-.location-card strong {
-  display: block;
-
-  font-size: 12px;
+  font-size: 11px;
 
   font-weight: 600;
-}
 
-.card-dot {
-  width: 9px;
-  height: 9px;
+  letter-spacing: 2.5px;
 
-  border-radius: 50%;
-
-  background: #111;
-}
-
-.pickup-card {
-  top: 18%;
-  left: 14%;
-}
-
-.destination-card {
-  right: 12%;
-  bottom: 17%;
+  color: #7c3aed;
 }
 
 
-/* FLOATING STAT */
+.about-eyebrow span {
+  width: 28px;
+  height: 1px;
 
-.floating-stat {
-  position: absolute;
+  margin-right: 10px;
 
-  top: 14%;
-  right: 12%;
-
-  display: flex;
-
-  flex-direction: column;
-
-  padding: 18px 20px;
-
-  border-radius: 14px;
-
-  background: #111;
-
-  color: white;
-
-  box-shadow:
-    0 20px 40px rgba(0, 0, 0, 0.15);
-}
-
-.floating-stat strong {
-  font-size: 28px;
-
-  line-height: 1;
-
-  letter-spacing: -1px;
-}
-
-.floating-stat span {
-  margin-top: 7px;
-
-  color: #aaa;
-
-  font-size: 8px;
-
-  letter-spacing: 1.3px;
+  background: #7c3aed;
 }
 
 
-/* CENTER BRAND */
+/* =========================================================
+   MAIN TITLE
+========================================================= */
 
-.map-center {
-  position: absolute;
+.about-heading h2 {
+  margin: 0;
 
-  top: 50%;
-  left: 50%;
+  font-size: clamp(52px, 6vw, 88px);
 
-  transform: translate(-50%, -50%);
+  line-height: 0.92;
 
-  display: flex;
-
-  align-items: baseline;
-
-  gap: 5px;
-
-  color: rgba(17, 17, 17, 0.15);
-
-  font-size: 55px;
-
-  font-weight: 800;
+  font-weight: 500;
 
   letter-spacing: -4px;
 
-  user-select: none;
+  color: #111111;
 }
 
-.map-center small {
-  font-size: 18px;
 
-  letter-spacing: -1px;
+.about-heading h2 span {
+  color: #7c3aed;
 }
 
-/* MOBILE */
 
-@media (max-width: 700px) {
-  .about-visual {
-    height: 430px;
+/* =========================================================
+   DESCRIPTION
+========================================================= */
 
-    border-radius: 20px;
-  }
+.about-description {
+  width: 100%;
 
-  .route-line {
-    left: 10%;
-    right: 10%;
-  }
+  max-width: 390px;
 
-  .pickup-card {
-    top: 15%;
-    left: 7%;
-  }
+  margin: 0 0 5px;
 
-  .destination-card {
-    right: 7%;
-    bottom: 13%;
-  }
+  font-size: 14px;
 
-  .floating-stat {
-    top: 8%;
-    right: 7%;
-  }
+  line-height: 1.7;
 
-  .map-center {
-    font-size: 38px;
-  }
+  color: #68656f;
 }
+
+
+/* =========================================================
+   MAP
+========================================================= */
 
 .about-visual {
   position: relative;
 
   width: 100%;
+
+  max-width: 1500px;
+
   height: 520px;
 
-  margin-bottom: 110px;
+  margin: 0 auto 90px;
 
   overflow: hidden;
 
-  border-radius: 28px;
+  border-radius: 24px;
 
-  background: #e9e7e0;
+  background:
+    linear-gradient(
+      135deg,
+      #f7f4ff,
+      #ffffff
+    );
+
+  border: 1px solid
+    rgba(124, 58, 237, 0.14);
+
+  box-shadow:
+    0 20px 60px rgba(88, 63, 135, 0.10);
 }
 
 
-/* REAL LEAFLET MAP */
+/* =========================================================
+   PURPLE MAP GLOW
+========================================================= */
+
+.about-map-glow {
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 2;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle at 20% 35%,
+      rgba(124, 58, 237, 0.10),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 80% 65%,
+      rgba(168, 85, 247, 0.08),
+      transparent 30%
+    );
+}
+
+
+/* =========================================================
+   REAL MAP
+========================================================= */
 
 .real-map {
   position: absolute !important;
@@ -761,44 +240,739 @@ margin-top: -110px;
 }
 
 
-/* Leaflet itself */
-
 .leaflet-container {
   width: 100% !important;
+
   height: 100% !important;
 
-  background: #e9e7e0;
-
-  font-family: inherit;
+  background: #f4f1fb;
 }
 
 
-/* Keep your custom cards ABOVE the map */
+/* =========================================================
+   MAP LABEL
+========================================================= */
+
+.about-map-label {
+  position: absolute;
+
+  z-index: 500;
+
+  left: 25px;
+  bottom: 25px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+
+  padding: 13px 16px;
+
+  border-radius: 12px;
+
+  background:
+    rgba(255, 255, 255, 0.92);
+
+  border: 1px solid
+    rgba(124, 58, 237, 0.15);
+
+  box-shadow:
+    0 12px 35px rgba(50, 30, 90, 0.12);
+
+  backdrop-filter: blur(12px);
+}
+
+
+.about-map-label span {
+  font-size: 8px;
+
+  font-weight: 600;
+
+  letter-spacing: 1.5px;
+
+  color: #8b5cf6;
+}
+
+
+.about-map-label strong {
+  font-size: 12px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.4px;
+
+  color: #17121f;
+}
+
+
+/* =========================================================
+   EXISTING REALMAP CUSTOM CARDS
+========================================================= */
 
 .location-card,
 .floating-stat,
 .map-brand {
   z-index: 500;
 }
-@media (max-width: 800px) {
-  .about-visual {
-    height: 450px;
-    min-height: 450px;
-  }
 
-  .real-map {
-    height: 450px !important;
-  }
+
+.location-card {
+  background:
+    rgba(255, 255, 255, 0.94);
+
+  border:
+    1px solid rgba(124, 58, 237, 0.14);
+
+  color: #17121f;
+
+  box-shadow:
+    0 15px 40px rgba(50, 30, 90, 0.12);
+
+  backdrop-filter: blur(12px);
 }
 
 
-@media (max-width: 500px) {
+.location-card small {
+  color: #7c3aed;
+}
+
+
+.location-card strong {
+  color: #17121f;
+}
+
+
+.card-dot {
+  background: #7c3aed;
+
+  box-shadow:
+    0 0 12px rgba(124, 58, 237, 0.45);
+}
+
+
+.floating-stat {
+  background:
+    rgba(255, 255, 255, 0.95);
+
+  color: #17121f;
+
+  border:
+    1px solid rgba(124, 58, 237, 0.14);
+
+  box-shadow:
+    0 15px 40px rgba(50, 30, 90, 0.12);
+}
+
+
+.floating-stat strong {
+  color: #17121f;
+}
+
+
+.floating-stat span {
+  color: #77717e;
+}
+
+
+/* =========================================================
+   JOURNEY LINE
+========================================================= */
+
+.journey-line {
+  position: relative;
+
+  width: 100%;
+
+  max-width: 1500px;
+
+  margin: 0 auto 100px;
+
+  display: flex;
+
+  align-items: center;
+}
+
+
+/* =========================================================
+   JOURNEY POINT
+========================================================= */
+
+.journey-point {
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  min-width: max-content;
+}
+
+
+.journey-point > span {
+  width: 48px;
+  height: 48px;
+
+  flex-shrink: 0;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 50%;
+
+  border: 1px solid
+    rgba(124, 58, 237, 0.20);
+
+  background:
+    #ffffff;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  color: #77717e;
+
+  box-shadow:
+    0 6px 20px rgba(50, 30, 90, 0.06);
+}
+
+
+/* ACTIVE */
+
+.journey-point.active > span {
+  color: #ffffff;
+
+  border-color: #7c3aed;
+
+  background:
+    linear-gradient(
+      135deg,
+      #8b5cf6,
+      #6d28d9
+    );
+
+  box-shadow:
+    0 8px 25px rgba(124, 58, 237, 0.25);
+}
+
+
+.journey-text strong {
+  display: block;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  letter-spacing: 1.5px;
+
+  color: #17121f;
+}
+
+
+.journey-text p {
+  margin: 5px 0 0;
+
+  font-size: 11px;
+
+  line-height: 1.4;
+
+  color: #85818b;
+}
+
+
+/* =========================================================
+   JOURNEY TRACK
+========================================================= */
+
+.journey-track {
+  position: relative;
+
+  flex: 1;
+
+  height: 1px;
+
+  margin: 0 25px;
+
+  background:
+    rgba(124, 58, 237, 0.15);
+}
+
+
+.journey-progress {
+  width: 35%;
+
+  height: 100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      #7c3aed,
+      #c084fc
+    );
+}
+
+
+/* =========================================================
+   ABOUT BOTTOM
+========================================================= */
+
+.about-bottom {
+  position: relative;
+
+  width: 100%;
+
+  max-width: 1500px;
+
+  margin: 0 auto;
+
+  padding-top: 70px;
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 70px;
+
+  border-top: 1px solid
+    rgba(124, 58, 237, 0.12);
+}
+
+
+/* =========================================================
+   STATEMENT
+========================================================= */
+
+.about-statement > span {
+  color: #7c3aed;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  letter-spacing: 1.7px;
+}
+
+
+.about-statement h3 {
+  margin: 23px 0 0;
+
+  font-size: clamp(42px, 5vw, 68px);
+
+  line-height: 0.95;
+
+  letter-spacing: -3.5px;
+
+  font-weight: 500;
+
+  color: #17121f;
+}
+
+
+.about-statement em {
+  font-style: normal;
+
+  color: #7c3aed;
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.about-stats {
+  align-self: end;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  border-top: 1px solid
+    rgba(124, 58, 237, 0.15);
+}
+
+
+.about-stat {
+  min-height: 145px;
+
+  padding: 24px 18px;
+
+  border-right: 1px solid
+    rgba(124, 58, 237, 0.13);
+}
+
+
+.about-stat:last-child {
+  border-right: none;
+}
+
+
+.about-stat strong {
+  display: block;
+
+  margin-bottom: 12px;
+
+  font-size: 34px;
+
+  line-height: 1;
+
+  font-weight: 500;
+
+  letter-spacing: -2px;
+
+  color: #17121f;
+}
+
+
+.about-stat span {
+  color: #85818b;
+
+  font-size: 9px;
+
+  font-weight: 600;
+
+  letter-spacing: 1.2px;
+}
+
+
+/* =========================================================
+   CTA
+========================================================= */
+
+.about-cta {
+  width: 100%;
+
+  max-width: 1500px;
+
+  margin: 95px auto 0;
+
+  padding: 30px 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 30px;
+
+  border-top: 1px solid
+    rgba(124, 58, 237, 0.12);
+
+  border-bottom: 1px solid
+    rgba(124, 58, 237, 0.12);
+}
+
+
+.about-cta p {
+  margin: 0;
+
+  font-size: 17px;
+
+  line-height: 1.45;
+
+  color: #68656f;
+}
+
+
+.about-cta-button {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  padding: 14px 21px;
+
+  border-radius: 100px;
+
+  text-decoration: none;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #8b5cf6,
+      #6d28d9
+    );
+
+  border: 1px solid
+    rgba(124, 58, 237, 0.20);
+
+  box-shadow:
+    0 10px 30px rgba(124, 58, 237, 0.20);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+
+.about-cta-button:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 15px 40px rgba(124, 58, 237, 0.30);
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+
+  .about-section {
+    padding: 90px 3vw 100px;
+  }
+
+
+  .about-heading {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 22px;
+
+    margin-bottom: 45px;
+  }
+
+
+  .about-description {
+    max-width: 600px;
+  }
+
+
+  .about-visual {
+    height: 460px;
+
+    margin-bottom: 75px;
+  }
+
+
+  .journey-line {
+    margin-bottom: 80px;
+  }
+
+
+  .about-bottom {
+    gap: 45px;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 800px) {
+
+  .about-section {
+    padding: 80px 20px 90px;
+  }
+
+
+  .about-heading h2 {
+    font-size: clamp(50px, 12vw, 75px);
+
+    letter-spacing: -3.5px;
+  }
+
+
+  .about-description {
+    font-size: 13px;
+  }
+
+
+  .about-visual {
+    height: 430px;
+
+    margin-bottom: 65px;
+
+    border-radius: 20px;
+  }
+
+
+  /* JOURNEY BECOMES VERTICAL */
+
+  .journey-line {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    margin-bottom: 70px;
+  }
+
+
+  .journey-track {
+    width: 1px;
+
+    height: 45px;
+
+    flex: none;
+
+    margin: 8px 0 8px 24px;
+  }
+
+
+  .journey-progress {
+    width: 100%;
+
+    height: 40%;
+  }
+
+
+  /* BOTTOM */
+
+  .about-bottom {
+    grid-template-columns: 1fr;
+
+    gap: 55px;
+
+    padding-top: 60px;
+  }
+
+
+  .about-statement h3 {
+    font-size: clamp(42px, 11vw, 62px);
+  }
+
+
+  /* CTA */
+
+  .about-cta {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    margin-top: 70px;
+
+    gap: 24px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .about-section {
+    padding-left: 20px;
+
+    padding-right: 20px;
+  }
+
+
+  .about-heading h2 {
+    font-size: 49px;
+
+    letter-spacing: -3px;
+  }
+
+
   .about-visual {
     height: 400px;
+
     min-height: 400px;
+
+    border-radius: 18px;
   }
+
 
   .real-map {
     height: 400px !important;
   }
+
+
+  .about-map-label {
+    left: 15px;
+
+    bottom: 15px;
+
+    padding: 11px 13px;
+  }
+
+
+  /* STATS */
+
+  .about-stats {
+    grid-template-columns: 1fr;
+  }
+
+
+  .about-stat {
+    min-height: auto;
+
+    padding: 20px 0;
+
+    border-right: none;
+
+    border-bottom:
+      1px solid rgba(124, 58, 237, 0.13);
+  }
+
+
+  .about-stat:last-child {
+    border-bottom: none;
+  }
+
+
+  .about-stat strong {
+    font-size: 28px;
+  }
+
+
+  /* BUTTON */
+
+  .about-cta-button {
+    width: 100%;
+  }
+
 }
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 400px) {
+
+  .about-section {
+    padding-left: 16px;
+
+    padding-right: 16px;
+  }
+
+
+  .about-heading h2 {
+    font-size: 44px;
+
+    letter-spacing: -2.5px;
+  }
+
+
+  .about-visual {
+    height: 370px;
+
+    min-height: 370px;
+  }
+
+
+  .real-map {
+    height: 370px !important;
+  }
+
+}
+

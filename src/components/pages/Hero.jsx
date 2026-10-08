@@ -1,23 +1,20 @@
 import { ArrowUpRight, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
-import LightPillar from "./Lightpillar.jsx";
+import LightPillar from "../Lightpillar";
+import QuickBooking from "../QuickBooking";
 
 function Hero() {
   return (
-    <section className="hero-wrapper">
+    <section className="hero-wrapper" id="home">
 
-      {/* =========================================
-          LIGHT PILLAR
-          Full strength in Hero
-          Fades at bottom
-      ========================================= */}
-
-      <div className="hero-pillar">
-
+      {/* ================================
+          LIGHT PILLAR BACKGROUND
+      ================================= */}
+      <div className="hero-pillar" aria-hidden="true">
         <LightPillar
           topColor="#5227FF"
           bottomColor="#FF9FFC"
-          intensity={1}
+          intensity={0.85}
           rotationSpeed={0.3}
           glowAmount={0.002}
           pillarWidth={3}
@@ -28,23 +25,22 @@ function Hero() {
           mixBlendMode="screen"
           quality="high"
         />
-
       </div>
 
+      {/* ================================
+          DARK OVERLAY
+          Keeps text readable
+      ================================= */}
+      <div className="hero-overlay" aria-hidden="true"></div>
 
-      {/* =========================================
+      {/* ================================
           HERO CONTENT
-      ========================================= */}
+      ================================= */}
+      <div className="hero-section">
 
-      <section
-        className="hero-section"
-        id="home"
-      >
-
-        {/* =====================================
-            HERO LEFT
-        ===================================== */}
-
+        {/* ============================
+            LEFT CONTENT
+        ============================= */}
         <div className="hero-content">
 
           <p className="eyebrow">
@@ -52,128 +48,58 @@ function Hero() {
             PREMIUM CAB SERVICES
           </p>
 
-
           <h1>
             Move smarter.
             <br />
-
-            <span>
-              Ride better.
-            </span>
+            <span>Ride better.</span>
           </h1>
 
-
           <p className="hero-description">
-            Reliable rides for everyday journeys,
-            airport transfers, business trips and
-            everything in between.
+            Reliable rides for everyday journeys, airport transfers,
+            business trips and everything in between.
           </p>
-
 
           <div className="hero-actions">
 
-            <Link
-              to="/booking"
-              className="primary-button"
-            >
-              <span>
-                Book a Ride
-              </span>
-
+            <Link to="/booking" className="primary-button">
+              <span>Book a Ride</span>
               <ArrowUpRight size={19} />
             </Link>
 
           </div>
 
-        </div>
+          {/* Small trust indicators */}
+          <div className="hero-trust">
 
-
-        {/* =====================================
-            QUICK BOOKING
-        ===================================== */}
-
-        <div className="booking-card">
-
-          <div className="booking-header">
-
-            <div>
-
-              <span>
-                QUICK BOOKING
-              </span>
-
-              <h2>
-                Where are you going?
-              </h2>
-
+            <div className="trust-item">
+              <strong>24/7</strong>
+              <span>Availability</span>
             </div>
 
+            <div className="trust-divider"></div>
 
-            <MapPin size={22} />
+            <div className="trust-item">
+              <strong>Safe</strong>
+              <span>Professional rides</span>
+            </div>
 
-          </div>
+            <div className="trust-divider"></div>
 
-
-          {/* PICKUP */}
-
-          <div className="location-input">
-
-            <span className="input-dot pickup"></span>
-
-            <div>
-
-              <small>
-                Pickup
-              </small>
-
-              <p>
-                Enter pickup location
-              </p>
-
+            <div className="trust-item">
+              <strong>Fast</strong>
+              <span>Easy booking</span>
             </div>
 
           </div>
-
-
-          <div className="location-line"></div>
-
-
-          {/* DESTINATION */}
-
-          <div className="location-input">
-
-            <span className="input-dot destination"></span>
-
-            <div>
-
-              <small>
-                Destination
-              </small>
-
-              <p>
-                Where do you want to go?
-              </p>
-
-            </div>
-
-          </div>
-
-
-          {/* BOOKING BUTTON */}
-
-          <Link
-            to="/booking"
-            className="booking-button"
-          >
-            Find a Ride
-
-            <ArrowUpRight size={18} />
-
-          </Link>
 
         </div>
 
-      </section>
+        {/* ============================
+            QUICK BOOKING CARD
+        ============================= */}
+        <QuickBooking/>
+
+      </div>
 
     </section>
   );
