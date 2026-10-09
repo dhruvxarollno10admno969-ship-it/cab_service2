@@ -16,6 +16,7 @@ import Service from "../components/Service";
 import About from "../components/About";
 import Testimonials from "../components/Testimonials";
 import Hero from "../components/pages/Hero";
+import Fleet from "./Fleet";
 
 function Home() {
   // =====================================================
@@ -94,144 +95,10 @@ function Home() {
           FLEET
       ===================================================== */}
 
-      <section className="fleet-section" id="fleet">
-        <div className="fleet-heading">
-          <div>
-            <p className="eyebrow"></p>
+      <Fleet />
 
-            <h2>
-              Choose your
-              <br />
-              <span>perfect ride.</span>
-            </h2>
-          </div>
 
-          <p className="fleet-intro">
-            From everyday city rides to comfortable long-distance
-            journeys, choose the vehicle that fits your trip.
-          </p>
-        </div>
-
-        {/* =====================================================
-            FLEET CARDS
-        ===================================================== */}
-
-        <div className="fleet-grid">
-
-          {/* SEDAN */}
-
-          <article className="fleet-card featured">
-            <div className="fleet-image">
-              <div className="car-placeholder">
-                SEDAN
-              </div>
-
-              <span className="fleet-tag">
-                MOST POPULAR
-              </span>
-            </div>
-
-            <div className="fleet-info">
-              <div>
-                <span className="fleet-type">
-                  EVERYDAY
-                </span>
-
-                <h3>City Sedan</h3>
-              </div>
-
-              <span className="fleet-price">
-                ₹12<span>/km</span>
-              </span>
-            </div>
-
-            <p className="fleet-description">
-              Comfortable and efficient for everyday city
-              journeys and airport transfers.
-            </p>
-
-            <div className="fleet-features">
-              <span>4 Seats</span>
-              <span>AC</span>
-              <span>2 Bags</span>
-            </div>
-          </article>
-
-          {/* SUV */}
-
-          <article className="fleet-card">
-            <div className="fleet-image">
-              <div className="car-placeholder">
-                SUV
-              </div>
-            </div>
-
-            <div className="fleet-info">
-              <div>
-                <span className="fleet-type">
-                  SPACIOUS
-                </span>
-
-                <h3>Comfort SUV</h3>
-              </div>
-
-              <span className="fleet-price">
-                ₹16<span>/km</span>
-              </span>
-            </div>
-
-            <p className="fleet-description">
-              More space for passengers and luggage without
-              compromising comfort.
-            </p>
-
-            <div className="fleet-features">
-              <span>6 Seats</span>
-              <span>AC</span>
-              <span>4 Bags</span>
-            </div>
-          </article>
-
-          {/* PREMIUM */}
-
-          <article className="fleet-card">
-            <div className="fleet-image">
-              <div className="car-placeholder premium-car">
-                PREMIUM
-              </div>
-            </div>
-
-            <div className="fleet-info">
-              <div>
-                <span className="fleet-type">
-                  EXECUTIVE
-                </span>
-
-                <h3>Premium Ride</h3>
-              </div>
-
-              <span className="fleet-price">
-                ₹22<span>/km</span>
-              </span>
-            </div>
-
-            <p className="fleet-description">
-              A refined ride for business trips, special
-              occasions and premium travel.
-            </p>
-
-            <div className="fleet-features">
-              <span>4 Seats</span>
-              <span>AC</span>
-              <span>3 Bags</span>
-            </div>
-          </article>
-
-        </div>
-      </section>
-
-            
-
+          
       {/* =====================================================
           TESTIMONIALS
       ===================================================== */}
