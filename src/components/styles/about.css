@@ -71,7 +71,31 @@ section#about.about-section .about-heading h2 {
 }
 
 section#about.about-section .about-heading h2 span {
-  color: var(--about-purple-light);
+    display: inline-block;
+
+  font-size: inherit;
+  font-weight: inherit;
+
+  line-height: inherit;
+  letter-spacing: inherit;
+
+  background:
+    linear-gradient(
+      100deg,
+      #a78bfa 0%,
+      #c084fc 48%,
+      #ff9ffc 100%
+    );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+
+  filter:
+    drop-shadow(
+      0 0 20px rgba(192, 132, 252, 0.22)
+    );
 }
 
 section#about.about-section .about-description {
@@ -265,7 +289,7 @@ section#about.about-section .about-bottom {
 }
 
 section#about.about-section .about-statement > span {
-  color: #b9a9ff;
+  color: #c9bcff;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 2px;
@@ -273,7 +297,7 @@ section#about.about-section .about-statement > span {
 
 section#about.about-section .about-statement h3 {
   margin: 25px 0 0;
-  color: #ffffff;
+  color: #fefbfb;
   font-size: clamp(45px, 5.2vw, 76px);
   line-height: 1.02;
   letter-spacing: -3.5px;

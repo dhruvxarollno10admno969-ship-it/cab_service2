@@ -37,17 +37,20 @@
 }
 
 .services-label {
-  display: inline-flex;
+    display: flex;
   align-items: center;
+  gap: 10px;
 
-  margin-bottom: 25px;
+  margin: 0 0 25px;
 
+  color: #c9c2d8;
+
+  font-family: "DM Sans", sans-serif;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
 
   letter-spacing: 2px;
-
-  color: #b9a9ff;
+  text-transform: uppercase;
 }
 
 .services-label::before {
@@ -76,7 +79,31 @@
 }
 
 .section-heading h2 span {
-  color: #a78bfa;
+  display: inline-block;
+
+  font-size: inherit;
+  font-weight: inherit;
+
+  line-height: inherit;
+  letter-spacing: inherit;
+
+  background:
+    linear-gradient(
+      100deg,
+      #a78bfa 0%,
+      #c084fc 48%,
+      #ff9ffc 100%
+    );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+
+  filter:
+    drop-shadow(
+      0 0 20px rgba(192, 132, 252, 0.22)
+    );
 }
 
 .section-heading p {

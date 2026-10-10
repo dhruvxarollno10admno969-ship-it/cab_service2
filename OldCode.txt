@@ -84,3 +84,87 @@ Hero section
           <ArrowUpRight size={18} />
         </Link>
       </div>
+
+
+      
+/* ========================================
+   CONTACT PAGE LAYOUT FIX
+   Keep styles isolated from global CSS
+======================================== */
+
+.customer-page-content > .contact-page {
+  display: block;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
+.contact-page {
+  min-height: 600px;
+  height: auto;
+}
+
+.contact-page .contact-container {
+  width: 100%;
+  max-width: 1250px;
+  margin-inline: auto;
+  align-items: start;
+}
+
+.contact-page .contact-title h1 {
+  color: #fff;
+  font-size: clamp(40px, 4.5vw, 58px);
+  font-weight: 750;
+  line-height: 1.08;
+  letter-spacing: -2px;
+  text-transform: none;
+}
+
+.contact-page .contact-form {
+  margin: 0;
+}
+
+.contact-page .contact-field input,
+.contact-page .contact-field textarea {
+  max-width: 100%;
+  min-width: 0;
+  text-transform: none;
+}
+
+/* Tablet */
+@media (min-width: 601px) and (max-width: 900px) {
+  .contact-page {
+    padding: 65px 4vw;
+  }
+
+  .contact-page .contact-container {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 28px;
+  }
+
+  .contact-page .contact-form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .contact-page {
+    min-height: auto;
+    padding: 48px 20px 60px;
+  }
+
+  .contact-page .contact-container {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 36px;
+  }
+
+  .contact-page .contact-form-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contact-page .contact-title h1 {
+    font-size: clamp(38px, 10vw, 48px);
+    letter-spacing: -1.5px;
+  }
+}

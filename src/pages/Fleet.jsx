@@ -112,11 +112,6 @@ useEffect(() => {
             <span className="fleet-label-dot" />
             MANZILL 777 / OUR FLEET
           </p>
-
-          <p className="fleet-intro">
-            Comfort, space and reliability. Find the right ride for
-            wherever your journey takes you.
-          </p>
         </div>
 
         <div className="fleet-heading">
@@ -129,12 +124,9 @@ useEffect(() => {
             <p>
               From everyday city rides to premium long-distance
               journeys, travel your way with MANZILL 777.
+              Comfort, space and reliability. Find the right ride for
+            wherever your journey takes you.
             </p>
-
-            <Link to="/booking" className="fleet-main-cta">
-              Book your ride
-              <ArrowUpRight size={18} />
-            </Link>
           </div>
         </div>
 
