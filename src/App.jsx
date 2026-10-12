@@ -161,7 +161,7 @@ function App() {
 
         {/* FEEDBACK */}
   <Route
-    path="/admin/feedback"
+    path="/admin/contact-enquiries"
     element={
       <AdminLayout>
         <AdminFeedback />

@@ -1,361 +1,735 @@
-
-/* =========================================================
-   MANZILL 777 — ABOUT SECTION
-   PURE BLACK + PURPLE ACCENTS + WHITE TEXT
-========================================================= */
+/* =====================================================
+   MANZILL 777 — PREMIUM ABOUT SECTION
+   BLACK / PURPLE / PINK / WHITE + DROP LIGHTS
+===================================================== */
 
 section#about.about-section {
-  --about-bg: #000000;
   --about-purple: #5227ff;
   --about-purple-light: #a78bfa;
   --about-pink: #ff9ffc;
   --about-text: #ffffff;
-  --about-muted: rgba(255, 255, 255, 0.68);
-  --about-border: rgba(167, 139, 250, 0.22);
-  position: relative !important;
+  --about-muted: rgba(255, 255, 255, 0.62);
+  --about-border: rgba(167, 139, 250, 0.2);
+
+  position: relative;
   isolation: isolate;
-  width: 100% !important;
-  min-height: 100vh !important;
-  padding: 110px 4vw 125px !important;
-  overflow: hidden !important;
-  color: var(--about-text) !important;
-  background: #000000 !important;
+  width: 100%;
+  padding: 110px 4vw 100px;
+  overflow: hidden;
+  box-sizing: border-box;
+  color: var(--about-text);
+
+  /* Background drop lights */
+  background:
+    radial-gradient(
+      ellipse 500px 420px at 95% 12%,
+      rgba(82, 39, 255, 0.24),
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 420px 380px at 5% 48%,
+      rgba(124, 58, 237, 0.18),
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 500px 350px at 85% 88%,
+      rgba(255, 159, 252, 0.12),
+      transparent 72%
+    ),
+    #000000;
 }
 
-/* Keep all direct content above the background */
-section#about.about-section > * {
+.about-section *,
+.about-section *::before,
+.about-section *::after {
+  box-sizing: border-box;
+}
+
+.about-section a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* =====================================================
+   SECTION DROP LIGHTS
+===================================================== */
+
+section#about.about-section::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: 6%;
+  right: -170px;
+  width: 430px;
+  height: 430px;
+  border-radius: 50%;
+  background: rgba(82, 39, 255, 0.28);
+  filter: blur(130px);
+  pointer-events: none;
+}
+
+section#about.about-section::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  left: -170px;
+  bottom: 4%;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: rgba(255, 159, 252, 0.17);
+  filter: blur(125px);
+  pointer-events: none;
+}
+
+.about-section > * {
   position: relative;
   z-index: 1;
 }
 
-/* =========================================================
-   HEADING
-========================================================= */
+/* =====================================================
+   SHARED EYEBROWS
+===================================================== */
 
-section#about.about-section .about-heading {
-  width: 100%;
-  max-width: 1450px;
-  margin: 0 auto 65px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 45px;
-}
-
-section#about.about-section .about-eyebrow {
+.about-eyebrow {
   display: flex;
   align-items: center;
   gap: 12px;
   margin: 0 0 25px;
-  color: #b9a9ff;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 2.3px;
+  color: #c4b5fd;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
 }
 
-section#about.about-section .about-eyebrow span {
-  display: block;
+.about-eyebrow span {
   width: 30px;
   height: 2px;
   flex-shrink: 0;
   background: var(--about-purple);
 }
 
-section#about.about-section .about-heading h2 {
+.about-mini-label {
+  display: inline-block;
+  color: #b9a9ff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  line-height: 1.6;
+}
+
+/* =====================================================
+   MAIN HEADING
+===================================================== */
+
+.about-heading {
+  width: 100%;
+  max-width: 1450px;
+  margin: 0 auto 75px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 45px;
+}
+
+.about-heading-content {
+  min-width: 0;
+}
+
+.about-heading h2 {
   margin: 0;
   color: #ffffff;
-  font-size: clamp(46px, 6.5vw, 94px);
+  font-size: clamp(48px, 6.5vw, 94px);
   line-height: 0.98;
   font-weight: 500;
   letter-spacing: -4px;
 }
 
-section#about.about-section .about-heading h2 span {
-    display: inline-block;
-
-  font-size: inherit;
-  font-weight: inherit;
-
-  line-height: inherit;
-  letter-spacing: inherit;
-
-  background:
-    linear-gradient(
-      100deg,
-      #a78bfa 0%,
-      #c084fc 48%,
-      #ff9ffc 100%
-    );
-
-  -webkit-background-clip: text;
+.about-heading h2 span {
+  display: inline-block;
+  background: linear-gradient(
+    100deg,
+    #a78bfa 0%,
+    #c084fc 48%,
+    #ff9ffc 100%
+  );
   background-clip: text;
-
+  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-
-  filter:
-    drop-shadow(
-      0 0 20px rgba(192, 132, 252, 0.22)
-    );
+  filter: drop-shadow(0 0 20px rgba(192, 132, 252, 0.16));
 }
 
-section#about.about-section .about-description {
+.about-description {
   width: 100%;
-  max-width: 480px;
-  margin: 0 0 7px;
+  max-width: 440px;
+  margin: 0 0 6px;
   color: var(--about-muted);
-  font-size: 17px;
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+/* =====================================================
+   FEATURED BRAND PANEL
+===================================================== */
+
+.about-experience {
+  position: relative;
+  width: 100%;
+  max-width: 1450px;
+  min-height: 470px;
+  margin: 0 auto 110px;
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 70px;
+  align-items: center;
+}
+
+.about-experience-copy {
+  padding: 15px 0;
+}
+
+.about-experience-copy h3 {
+  margin: 26px 0 22px;
+  color: #ffffff;
+  font-size: clamp(44px, 5vw, 72px);
+  font-weight: 500;
+  line-height: 1.03;
+  letter-spacing: -3px;
+}
+
+.about-experience-copy h3 em,
+.about-features-heading h3 em,
+.journey-heading h3 em {
+  color: var(--about-purple-light);
+  font-style: normal;
+}
+
+.about-experience-copy > p {
+  max-width: 430px;
+  margin: 0;
+  color: var(--about-muted);
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+.about-inline-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 30px;
+  padding-bottom: 9px;
+  color: #ffffff;
+  border-bottom: 1px solid rgba(167, 139, 250, 0.6);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: gap 0.3s ease, color 0.3s ease;
+}
+
+.about-inline-link:hover {
+  gap: 18px;
+  color: #d8b4fe;
+}
+
+/* =====================================================
+   DECORATIVE BRAND VISUAL
+===================================================== */
+
+.about-experience-visual {
+  position: relative;
+  isolation: isolate;
+  min-width: 0;
+  min-height: 440px;
+  padding: 35px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  border: 1px solid rgba(167, 139, 250, 0.27);
+  border-radius: 26px;
+
+  background:
+    radial-gradient(
+      ellipse at 85% 15%,
+      rgba(139, 92, 246, 0.30),
+      transparent 45%
+    ),
+    radial-gradient(
+      ellipse at 5% 100%,
+      rgba(82, 39, 255, 0.22),
+      transparent 45%
+    ),
+    linear-gradient(135deg, #100b1b, #050408 75%);
+
+  box-shadow:
+    0 30px 90px rgba(0, 0, 0, 0.4),
+    0 0 55px rgba(82, 39, 255, 0.07),
+    inset 0 1px rgba(255, 255, 255, 0.035);
+}
+
+.about-experience-visual::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 320px;
+  height: 320px;
+  right: -100px;
+  top: 90px;
+  border: 1px solid rgba(167, 139, 250, 0.17);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 35px rgba(167, 139, 250, 0.025),
+    0 0 0 70px rgba(167, 139, 250, 0.02);
+}
+
+.about-orb {
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+.about-orb-one {
+  width: 170px;
+  height: 170px;
+  right: 12%;
+  top: 25%;
+  background: radial-gradient(
+    circle,
+    rgba(139, 92, 246, 0.22),
+    transparent 72%
+  );
+}
+
+.about-orb-two {
+  width: 130px;
+  height: 130px;
+  left: 10%;
+  bottom: 10%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 159, 252, 0.13),
+    transparent 72%
+  );
+}
+
+.about-visual-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #c4b5fd;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+}
+
+.about-live-dot {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #a78bfa;
+  box-shadow: 0 0 12px rgba(167, 139, 250, 0.8);
+}
+
+.about-visual-brand {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 40px 0;
+}
+
+.about-brand-mark {
+  width: 70px;
+  height: 70px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(196, 181, 253, 0.5);
+  border-radius: 20px;
+  color: #ffffff;
+  background: linear-gradient(
+    145deg,
+    rgba(139, 92, 246, 0.4),
+    rgba(82, 39, 255, 0.08)
+  );
+  box-shadow: 0 0 35px rgba(82, 39, 255, 0.12);
+  font-size: 36px;
+  font-weight: 500;
+  letter-spacing: -3px;
+}
+
+.about-visual-brand > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.about-visual-brand strong {
+  color: #ffffff;
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: 4px;
+}
+
+.about-visual-brand > div > span {
+  color: #a78bfa;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  line-height: 1.7;
+}
+
+.about-visual-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(167, 139, 250, 0.5),
+    rgba(167, 139, 250, 0.03)
+  );
+}
+
+.about-visual-message {
+  margin: 30px 0;
+}
+
+.about-visual-message > span {
+  color: #b9a9ff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+}
+
+.about-visual-message h4 {
+  margin: 13px 0 9px;
+  color: #ffffff;
+  font-size: clamp(25px, 3vw, 38px);
+  line-height: 1.15;
+  font-weight: 500;
+  letter-spacing: -1px;
+}
+
+.about-visual-message p {
+  margin: 0;
+  color: var(--about-muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.about-visual-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+}
+
+.about-footer-line {
+  width: 20px;
+  height: 1px;
+  background: #7c3aed;
+}
+
+/* =====================================================
+   FEATURE CARDS
+===================================================== */
+
+.about-features-heading {
+  width: 100%;
+  max-width: 1450px;
+  margin: 0 auto 32px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.about-features-heading h3,
+.journey-heading h3 {
+  margin: 13px 0 0;
+  color: #ffffff;
+  font-size: clamp(34px, 4vw, 52px);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -2px;
+}
+
+.about-features-heading > p {
+  max-width: 310px;
+  margin: 0;
+  color: var(--about-muted);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.about-features {
+  width: 100%;
+  max-width: 1450px;
+  margin: 0 auto 110px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.about-feature-card {
+  min-width: 0;
+  min-height: 285px;
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border: 1px solid var(--about-border);
+  border-radius: 20px;
+
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(82, 39, 255, 0.14),
+      transparent 48%
+    ),
+    #08070c;
+
+  transition:
+    transform 0.35s ease,
+    border-color 0.35s ease,
+    background 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.about-feature-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(167, 139, 250, 0.55);
+  box-shadow: 0 12px 40px rgba(82, 39, 255, 0.12);
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(82, 39, 255, 0.22),
+      transparent 50%
+    ),
+    #0c0913;
+}
+
+.about-feature-top {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.about-feature-top > span {
+  color: #a78bfa;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.about-feature-icon {
+  width: 47px;
+  height: 47px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(167, 139, 250, 0.25);
+  border-radius: 14px;
+  background: rgba(82, 39, 255, 0.12);
+  color: #c4b5fd;
+}
+
+.about-feature-card h4 {
+  margin: 28px 0 12px;
+  color: #ffffff;
+  font-size: clamp(21px, 2vw, 27px);
+  font-weight: 500;
+  letter-spacing: -0.8px;
+}
+
+.about-feature-card > p {
+  margin: 0 0 28px;
+  color: var(--about-muted);
+  font-size: 13px;
   line-height: 1.85;
 }
 
-/* =========================================================
-   MAP FRAME
-========================================================= */
-
-section#about.about-section .about-visual {
-  position: relative !important;
-  isolation: isolate;
+.about-feature-bottom {
   width: 100%;
-  max-width: 1450px;
-  height: 520px;
-  margin: 0 auto 90px;
-  overflow: hidden;
-  border-radius: 24px;
-  background: #000000 !important;
-  border: 1px solid rgba(167, 139, 250, 0.28);
-  box-shadow: 0 20px 65px rgba(0, 0, 0, 0.55);
-}
-
-/* Interactive map */
-section#about.about-section .real-map {
-  position: absolute !important;
-  inset: 0 !important;
-  z-index: 1 !important;
-  width: 100% !important;
-  height: 100% !important;
-}
-
-section#about.about-section .real-map > * {
-  width: 100% !important;
-  height: 100% !important;
-}
-
-section#about.about-section .leaflet-container {
-  width: 100% !important;
-  height: 100% !important;
-  background: #000000 !important;
-}
-
-/* Optional subtle purple map glow */
-section#about.about-section .about-map-glow {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  background:
-    radial-gradient(
-      circle at 12% 18%,
-      rgba(82, 39, 255, 0.10),
-      transparent 36%
-    ),
-    linear-gradient(
-      180deg,
-      transparent 65%,
-      rgba(0, 0, 0, 0.35)
-    );
-}
-
-/* Map information label */
-section#about.about-section .about-map-label {
-  position: absolute;
-  left: 25px;
-  bottom: 25px;
-  z-index: 500;
+  margin-top: auto;
+  padding-top: 17px;
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 16px 20px;
-  border-radius: 14px;
-  background: rgba(0, 0, 0, 0.94);
-  border: 1px solid rgba(167, 139, 250, 0.35);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(12px);
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-top: 1px solid rgba(167, 139, 250, 0.16);
+  color: #b9a9ff;
 }
 
-section#about.about-section .about-map-label span {
-  color: var(--about-purple-light);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
+.about-feature-bottom span {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
 }
 
-section#about.about-section .about-map-label strong {
-  color: #ffffff;
-  font-size: 15px;
-}
-
-/* =========================================================
+/* =====================================================
    JOURNEY TIMELINE
-========================================================= */
+===================================================== */
 
-section#about.about-section .journey-line {
+.journey-section {
   width: 100%;
   max-width: 1450px;
   margin: 0 auto 100px;
-  display: flex;
-  align-items: center;
-  gap: 0;
 }
 
-section#about.about-section .journey-point {
+.journey-heading {
+  margin-bottom: 38px;
+}
+
+.journey-line {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.journey-point {
   display: flex;
   align-items: center;
   gap: 15px;
   min-width: max-content;
 }
 
-section#about.about-section .journey-point > span {
+.journey-number {
   width: 54px;
   height: 54px;
   flex-shrink: 0;
   display: grid;
   place-items: center;
-  border-radius: 50%;
-  background: #000000;
   border: 1px solid rgba(167, 139, 250, 0.4);
+  border-radius: 50%;
   color: #c4b5fd;
+  background: #050408;
   font-size: 13px;
   font-weight: 600;
 }
 
-section#about.about-section .journey-point.active > span {
+.journey-point.active .journey-number {
   color: #ffffff;
-  background: linear-gradient(
-    135deg,
-    #5227ff,
-    #8b5cf6
-  );
   border-color: #a78bfa;
-  box-shadow: 0 8px 30px rgba(82, 39, 255, 0.3);
+  background: linear-gradient(135deg, #5227ff, #8b5cf6);
+  box-shadow: 0 8px 30px rgba(82, 39, 255, 0.25);
 }
 
-section#about.about-section .journey-text strong {
+.journey-text strong {
   display: block;
   color: #ffffff;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
 }
 
-section#about.about-section .journey-text p {
+.journey-text p {
+  max-width: 180px;
   margin: 7px 0 0;
-  color: rgba(255, 255, 255, 0.56);
-  font-size: 13px;
+  color: var(--about-muted);
+  font-size: 12px;
   line-height: 1.6;
 }
 
-section#about.about-section .journey-track {
+.journey-track {
   position: relative;
   flex: 1;
   min-width: 20px;
   height: 1px;
-  margin: 0 24px;
+  margin: 0 20px;
   background: rgba(167, 139, 250, 0.25);
 }
 
-section#about.about-section .journey-progress {
+.journey-progress {
   width: 35%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    #5227ff,
-    #a78bfa
-  );
+  background: linear-gradient(90deg, #5227ff, #a78bfa);
   box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
 }
 
-/* =========================================================
-   BOTTOM STATEMENT
-========================================================= */
+/* =====================================================
+   BRAND STATEMENT + STATISTICS
+===================================================== */
 
-section#about.about-section .about-bottom {
+.about-bottom {
   width: 100%;
   max-width: 1450px;
   margin: 0 auto;
-  padding-top: 70px;
+  padding-top: 65px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 65px;
+  gap: 60px;
   border-top: 1px solid var(--about-border);
 }
 
-section#about.about-section .about-statement > span {
+.about-statement > span {
   color: #c9bcff;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 2px;
 }
 
-section#about.about-section .about-statement h3 {
-  margin: 25px 0 0;
-  color: #fefbfb;
-  font-size: clamp(45px, 5.2vw, 76px);
-  line-height: 1.02;
-  letter-spacing: -3.5px;
+.about-statement h3 {
+  margin: 24px 0 0;
+  color: #ffffff;
+  font-size: clamp(44px, 5vw, 72px);
+  line-height: 1.03;
+  letter-spacing: -3px;
   font-weight: 500;
 }
 
-section#about.about-section .about-statement em {
+.about-statement h3 em {
   color: var(--about-purple-light);
   font-style: normal;
 }
 
-/* =========================================================
-   STATISTICS
-========================================================= */
-
-section#about.about-section .about-stats {
+.about-stats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   align-self: end;
   border-top: 1px solid var(--about-border);
 }
 
-section#about.about-section .about-stat {
-  min-height: 150px;
-  padding: 28px 18px;
-  border-right: 1px solid rgba(167, 139, 250, 0.18);
+.about-stat {
+  min-width: 0;
+  min-height: 145px;
+  padding: 25px 15px;
+  border-right: 1px solid rgba(167, 139, 250, 0.17);
 }
 
-section#about.about-section .about-stat:last-child {
+.about-stat:last-child {
   border-right: none;
 }
 
-section#about.about-section .about-stat strong {
+.about-stat strong {
   display: block;
   margin-bottom: 14px;
   color: #ffffff;
-  font-size: 42px;
+  font-size: clamp(28px, 3vw, 42px);
   font-weight: 500;
   letter-spacing: -2px;
 }
 
-section#about.about-section .about-stat span {
+.about-stat span {
+  display: block;
   color: #b9a9ff;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 1.2px;
-  line-height: 1.7;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 1.8;
 }
 
-/* =========================================================
+/* =====================================================
    CALL TO ACTION
-========================================================= */
+===================================================== */
 
-section#about.about-section .about-cta {
+.about-cta {
+  position: relative;
   width: 100%;
   max-width: 1450px;
-  margin: 90px auto 0;
-  padding: 34px 0;
+  margin: 85px auto 0;
+  padding: 32px 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -364,197 +738,317 @@ section#about.about-section .about-cta {
   border-bottom: 1px solid var(--about-border);
 }
 
-section#about.about-section .about-cta p {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.75);
-  font-size: 20px;
+.about-cta p {
+  margin: 13px 0 0;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: clamp(19px, 2.2vw, 25px);
   line-height: 1.55;
 }
 
-section#about.about-section .about-cta-button {
+.about-cta p em {
+  color: #c4b5fd;
+  font-style: normal;
+}
+
+.about-cta-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
   padding: 17px 25px;
+  flex-shrink: 0;
+  border: 1px solid rgba(196, 181, 253, 0.25);
   border-radius: 100px;
   color: #ffffff;
-  background: linear-gradient(
-    135deg,
-    #5227ff,
-    #8b5cf6
-  );
-  border: 1px solid rgba(196, 181, 253, 0.25);
+  background: linear-gradient(135deg, #5227ff, #8b5cf6);
+  box-shadow: 0 10px 32px rgba(82, 39, 255, 0.23);
   text-decoration: none;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
-  box-shadow: 0 10px 32px rgba(82, 39, 255, 0.25);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-section#about.about-section .about-cta-button:hover {
+.about-cta-button:hover {
   transform: translateY(-3px);
   box-shadow: 0 15px 40px rgba(82, 39, 255, 0.4);
 }
 
-/* =========================================================
+/* =====================================================
    TABLET
-========================================================= */
+===================================================== */
 
 @media (max-width: 1000px) {
   section#about.about-section {
-    padding: 90px 4vw 100px !important;
+    padding: 85px 4vw 80px;
   }
 
-  section#about.about-section .about-heading {
+  .about-heading {
     flex-direction: column;
     align-items: flex-start;
     gap: 25px;
+    margin-bottom: 55px;
   }
 
-  section#about.about-section .about-description {
+  .about-description {
     max-width: 650px;
   }
 
-  section#about.about-section .about-visual {
-    height: 460px;
+  .about-experience {
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 85px;
   }
 
-  section#about.about-section .journey-line {
+  .about-experience-visual {
+    min-height: 420px;
+    padding: 27px;
+  }
+
+  .about-visual-brand {
+    gap: 12px;
+  }
+
+  .about-brand-mark {
+    width: 58px;
+    height: 58px;
+    font-size: 30px;
+  }
+
+  .about-visual-brand strong {
+    font-size: 24px;
+  }
+
+  .about-features {
+    gap: 14px;
+    margin-bottom: 85px;
+  }
+
+  .about-feature-card {
+    padding: 21px;
+  }
+
+  .journey-line {
     flex-wrap: wrap;
     row-gap: 24px;
   }
 
-  section#about.about-section .journey-track {
+  .journey-track {
     margin: 0 12px;
+  }
+
+  .about-bottom {
+    gap: 30px;
+  }
+
+  .about-stat {
+    padding: 22px 10px;
   }
 }
 
-/* =========================================================
-   MOBILE
-========================================================= */
+/* =====================================================
+   MOBILE / SMALL TABLET
+===================================================== */
 
-@media (max-width: 800px) {
+@media (max-width: 760px) {
   section#about.about-section {
-    padding: 75px 22px 85px !important;
+    padding: 70px 22px 75px;
   }
 
-  section#about.about-section .about-heading h2 {
-    font-size: clamp(40px, 9vw, 60px);
+  .about-heading h2 {
+    font-size: clamp(39px, 8.5vw, 58px);
     letter-spacing: -2.5px;
   }
 
-  section#about.about-section .about-description {
-    font-size: 16px;
+  .about-description {
+    font-size: 15px;
+    line-height: 1.85;
   }
 
-  section#about.about-section .about-visual {
-    height: 420px;
-    margin-bottom: 65px;
-    border-radius: 20px;
+  .about-experience {
+    grid-template-columns: 1fr;
+    gap: 35px;
+    margin-bottom: 75px;
   }
 
-  section#about.about-section .journey-line {
+  .about-experience-copy h3 {
+    font-size: clamp(43px, 9vw, 65px);
+    letter-spacing: -2.5px;
+  }
+
+  .about-experience-visual {
+    min-height: 390px;
+  }
+
+  .about-features-heading {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .about-features-heading h3,
+  .journey-heading h3 {
+    font-size: 38px;
+  }
+
+  .about-features {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin-bottom: 75px;
+  }
+
+  .about-feature-card {
+    min-height: 240px;
+    padding: 25px;
+  }
+
+  .about-feature-card h4 {
+    font-size: 25px;
+  }
+
+  .journey-section {
+    margin-bottom: 75px;
+  }
+
+  .journey-line {
     flex-direction: column;
     align-items: flex-start;
     flex-wrap: nowrap;
-    margin-bottom: 70px;
+    gap: 0;
   }
 
-  section#about.about-section .journey-track {
+  .journey-point {
+    min-width: 0;
+    gap: 16px;
+  }
+
+  .journey-track {
     width: 1px;
-    height: 38px;
+    height: 35px;
     flex: none;
-    margin: 8px 0 8px 26px;
+    margin: 5px 0 5px 26px;
   }
 
-  section#about.about-section .journey-progress {
+  .journey-progress {
     width: 100%;
     height: 40%;
   }
 
-  section#about.about-section .about-bottom {
+  .about-bottom {
     grid-template-columns: 1fr;
-    gap: 45px;
+    gap: 40px;
+    padding-top: 45px;
   }
 
-  section#about.about-section .about-statement h3 {
-    font-size: clamp(42px, 9vw, 62px);
+  .about-statement h3 {
+    font-size: clamp(42px, 9vw, 60px);
     letter-spacing: -2px;
   }
 
-  section#about.about-section .about-cta {
+  .about-cta {
     flex-direction: column;
     align-items: flex-start;
+    gap: 25px;
+    margin-top: 65px;
   }
 }
 
-/* =========================================================
+/* =====================================================
    SMALL MOBILE
-========================================================= */
+===================================================== */
 
-@media (max-width: 600px) {
+@media (max-width: 480px) {
   section#about.about-section {
-    padding-left: 18px !important;
-    padding-right: 18px !important;
+    padding: 60px 18px 65px;
   }
 
-  section#about.about-section .about-heading h2 {
-    font-size: 42px;
+  .about-eyebrow {
+    font-size: 10px;
+    letter-spacing: 1.6px;
+  }
+
+  .about-heading h2 {
+    font-size: 38px;
     letter-spacing: -2px;
   }
 
-  section#about.about-section .about-visual {
-    height: 370px;
+  .about-heading {
+    margin-bottom: 45px;
+  }
+
+  .about-experience-visual {
     min-height: 370px;
-    border-radius: 16px;
+    padding: 22px;
+    border-radius: 20px;
   }
 
-  section#about.about-section .about-map-label {
-    left: 14px;
-    bottom: 14px;
-    max-width: calc(100% - 28px);
+  .about-visual-brand {
+    margin: 32px 0;
   }
 
-  section#about.about-section .about-stats {
-    grid-template-columns: 1fr;
+  .about-brand-mark {
+    width: 51px;
+    height: 51px;
+    border-radius: 15px;
+    font-size: 27px;
   }
 
-  section#about.about-section .about-stat {
+  .about-visual-brand strong {
+    font-size: 20px;
+    letter-spacing: 3px;
+  }
+
+  .about-visual-brand > div > span {
+    font-size: 8px;
+  }
+
+  .about-visual-message h4 {
+    font-size: 28px;
+  }
+
+  .about-visual-footer {
+    gap: 8px;
+    font-size: 8px;
+  }
+
+  .about-footer-line {
+    width: 10px;
+  }
+
+  .about-features-heading h3,
+  .journey-heading h3 {
+    font-size: 33px;
+    letter-spacing: -1.5px;
+  }
+
+  .about-stat {
     min-height: auto;
-    padding: 22px 0;
+    padding: 21px 0;
     border-right: none;
-    border-bottom: 1px solid rgba(167, 139, 250, 0.18);
+    border-bottom: 1px solid rgba(167, 139, 250, 0.17);
   }
 
-  section#about.about-section .about-stat:last-child {
+  .about-stat:last-child {
     border-bottom: none;
   }
 
-  section#about.about-section .about-cta-button {
+  .about-stat strong {
+    font-size: 35px;
+  }
+
+  .about-cta-button {
     width: 100%;
   }
 }
 
-@media (max-width: 400px) {
-  section#about.about-section .about-heading h2 {
-    font-size: 37px;
-  }
+/* =====================================================
+   ACCESSIBILITY
+===================================================== */
 
-  section#about.about-section .about-visual {
-    height: 340px;
+@media (prefers-reduced-motion: reduce) {
+  .about-section *,
+  .about-section *::before,
+  .about-section *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }
-
-/* =========================================================
-   FORCE PURE BLACK — NO SECTION GRADIENTS
-========================================================= */
-
-section#about.about-section,
-section#about.about-section::before,
-section#about.about-section::after {
-  background-color: #000000;
-}
-

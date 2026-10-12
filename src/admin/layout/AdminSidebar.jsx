@@ -42,8 +42,8 @@ function AdminSidebar({ isOpen, onClose }) {
     },
 
     {
-  label: "Feedback",
-  path: "/admin/feedback",
+  label: "contact enquiries",
+  path: "/admin/contact-enquiries",
   icon: MessageSquareQuote,
 },
 

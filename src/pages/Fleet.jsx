@@ -193,7 +193,7 @@ useEffect(() => {
                   </div>
 
                   <p className="fleet-price">
-                    ₹{vehicle.price}
+                    ₹{vehicle.pricePerKm || "20"}
                     <span>/ km</span>
                   </p>
                 </div>

@@ -1,35 +1,100 @@
 /* =========================================================
-   SERVICES SECTION
+   MANZILL 777 — PREMIUM SERVICES
+   Footer-inspired purple theme
 ========================================================= */
 
 .services-section {
+  --services-purple: #7c3aed;
+  --services-violet: #5227ff;
+  --services-pink: #ff9ffc;
+  --services-text: #f5f3ff;
+  --services-muted: #a7a1b7;
+
+  position: relative;
+  isolation: isolate;
+
   width: 100%;
   padding: 110px 4vw 130px;
+  box-sizing: border-box;
+
+  overflow: hidden;
 
   background:
     radial-gradient(
-      circle at 10% 20%,
-      rgba(82, 39, 255, 0.20),
-      transparent 32%
+      ellipse at 12% 15%,
+      rgba(82, 39, 255, 0.16),
+      transparent 38%
     ),
     radial-gradient(
-      circle at 90% 80%,
-      rgba(255, 159, 252, 0.12),
-      transparent 30%
+      ellipse at 88% 75%,
+      rgba(255, 159, 252, 0.08),
+      transparent 35%
     ),
-    #08060d;
+    #08070d;
 
-  color: white;
-
-  overflow: hidden;
+  color: var(--services-text);
+  font-family: inherit;
 }
 
+.services-section *,
+.services-section *::before,
+.services-section *::after {
+  box-sizing: border-box;
+}
 
 /* =========================================================
-   HEADING
+   TOP GRADIENT DIVIDER
+========================================================= */
+
+.services-section::before {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  left: 8%;
+  width: 84%;
+  height: 2px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #5227ff,
+    #ff9ffc,
+    #5227ff,
+    transparent
+  );
+
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+/* Soft background accent */
+.services-section::after {
+  content: "";
+
+  position: absolute;
+  z-index: -1;
+  top: 160px;
+  right: -220px;
+
+  width: 450px;
+  height: 450px;
+
+  border-radius: 50%;
+  background: rgba(82, 39, 255, 0.08);
+  filter: blur(100px);
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   SECTION HEADING
 ========================================================= */
 
 .section-heading {
+  position: relative;
+  z-index: 1;
+
   width: 100%;
   max-width: 1450px;
 
@@ -37,19 +102,17 @@
 }
 
 .services-label {
-    display: flex;
+  display: flex;
   align-items: center;
   gap: 10px;
 
   margin: 0 0 25px;
 
-  color: #c9c2d8;
-
+  color: #c4a3ff;
   font-family: "DM Sans", sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-
-  letter-spacing: 2px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
   text-transform: uppercase;
 }
 
@@ -58,52 +121,39 @@
 
   width: 28px;
   height: 1px;
+  flex-shrink: 0;
 
-  margin-right: 10px;
-
-  background: #8b5cf6;
+  background: linear-gradient(
+    90deg,
+    #5227ff,
+    #ff9ffc
+  );
 }
 
 .section-heading h2 {
   margin: 0;
 
+  color: #ffffff;
+  font-family: "DM Sans", sans-serif;
   font-size: clamp(55px, 7vw, 100px);
-
-  line-height: 0.92;
-
   font-weight: 500;
-
+  line-height: 0.96;
   letter-spacing: -5px;
-
-  color: white;
 }
 
 .section-heading h2 span {
   display: inline-block;
 
-  font-size: inherit;
-  font-weight: inherit;
-
-  line-height: inherit;
-  letter-spacing: inherit;
-
-  background:
-    linear-gradient(
-      100deg,
-      #a78bfa 0%,
-      #c084fc 48%,
-      #ff9ffc 100%
-    );
+  background: linear-gradient(
+    100deg,
+    #a78bfa 0%,
+    #c084fc 48%,
+    #ff9ffc 100%
+  );
 
   -webkit-background-clip: text;
   background-clip: text;
-
   -webkit-text-fill-color: transparent;
-
-  filter:
-    drop-shadow(
-      0 0 20px rgba(192, 132, 252, 0.22)
-    );
 }
 
 .section-heading p {
@@ -111,30 +161,28 @@
 
   margin: 28px 0 0;
 
+  color: var(--services-muted);
   font-size: 15px;
-
-  line-height: 1.7;
-
-  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.8;
 }
 
-
 /* =========================================================
-   SERVICES LIST
+   SERVICES GRID
 ========================================================= */
 
 .services-list {
+  position: relative;
+  z-index: 1;
+
   width: 100%;
   max-width: 1450px;
-
   margin: 0 auto;
 
-  display: flex;
-  flex-direction: column;
-
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 24px;
 }
-
 
 /* =========================================================
    SERVICE CARD
@@ -143,218 +191,162 @@
 .service-card {
   position: relative;
 
-  width: 100%;
-  height: 390px;
-
   display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas: "image content";
 
-  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  min-width: 0;
+  min-height: 390px;
 
   overflow: hidden;
-
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 24px;
 
+  background: #100c18;
+  color: #ffffff;
   text-decoration: none;
 
-  color: white;
-
-  background: #111;
-
-  border: 1px solid
-    rgba(255, 255, 255, 0.09);
-
   box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.25);
+    0 20px 55px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.025);
 
   transition:
-    transform 0.45s
-      cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.35s ease,
     border-color 0.35s ease,
     box-shadow 0.35s ease;
 }
 
-
-/* =========================================================
-   ALTERNATING SIDES
-========================================================= */
-
-/* 01 + 03
-   IMAGE LEFT
-   CONTENT RIGHT
-*/
-
+/* Images alternate left and right */
 .service-card:not(.reverse) {
-  grid-template-areas:
-    "image content";
+  grid-template-areas: "image content";
 }
-
-
-/* 02 + 04
-   CONTENT LEFT
-   IMAGE RIGHT
-*/
 
 .service-card.reverse {
-  grid-template-areas:
-    "content image";
+  grid-template-areas: "content image";
 }
 
-
 /* =========================================================
-   HOVER
-========================================================= */
-
-.service-card:hover {
-  transform: translateY(-5px);
-
-  border-color:
-    rgba(139, 92, 246, 0.55);
-
-  box-shadow:
-    0 25px 70px
-    rgba(82, 39, 255, 0.18);
-}
-
-
-/* =========================================================
-   IMAGE BOX
+   SERVICE IMAGE
 ========================================================= */
 
 .service-image-box {
   position: relative;
-
-  width: 100%;
-  height: 100%;
-
   grid-area: image;
 
+  width: 100%;
+  min-width: 0;
+  min-height: 390px;
+
   overflow: hidden;
+  background: #171321;
 }
 
 .service-image {
+  display: block;
+
   width: 100%;
   height: 100%;
 
-  display: block;
-
   object-fit: cover;
 
-  transition:
-    transform 0.8s
-    cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.7s ease;
 }
-
-.service-card:hover .service-image {
-  transform: scale(1.06);
-}
-
-
-/* =========================================================
-   IMAGE PURPLE OVERLAY
-========================================================= */
 
 .service-image-box::after {
   content: "";
 
   position: absolute;
-
   inset: 0;
 
-  background:
-    linear-gradient(
-      90deg,
-      rgba(82, 39, 255, 0.08),
-      rgba(8, 6, 13, 0.05)
-    );
+  background: linear-gradient(
+    135deg,
+    rgba(82, 39, 255, 0.12),
+    transparent 55%,
+    rgba(8, 7, 13, 0.18)
+  );
 
   pointer-events: none;
 }
 
+.service-card:hover .service-image {
+  transform: scale(1.05);
+}
 
 /* =========================================================
-   CONTENT
+   SERVICE CONTENT
 ========================================================= */
 
 .service-content {
   position: relative;
-
   grid-area: content;
 
-  width: 100%;
-  height: 100%;
-
-  padding: 40px;
-
-  box-sizing: border-box;
-
   display: flex;
-
   flex-direction: column;
-
   justify-content: space-between;
+
+  width: 100%;
+  min-width: 0;
+  min-height: 390px;
+
+  padding: 30px;
 
   background:
     radial-gradient(
-      circle at 100% 0%,
-      rgba(82, 39, 255, 0.20),
-      transparent 45%
+      ellipse at 100% 0%,
+      rgba(124, 58, 237, 0.19),
+      transparent 50%
     ),
-    #100c1b;
+    linear-gradient(
+      145deg,
+      #1b1230,
+      #100c18 72%
+    );
 }
 
-
 /* =========================================================
-   NUMBER
+   SERVICE NUMBER
 ========================================================= */
 
 .service-number {
   width: fit-content;
 
-  font-size: 13px;
-
-  font-weight: 500;
-
-  letter-spacing: 1px;
-
-  color: #c4b5fd;
+  color: #c4a3ff;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
 }
 
-
 /* =========================================================
-   SERVICE INFO
+   SERVICE TITLE
 ========================================================= */
 
 .service-info {
   max-width: 480px;
+  padding-bottom: 4px;
 }
 
 .service-info h3 {
   margin: 0 0 18px;
 
-  font-size: clamp(38px, 4vw, 58px);
-
+  color: #ffffff;
+  font-family: "DM Sans", sans-serif;
+  font-size: clamp(27px, 3vw, 46px);
   font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -1.8px;
 
-  line-height: 0.98;
-
-  letter-spacing: -2.5px;
-
-  color: white;
+  overflow-wrap: anywhere;
 }
 
 .service-info p {
-  max-width: 470px;
-
+  max-width: 420px;
   margin: 0;
 
-  font-size: 15px;
-
-  line-height: 1.7;
-
-  color:
-    rgba(255, 255, 255, 0.58);
+  color: rgba(245, 243, 255, 0.65);
+  font-size: 14px;
+  line-height: 1.8;
 }
-
 
 /* =========================================================
    EXPLORE LINK
@@ -362,23 +354,17 @@
 
 .service-link {
   display: inline-flex;
-
   align-items: center;
-
   gap: 9px;
 
-  margin-top: 28px;
-
+  margin-top: 25px;
   padding-bottom: 8px;
 
-  border-bottom: 1px solid
-    rgba(255, 255, 255, 0.30);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 
+  color: #ffffff;
   font-size: 13px;
-
-  font-weight: 500;
-
-  color: white;
+  font-weight: 600;
 
   transition:
     gap 0.3s ease,
@@ -387,58 +373,66 @@
 
 .service-card:hover .service-link {
   gap: 14px;
-
-  border-color: #a78bfa;
+  border-color: #ff9ffc;
 }
 
-
 /* =========================================================
-   LARGE ARROW
+   CARD ARROW
 ========================================================= */
 
 .service-arrow {
   position: absolute;
+  right: 25px;
+  bottom: 25px;
 
-  right: 40px;
-  bottom: 38px;
-
-  width: 46px;
-  height: 46px;
-
-  padding: 10px;
+  width: 42px;
+  height: 42px;
+  padding: 9px;
 
   box-sizing: border-box;
 
+  border: 1px solid rgba(196, 163, 255, 0.3);
   border-radius: 50%;
 
-  color: white;
-
-  background:
-    rgba(124, 58, 237, 0.18);
-
-  border:
-    1px solid
-    rgba(167, 139, 250, 0.30);
+  background: rgba(124, 58, 237, 0.16);
+  color: #ffffff;
 
   transition:
-    transform 0.35s ease,
-    background 0.35s ease;
+    transform 0.3s ease,
+    background 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .service-card:hover .service-arrow {
-  transform:
-    translate(5px, -5px);
+  transform: translate(4px, -4px);
 
-  background: #7c3aed;
+  border-color: #c4a3ff;
+  background: linear-gradient(
+    135deg,
+    #7c3aed,
+    #5227ff
+  );
 }
 
+/* =========================================================
+   CARD HOVER
+========================================================= */
+
+.service-card:hover {
+  transform: translateY(-5px);
+
+  border-color: rgba(167, 139, 250, 0.5);
+
+  box-shadow:
+    0 25px 65px rgba(82, 39, 255, 0.16),
+    0 0 30px rgba(124, 58, 237, 0.05);
+}
 
 /* =========================================================
    TABLET
 ========================================================= */
 
-@media (max-width: 900px) {
-
+@media (max-width: 1000px) {
   .services-section {
     padding: 90px 4vw 100px;
   }
@@ -447,37 +441,45 @@
     margin-bottom: 50px;
   }
 
-  .service-card {
-    height: 350px;
+  .services-list {
+    gap: 18px;
+  }
+
+  .service-card,
+  .service-content,
+  .service-image-box {
+    min-height: 350px;
   }
 
   .service-content {
-    padding: 30px;
+    padding: 24px;
   }
 
   .service-info h3 {
-    font-size: 38px;
+    font-size: clamp(25px, 3.3vw, 36px);
+    letter-spacing: -1.2px;
   }
 
   .service-info p {
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .service-arrow {
-    right: 30px;
-    bottom: 30px;
+    right: 20px;
+    bottom: 20px;
+
+    width: 38px;
+    height: 38px;
   }
 }
-
 
 /* =========================================================
    MOBILE
 ========================================================= */
 
 @media (max-width: 650px) {
-
   .services-section {
-    padding: 70px 20px 90px;
+    padding: 70px 20px 85px;
   }
 
   .section-heading {
@@ -485,44 +487,48 @@
   }
 
   .section-heading h2 {
-    font-size: 52px;
-
-    letter-spacing: -3px;
+    font-size: clamp(43px, 10vw, 54px);
+    letter-spacing: -2.8px;
+    line-height: 1;
   }
 
   .section-heading p {
+    margin-top: 22px;
     font-size: 14px;
   }
 
-
-  /* -----------------------------------------
-     MOBILE = IMAGE ABOVE CONTENT
-  ----------------------------------------- */
+  .services-list {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+  }
 
   .service-card,
   .service-card.reverse {
-    height: auto;
-
-    grid-template-columns: 1fr;
-
+    grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
       "image"
       "content";
+
+    min-height: auto;
+    border-radius: 20px;
   }
 
   .service-image-box {
-    height: 260px;
+    height: 250px;
+    min-height: 250px;
   }
 
   .service-content {
-    min-height: 300px;
+    min-height: 285px;
+    padding: 24px;
+  }
 
-    padding: 25px;
+  .service-info {
+    padding: 25px 0 35px;
   }
 
   .service-info h3 {
-    font-size: 38px;
-
+    font-size: clamp(32px, 8vw, 42px);
     letter-spacing: -1.5px;
   }
 
@@ -531,38 +537,125 @@
   }
 
   .service-arrow {
-    right: 25px;
-    bottom: 25px;
+    right: 20px;
+    bottom: 20px;
   }
 }
-
 
 /* =========================================================
    SMALL MOBILE
 ========================================================= */
 
 @media (max-width: 400px) {
-
   .services-section {
-    padding-left: 16px;
-    padding-right: 16px;
+    padding: 60px 16px 75px;
   }
 
   .section-heading h2 {
-    font-size: 46px;
+    font-size: 43px;
+    letter-spacing: -2.5px;
   }
 
   .service-image-box {
-    height: 230px;
+    height: 220px;
+    min-height: 220px;
   }
 
   .service-content {
-    min-height: 290px;
-
-    padding: 22px;
+    min-height: 280px;
+    padding: 21px;
   }
 
   .service-info h3 {
-    font-size: 34px;
+    font-size: 32px;
   }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .service-card,
+  .service-image,
+  .service-link,
+  .service-arrow {
+    transition: none;
+  }
+
+  .service-card:hover {
+    transform: none;
+  }
+
+  .service-card:hover .service-image {
+    transform: none;
+  }
+}
+/* =========================================================
+   SERVICES — SOFT PURPLE DROP LIGHT
+========================================================= */
+
+.services-section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.services-section::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+
+  top: 100px;
+  right: -100px;
+
+  width: 420px;
+  height: 420px;
+
+  border-radius: 50%;
+
+  background: rgba(124, 58, 237, 0.30);
+
+  filter: blur(120px);
+  pointer-events: none;
+}
+
+/* Purple light near the bottom-left */
+.services-list::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+
+  left: -140px;
+  bottom: -100px;
+
+  width: 350px;
+  height: 350px;
+
+  border-radius: 50%;
+
+  background: rgba(82, 39, 255, 0.22);
+
+  filter: blur(110px);
+  pointer-events: none;
+}
+
+/* Pink accent light */
+.services-list::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+
+  right: -80px;
+  top: 30%;
+
+  width: 260px;
+  height: 260px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 159, 252, 0.14);
+
+  filter: blur(100px);
+  pointer-events: none;
 }
