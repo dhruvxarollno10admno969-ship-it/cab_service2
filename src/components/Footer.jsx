@@ -1,4 +1,6 @@
 
+import { useEffect, useState } from "react";
+
 import {
   ArrowUpRight,
   Phone,
@@ -9,6 +11,8 @@ import {
 } from "lucide-react";
 
 import { Link, useNavigate } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
+
 import { auth } from "../firebase";
 import "./Footer.css";
 
@@ -16,6 +20,20 @@ const ADMIN_EMAIL = "admin@gmail.com";
 
 function Footer() {
   const navigate = useNavigate();
+
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+
+  // Track Firebase authentication changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      const isAdmin =
+        user?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+
+      setIsAdminLoggedIn(isAdmin);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -25,21 +43,11 @@ function Footer() {
   };
 
   const handleAdminLogin = () => {
-    const currentUser = auth.currentUser;
-
-    if (currentUser?.email === ADMIN_EMAIL) {
-      navigate("/admin");
-    } else {
-      navigate("/admin/login");
-    }
+    navigate("/admin/login");
   };
 
   return (
     <footer className="site-footer">
-      {/* CTA SECTION */}
-      
-      
-
       {/* MAIN FOOTER */}
       <div className="footer-main">
         {/* BRAND */}
@@ -73,15 +81,18 @@ function Footer() {
             <span>+91 98154 89193</span>
           </a>
 
-          <button
-            type="button"
-            className="footer-admin-login"
-            onClick={handleAdminLogin}
-          >
-            <LockKeyhole size={14} />
-            Admin Login
-            <ArrowUpRight size={13} />
-          </button>
+          {/* Show Admin Login only when the admin is not logged in */}
+          {!isAdminLoggedIn && (
+            <button
+              type="button"
+              className="footer-admin-login"
+              onClick={handleAdminLogin}
+            >
+              <LockKeyhole size={14} />
+              <span>Admin Login</span>
+              <ArrowUpRight size={13} />
+            </button>
+          )}
         </div>
 
         {/* NAVIGATION */}
@@ -110,7 +121,10 @@ function Footer() {
         <div className="footer-column footer-contact-column">
           <h3 className="footer-title">GET IN TOUCH</h3>
 
-          <a href="tel:+919815489193" className="footer-contact-link">
+          <a
+            href="tel:+919815489193"
+            className="footer-contact-link"
+          >
             <span className="footer-contact-icon">
               <Phone size={16} />
             </span>

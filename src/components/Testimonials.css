@@ -439,3 +439,64 @@ transition: none;
 transform: none;
 }
 }
+
+
+/* =========================================
+   TESTIMONIALS — GRADIENT LINE + CENTER GLOW
+========================================= */
+
+.testimonials-section {
+  position: relative;
+  isolation: isolate;
+}
+
+/* Purple-pink gradient divider */
+.testimonials-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #5227ff 20%,
+    #a78bfa 40%,
+    #ff9ffc 50%,
+    #a78bfa 60%,
+    #5227ff 80%,
+    transparent 100%
+  );
+
+  box-shadow:
+    0 0 10px rgba(130, 70, 255, 0.5),
+    0 0 22px rgba(130, 70, 255, 0.2);
+
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Soft light dropping from the center */
+.testimonials-section::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: min(850px, 100%);
+  height: 300px;
+
+  background: radial-gradient(
+    ellipse at top center,
+    rgba(124, 58, 237, 0.20) 0%,
+    rgba(82, 39, 255, 0.10) 35%,
+    rgba(255, 159, 252, 0.04) 60%,
+    transparent 78%
+  );
+
+  pointer-events: none;
+  z-index: -1;
+}

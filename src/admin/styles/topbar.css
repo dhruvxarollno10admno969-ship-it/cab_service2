@@ -1,263 +1,233 @@
-/* =========================================================
-   ADMIN TOPBAR
-========================================================= */
+
+/* =========================================
+   MANZILL 777 — ADMIN TOPBAR
+========================================= */
 
 .admin-topbar {
   position: sticky;
   top: 0;
   z-index: 900;
 
-  width: 100%;
-  height: 72px;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
 
-  padding: 0 32px;
-
-  background: rgba(255, 255, 255, 0.96);
-  border-bottom: 1px solid #e8e8e8;
+  width: 100%;
+  height: 72px;
+  padding: 0 28px;
 
   box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.97);
+  border-bottom: 1px solid #e8e8e8;
   backdrop-filter: blur(14px);
 }
 
-/* =========================================================
-   LEFT
-========================================================= */
+/* Left side */
 
 .admin-topbar-left {
   display: flex;
   align-items: center;
-  gap: 18px;
-
+  gap: 16px;
   min-width: 0;
 }
 
 .admin-mobile-menu {
-  width: 40px;
-  height: 40px;
-
   display: none;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+
+  width: 40px;
+  height: 40px;
 
   border: 1px solid #dedede;
   border-radius: 9px;
-
   background: #fff;
   color: #111;
-
   cursor: pointer;
-
-  transition:
-    background 0.2s ease,
-    transform 0.2s ease;
 }
 
 .admin-mobile-menu:hover {
-  background: #f5f5f5;
+  background: #f4f4f4;
 }
 
-.admin-mobile-menu:active {
-  transform: scale(0.94);
-}
-
-/* =========================================================
-   TOPBAR BRAND
-========================================================= */
+/* Brand */
 
 .admin-topbar-brand {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
+  min-width: 0;
 }
 
 .admin-topbar-brand span {
-  color: #8a8a8a;
-
+  color: #888;
   font-size: 10px;
   font-weight: 600;
-
   letter-spacing: 1.4px;
   text-transform: uppercase;
 }
 
 .admin-topbar-brand strong {
   color: #111;
-
   font-size: 18px;
   font-weight: 650;
-
-  line-height: 1.1;
+  line-height: 1.2;
 }
 
-/* =========================================================
-   RIGHT
-========================================================= */
+/* Right side */
 
 .admin-topbar-right {
   display: flex;
   align-items: center;
-
   gap: 12px;
+  flex-shrink: 0;
 }
 
-/* =========================================================
-   ICON BUTTON
-========================================================= */
+/* Profile */
 
-.admin-topbar-icon {
+.admin-profile-wrapper {
   position: relative;
-
-  width: 40px;
-  height: 40px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 0;
-
-  border: 0;
-  border-radius: 50%;
-
-  background: transparent;
-  color: #111;
-
-  cursor: pointer;
-
-  transition:
-    background 0.2s ease,
-    transform 0.2s ease;
+  min-width: 0;
 }
-
-.admin-topbar-icon:hover {
-  background: #f3f3f3;
-}
-
-.admin-topbar-icon:active {
-  transform: scale(0.94);
-}
-
-/* =========================================================
-   NOTIFICATION
-========================================================= */
-
-.admin-notification-dot {
-  position: absolute;
-
-  top: 7px;
-  right: 7px;
-
-  width: 8px;
-  height: 8px;
-
-  background: #ff2424;
-
-  border: 2px solid #fff;
-  border-radius: 50%;
-}
-
-/* =========================================================
-   PROFILE
-========================================================= */
 
 .admin-profile {
   display: flex;
   align-items: center;
-
-  gap: 11px;
-
-  padding: 0;
-  margin-left: 5px;
-
-  border: 0;
+  gap: 10px;
+  max-width: 100%;
+  padding: 4px 0;
+  border: none;
   background: transparent;
-
   color: #111;
-
+  text-align: left;
   cursor: pointer;
 }
 
-/* =========================================================
-   AVATAR
-========================================================= */
-
 .admin-profile-avatar {
-  width: 44px;
-  height: 44px;
-
-  flex-shrink: 0;
-
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+
+  width: 42px;
+  height: 42px;
 
   border-radius: 50%;
-
   background: #111;
   color: #fff;
-
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
 }
-
-/* =========================================================
-   PROFILE INFO
-========================================================= */
 
 .admin-profile-info {
   display: flex;
   flex-direction: column;
-
+  gap: 4px;
   min-width: 0;
-
-  text-align: left;
 }
 
 .admin-profile-info strong {
   color: #111;
-
   font-size: 14px;
   font-weight: 600;
-
   white-space: nowrap;
 }
 
 .admin-profile-info span {
-  margin-top: 3px;
-
   color: #858585;
-
   font-size: 12px;
-
   white-space: nowrap;
 }
 
-/* =========================================================
-   CHEVRON
-========================================================= */
-
 .admin-profile-chevron {
   flex-shrink: 0;
-
-  margin-left: 4px;
-
+  color: #111;
   transition: transform 0.2s ease;
 }
 
-.admin-profile:hover .admin-profile-chevron {
-  transform: translateY(2px);
+.admin-profile-chevron.open {
+  transform: rotate(180deg);
 }
 
-/* =========================================================
+/* Dropdown */
+
+.admin-profile-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  z-index: 1200;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  width: 200px;
+  max-width: calc(100vw - 24px);
+  padding: 8px;
+
+  border: 1px solid #e5e5e5;
+  border-radius: 13px;
+  background: #fff;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+
+  animation: adminDropdown 0.18s ease;
+}
+
+.admin-profile-dropdown button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  width: 100%;
+  min-height: 42px;
+  padding: 0 12px;
+
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  color: #222;
+
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.admin-profile-dropdown button:hover {
+  background: #f3f3f3;
+}
+
+.admin-profile-dropdown button svg {
+  flex-shrink: 0;
+}
+
+.admin-profile-dropdown .admin-logout-button {
+  color: #d33;
+}
+
+.admin-profile-dropdown .admin-logout-button:hover {
+  background: #fff0f0;
+}
+
+@keyframes adminDropdown {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================
    TABLET
-========================================================= */
+========================================= */
 
 @media (max-width: 900px) {
-
   .admin-topbar {
     height: 68px;
     padding: 0 20px;
@@ -276,34 +246,27 @@
   }
 }
 
-/* =========================================================
+/* =========================================
    MOBILE
-========================================================= */
+========================================= */
 
 @media (max-width: 600px) {
-
   .admin-topbar {
     height: 64px;
-    padding: 0 14px;
+    padding: 0 12px;
   }
 
   .admin-topbar-right {
     gap: 4px;
   }
 
-  .admin-topbar-icon {
-    width: 38px;
-    height: 38px;
-  }
-
   .admin-profile {
-    margin-left: 2px;
-    gap: 6px;
+    gap: 7px;
   }
 
   .admin-profile-avatar {
-    width: 38px;
-    height: 38px;
+    width: 37px;
+    height: 37px;
     font-size: 14px;
   }
 
@@ -312,445 +275,22 @@
   }
 
   .admin-profile-chevron {
-    width: 16px;
-  }
-}
-/* =====================================================
-   TOPBAR
-===================================================== */
-
-.admin-topbar {
-  height: 72px;
-  width: 100%;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  padding: 0 28px;
-
-  background: #fff;
-
-  border-bottom: 1px solid #e8e8e8;
-
-  box-sizing: border-box;
-
-  position: sticky;
-  top: 0;
-
-  z-index: 50;
-}
-
-
-/* =====================================================
-   LEFT
-===================================================== */
-
-.admin-topbar-left {
-  display: flex;
-  align-items: center;
-
-  gap: 16px;
-
-  min-width: 0;
-}
-
-.admin-mobile-menu {
-  display: none;
-
-  align-items: center;
-  justify-content: center;
-
-  width: 40px;
-  height: 40px;
-
-  border: 0;
-  background: transparent;
-
-  color: #111;
-
-  cursor: pointer;
-
-  border-radius: 8px;
-}
-
-.admin-mobile-menu:hover {
-  background: #f4f4f4;
-}
-
-
-/* =====================================================
-   TOPBAR BRAND
-===================================================== */
-
-.admin-topbar-brand {
-  display: flex;
-  flex-direction: column;
-
-  line-height: 1.1;
-}
-
-.admin-topbar-brand span {
-  font-size: 11px;
-
-  color: #8a8a8a;
-
-  letter-spacing: 1px;
-}
-
-.admin-topbar-brand strong {
-  margin-top: 4px;
-
-  font-size: 18px;
-
-  color: #111;
-}
-
-
-/* =====================================================
-   RIGHT
-===================================================== */
-
-.admin-topbar-right {
-  display: flex;
-  align-items: center;
-
-  gap: 18px;
-
-  flex-shrink: 0;
-}
-
-
-/* =====================================================
-   ICON
-===================================================== */
-
-.admin-topbar-icon {
-  position: relative;
-
-  width: 40px;
-  height: 40px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 0;
-
-  border: none;
-
-  background: transparent;
-
-  color: #111;
-
-  cursor: pointer;
-
-  border-radius: 50%;
-
-  transition:
-    background 0.2s ease,
-    transform 0.2s ease;
-}
-
-.admin-topbar-icon:hover {
-  background: #f4f4f4;
-}
-
-.admin-topbar-icon:active {
-  transform: scale(0.94);
-}
-
-
-/* =====================================================
-   NOTIFICATION
-===================================================== */
-
-.admin-notification {
-  position: relative;
-}
-
-.admin-notification-dot {
-  position: absolute;
-
-  top: 6px;
-  right: 6px;
-
-  width: 7px;
-  height: 7px;
-
-  background: #ff2d2d;
-
-  border: 2px solid #fff;
-
-  border-radius: 50%;
-}
-
-
-/* =====================================================
-   PROFILE
-===================================================== */
-
-.admin-profile {
-  display: flex;
-  align-items: center;
-
-  gap: 12px;
-
-  padding: 4px 0;
-
-  border: none;
-
-  background: transparent;
-
-  cursor: pointer;
-
-  color: #111;
-
-  text-align: left;
-}
-
-.admin-profile-avatar {
-  width: 44px;
-  height: 44px;
-
-  flex-shrink: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 50%;
-
-  background: #111;
-
-  color: #fff;
-
-  font-size: 17px;
-  font-weight: 500;
-}
-
-.admin-profile-info {
-  display: flex;
-  flex-direction: column;
-
-  min-width: 120px;
-
-  line-height: 1.15;
-}
-
-.admin-profile-info strong {
-  font-size: 15px;
-  font-weight: 600;
-
-  color: #111;
-
-  white-space: nowrap;
-}
-
-.admin-profile-info span {
-  margin-top: 4px;
-
-  font-size: 13px;
-
-  color: #7b7b7b;
-
-  white-space: nowrap;
-}
-
-.admin-profile-chevron {
-  color: #111;
-
-  transition: transform 0.2s ease;
-}
-
-.admin-profile:hover .admin-profile-chevron {
-  transform: translateY(2px);
-}
-
-
-/* =====================================================
-   TABLET
-===================================================== */
-
-@media (max-width: 900px) {
-
-  .admin-mobile-menu {
-    display: flex;
-  }
-
-  .admin-topbar {
-    height: 64px;
-
-    padding: 0 18px;
-  }
-
-  .admin-topbar-brand strong {
-    font-size: 16px;
-  }
-
-}
-
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media (max-width: 600px) {
-
-  .admin-topbar {
-    padding: 0 12px;
-  }
-
-  .admin-topbar-brand {
-    display: none;
-  }
-
-  .admin-topbar-right {
-    margin-left: auto;
-
-    gap: 4px;
-  }
-
-  .admin-topbar-icon {
-    width: 38px;
-    height: 38px;
-  }
-
-  .admin-profile {
-    gap: 7px;
-  }
-
-  .admin-profile-avatar {
-    width: 38px;
-    height: 38px;
-
-    font-size: 15px;
-  }
-
-  .admin-profile-info {
-    min-width: 0;
-  }
-
-  .admin-profile-info strong {
-    font-size: 13px;
-  }
-
-  .admin-profile-info span {
-    font-size: 11px;
-  }
-
-  .admin-profile-chevron {
     width: 15px;
   }
 
-}
-/* ========================================
-   ADMIN PROFILE DROPDOWN - FIX
-======================================== */
-
-.admin-profile-wrapper {
-  position: relative !important;
-}
-
-.admin-profile-dropdown {
-  position: absolute !important;
-
-  top: calc(100% + 10px) !important;
-  right: 0 !important;
-
-  width: 190px !important;
-
-  display: flex !important;
-  flex-direction: column !important;
-
-  gap: 4px !important;
-
-  padding: 8px !important;
-
-  background: #ffffff !important;
-
-  border: 1px solid #e5e5e5 !important;
-  border-radius: 14px !important;
-
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12) !important;
-
-  z-index: 9999 !important;
-
-  animation: adminDropdown 0.18s ease;
-}
-
-
-/* DROPDOWN BUTTONS */
-
-.admin-profile-dropdown button {
-  width: 100% !important;
-  height: 42px !important;
-
-  margin: 0 !important;
-  padding: 0 12px !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-
-  gap: 10px !important;
-
-  border: none !important;
-  outline: none !important;
-
-  border-radius: 9px !important;
-
-  background: transparent !important;
-
-  color: #222 !important;
-
-  font-family: inherit !important;
-  font-size: 14px !important;
-  font-weight: 500 !important;
-
-  cursor: pointer !important;
-
-  appearance: none !important;
-
-  box-shadow: none !important;
-}
-
-
-/* HOVER */
-
-.admin-profile-dropdown button:hover {
-  background: #f3f3f3 !important;
-}
-
-
-/* LOGOUT */
-
-.admin-profile-dropdown .admin-logout-button {
-  color: #d33 !important;
-}
-
-.admin-profile-dropdown .admin-logout-button:hover {
-  background: #fff0f0 !important;
-}
-
-
-/* ICON */
-
-.admin-profile-dropdown svg {
-  flex-shrink: 0;
-}
-
-
-/* ANIMATION */
-
-@keyframes adminDropdown {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
+  .admin-profile-dropdown {
+    top: calc(100% + 10px);
+    right: 0;
+    width: 185px;
   }
+}
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
+/* Reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-profile-chevron,
+  .admin-profile-dropdown {
+    animation: none;
+    transition: none;
   }
 }
