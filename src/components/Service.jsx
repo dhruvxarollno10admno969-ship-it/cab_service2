@@ -54,7 +54,7 @@ function Services() {
 
         <p>
           From everyday city rides to long-distance journeys,
-          MANZILL 777 makes every trip simple, comfortable and reliable.
+          MANZILL 77 makes every trip simple, comfortable and reliable.
         </p>
       </div>
 

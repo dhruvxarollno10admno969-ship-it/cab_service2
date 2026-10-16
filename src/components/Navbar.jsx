@@ -112,7 +112,7 @@ function Navbar() {
 
         <div className="logo-text">
           <span>MANZILL</span>
-          <small>777</small>
+          <small>77</small>
         </div>
       </Link>
 

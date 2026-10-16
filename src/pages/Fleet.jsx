@@ -110,7 +110,7 @@ useEffect(() => {
         <div className="fleet-top">
           <p className="fleet-label">
             <span className="fleet-label-dot" />
-            MANZILL 777 / OUR FLEET
+            MANZILL 77 / OUR FLEET
           </p>
         </div>
 

@@ -27,33 +27,25 @@ function Profile() {
 
   
 
+
   /* ================= GET USER ================= */
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (!currentUser) {
-        setLoading(false);
-        return;
-      }
+    let active = true;
 
-      setUser(currentUser);
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      async (currentUser) => {
+        if (!active) return;
 
-      const userRef = doc(db, "users", currentUser.uid);
-      const userSnap = await getDoc(userRef);
+        setUser(currentUser);
 
-      if (userSnap.exists()) {
-        const data = userSnap.data();
+        if (!currentUser) {
+          setLoading(false);
+          return;
+        }
 
-        setFormData({
-          name: data.name || currentUser.displayName || "",
-          email: currentUser.email || "",
-          phone: data.phone || "",
-          address: data.address || "",
-          city: data.city || "",
-          state: data.state || "",
-          country: data.country || "India",
-        });
-      } else {
+        // Show Firebase Authentication data immediately.
         setFormData({
           name: currentUser.displayName || "",
           email: currentUser.email || "",
@@ -63,13 +55,57 @@ function Profile() {
           state: "",
           country: "India",
         });
+
+        try {
+          const userRef = doc(db, "users", currentUser.uid);
+          const userSnap = await getDoc(userRef);
+
+          if (!active) return;
+
+          if (userSnap.exists()) {
+            const data = userSnap.data();
+
+            setFormData({
+              name: data.name || currentUser.displayName || "",
+              email: currentUser.email || "",
+              phone: data.phone || "",
+              address: data.address || "",
+              city: data.city || "",
+              state: data.state || "",
+              country: data.country || "India",
+            });
+          }
+        } catch (error) {
+          console.error("Profile loading error:", error);
+
+          if (active) {
+            console.error(
+              "Check Firestore rules, network connectivity, " +
+              "and the users collection."
+            );
+          }
+        } finally {
+          if (active) {
+            setLoading(false);
+          }
+        }
+      },
+      (error) => {
+        console.error("Authentication listener error:", error);
+
+        if (active) {
+          setUser(null);
+          setLoading(false);
+        }
       }
+    );
 
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
+    return () => {
+      active = false;
+      unsubscribe();
+    };
   }, []);
+
 
   /* ================= INPUT CHANGE ================= */
 

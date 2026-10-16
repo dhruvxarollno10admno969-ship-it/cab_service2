@@ -44,7 +44,7 @@ function About() {
         <div className="about-content">
           <p className="about-eyebrow">
             <span />
-            ABOUT MANZILL 777
+            ABOUT MANZILL 77
           </p>
 
           <h2>
@@ -54,7 +54,7 @@ function About() {
           </h2>
 
           <p className="about-description">
-            At MANZILL 777, we believe getting from one
+            At MANZILL 77, we believe getting from one
             place to another should feel simple and
             comfortable. From everyday city rides to
             airport transfers and longer journeys, we're

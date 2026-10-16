@@ -55,12 +55,12 @@ function Footer() {
           <Link
             to="/"
             className="footer-logo"
-            aria-label="MANZILL 777 Home"
+            aria-label="MANZILL 77 Home"
           >
             <span className="footer-logo-mark">M</span>
 
             <span className="footer-logo-text">
-              MANZILL <span>777</span>
+              MANZILL <span>77</span>
             </span>
           </Link>
 
@@ -133,14 +133,14 @@ function Footer() {
           </a>
 
           <a
-            href="mailto:hello@manzill777.com"
+            href="mailto:hello@manzill77.com"
             className="footer-contact-link"
           >
             <span className="footer-contact-icon">
               <Mail size={16} />
             </span>
 
-            <span>hello@manzill777.com</span>
+            <span>hello@manzill77.com</span>
           </a>
 
           <div className="footer-contact-link footer-location">
