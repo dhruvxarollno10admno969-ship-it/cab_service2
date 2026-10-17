@@ -24,8 +24,8 @@ import {
   signOut,
 } from "firebase/auth";
 
-import { auth } from "../firebase";
-import "./Navbar.css";
+import { auth } from "../../firebase";
+import "../styles/Navbar.css";
 
 // Admin account
 const ADMIN_EMAIL = "admin@gmail.com";
@@ -224,7 +224,7 @@ function Navbar() {
                     </Link>
 
                     <Link
-                      to="/booking"
+                      to="/my-rides"
                       className="profile-item"
                       onClick={closeMenu}
                     >
@@ -365,7 +365,7 @@ function Navbar() {
                     </Link>
 
                     <Link
-                      to="/booking"
+                      to="/my-rides"
                       onClick={closeMenu}
                       className="mobile-menu-item"
                     >

@@ -1,6 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import "./servies.css";
+import "../styles/servies.css";
+import Title from "./Title";
 
 const services = [
   {
@@ -9,7 +10,7 @@ const services = [
     title: "City Rides",
     description:
       "Quick and comfortable rides for your everyday journeys.",
-    image: "/images/city-rides.jpg",
+    image: "/public/images/city-rides.jpg",
   },
   {
     id: 2,
@@ -40,23 +41,13 @@ const services = [
 function Services() {
   return (
     <section className="services-section" id="services">
-
-      <div className="section-heading">
-        <span className="services-label">
-          OUR SERVICES
-        </span>
-
-        <h2>
-          One platform.
-          <br />
-          <span>Every journey.</span>
-        </h2>
-
-        <p>
-          From everyday city rides to long-distance journeys,
-          MANZILL 77 makes every trip simple, comfortable and reliable.
-        </p>
-      </div>
+      
+      <Title
+        label="OUR SERVICES"
+        title="One platform."
+        highlight="Every journey."
+        description="From everyday city rides to long-distance journeys, MANZILL 777 makes every trip simple, comfortable and reliable."
+      />
 
       <div className="services-list">
 

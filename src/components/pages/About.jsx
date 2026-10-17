@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 
 import { Link } from "react-router-dom";
-import "../components/styles/about.css";
+import "../styles/about.css";
 
 const benefits = [
   {

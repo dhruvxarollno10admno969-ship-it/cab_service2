@@ -13,23 +13,20 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 
-import { auth } from "../firebase";
-import "./Footer.css";
-
-const ADMIN_EMAIL = "admin@gmail.com";
+import { auth } from "../../firebase";
+import "../styles/Footer.css";
 
 function Footer() {
   const navigate = useNavigate();
 
-  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
 
-  // Track Firebase authentication changes
+  // Track whether any Firebase user is logged in
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      const isAdmin =
-        user?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
-
-      setIsAdminLoggedIn(isAdmin);
+      setIsLoggedIn(Boolean(user));
+      setAuthLoading(false);
     });
 
     return () => unsubscribe();
@@ -55,7 +52,7 @@ function Footer() {
           <Link
             to="/"
             className="footer-logo"
-            aria-label="MANZILL 77 Home"
+            aria-label="MANZILL 777 Home"
           >
             <span className="footer-logo-mark">M</span>
 
@@ -81,8 +78,8 @@ function Footer() {
             <span>+91 98154 89193</span>
           </a>
 
-          {/* Show Admin Login only when the admin is not logged in */}
-          {!isAdminLoggedIn && (
+          {/* Hide Admin Login for every logged-in user */}
+          {!authLoading && !isLoggedIn && (
             <button
               type="button"
               className="footer-admin-login"

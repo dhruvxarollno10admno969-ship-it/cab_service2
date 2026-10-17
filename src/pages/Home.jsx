@@ -11,10 +11,10 @@ import {
 import { db } from "../firebase";
 
 import "../App.css";
-import QuickBooking from "../components/QuickBooking";
-import Service from "../components/Service";
-import About from "../components/About";
-import Testimonials from "../components/Testimonials";
+import QuickBooking from "../components/pages/QuickBooking";
+import Service from "../components/pages/Service";
+import About from "../components/pages/About";
+import Testimonials from "../components/pages/Testimonials";
 import Hero from "../components/pages/Hero";
 import Fleet from "./Fleet";
 import Contact from "./Contact";

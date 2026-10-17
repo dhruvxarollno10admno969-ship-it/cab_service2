@@ -1,7 +1,7 @@
 import { ArrowUpRight, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
-import LightPillar from "../Lightpillar";
-import QuickBooking from "../QuickBooking";
+import LightPillar from "./Lightpillar";
+import QuickBooking from "./QuickBooking";
 
 function Hero() {
   return (

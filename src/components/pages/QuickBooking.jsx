@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { MapPin, ArrowUpRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import "./QuickBooking.css";
+import "../styles/QuickBooking.css";
 
 function QuickBooking() {
   const navigate = useNavigate();

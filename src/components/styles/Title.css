@@ -1,0 +1,153 @@
+
+/* =====================================
+   MANZILL 777 — REUSABLE SECTION TITLE
+===================================== */
+
+.section-title {
+  width: 100%;
+  max-width: 1450px;
+  margin: 0 auto 48px;
+
+  color: #ffffff;
+  font-family: "DM Sans", sans-serif;
+}
+
+/* Small label */
+
+.section-title__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+
+  margin-bottom: 18px;
+
+  color: #c4a3ff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.section-title__label::before {
+  content: "";
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+
+  background: linear-gradient(
+    90deg,
+    #5227ff,
+    #ff9ffc
+  );
+}
+
+/* Main heading */
+
+.section-title__heading {
+  margin: 0;
+
+  color: #ffffff;
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -1.8px;
+
+  overflow-wrap: anywhere;
+}
+
+.section-title__heading span {
+  background: linear-gradient(
+    100deg,
+    #a78bfa,
+    #c084fc,
+    #ff9ffc
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Description */
+
+.section-title__description {
+  max-width: 540px;
+  margin: 18px 0 0;
+
+  color: #a7a1b7;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+/* Alignment */
+
+.section-title--center {
+  text-align: center;
+}
+
+.section-title--center .section-title__description {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.section-title--right {
+  text-align: right;
+}
+
+.section-title--right .section-title__description {
+  margin-left: auto;
+}
+
+/* Tablet */
+
+@media (max-width: 768px) {
+  .section-title {
+    margin-bottom: 36px;
+  }
+
+  .section-title__heading {
+    font-size: clamp(30px, 5.5vw, 40px);
+    letter-spacing: -1.3px;
+  }
+
+  .section-title__description {
+    font-size: 14px;
+    line-height: 1.75;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 480px) {
+  .section-title {
+    margin-bottom: 30px;
+  }
+
+  .section-title__label {
+    margin-bottom: 14px;
+    font-size: 10px;
+    letter-spacing: 1.7px;
+  }
+
+  .section-title__heading {
+    font-size: clamp(29px, 8vw, 36px);
+    line-height: 1.2;
+    letter-spacing: -1px;
+  }
+
+  .section-title__description {
+    margin-top: 14px;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+}
+
+/* Accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+  .section-title,
+  .section-title * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

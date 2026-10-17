@@ -5,8 +5,7 @@ import { Routes, Route, Outlet } from "react-router-dom";
 // ========================================
 
 import Home from "./pages/Home";
-import Service from "./components/Service";
-import About from "./pages/booking/about/About";
+import Service from "./components/pages/Service";
 import Fleet from "./pages/Fleet";
 import Contact from "./pages/Contact";
 import Booking from "./pages/booking/Booking";
@@ -19,9 +18,11 @@ import Setting from "./pages/Setting";
 
 import PrivateRoute from "./PrivateRoute";
 
-import Navbar from "./components/Navbar";
+import Navbar from "./components/pages/Navbar";
 
-import Footer from "./components/Footer";
+import Footer from "./components/pages/Footer";
+
+import MyRides from "./components/pages/MyRides";
 
 // ========================================
 // ADMIN PANEL
@@ -72,6 +73,7 @@ function App() {
       <Route element={<CustomerLayout />}>
         {/* HOME */}
         <Route path="/" element={<Home />} />
+        
 
         {/* AUTHENTICATION */}
         <Route path="/login" element={<Login />} />
@@ -80,8 +82,6 @@ function App() {
 
         {/* MAIN PAGES */}
         <Route path="/services" element={<Service />} />
-
-        <Route path="/about" element={<About />} />
 
         <Route path="/fleet" element={<Fleet />} />
 
@@ -94,8 +94,10 @@ function App() {
         <Route element={<PrivateRoute />}>
           <Route path="/booking" element={<Booking />} />
           
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/my-rides" element={<MyRides />} />
 
+          <Route path="/profile" element={<Profile />} />
+          
           <Route path="/settings" element={<Setting />} />
         </Route>
       </Route>

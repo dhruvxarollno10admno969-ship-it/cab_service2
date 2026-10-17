@@ -3,7 +3,7 @@ import {
   ArrowUpRight,
   MessageSquareQuote,
 } from "lucide-react";
-
+import Title from "./Title";
 import {
   collection,
   getDocs,
@@ -12,9 +12,9 @@ import {
   
 } from "firebase/firestore";
 
-import { db } from "../firebase";
+import { db } from "../../firebase";  
 
-import "./Testimonials.css";
+import "../styles/Testimonials.css";
 
 const Testimonials = () => {
   const [testimonials, setTestimonials] = useState([]);
@@ -54,26 +54,13 @@ const Testimonials = () => {
     >
       <div className="testimonials-container">
 
-        {/* Header */}
-        <div className="testimonials-header">
-          <div className="testimonials-label">
-            <span className="testimonials-label-dot"></span>
-            CUSTOMER STORIES
-          </div>
 
-          <div className="testimonials-heading-wrap">
-            <h2>
-              Good rides.
-              <br />
-              <span>Better experiences.</span>
-            </h2>
-
-            <p>
-              Hear what our riders have to say about their journey
-              with us.
-            </p>
-          </div>
-        </div>
+         <Title
+        label="CUSTOMER STORIES"
+        title="Good rides.."
+        highlight="Better experiences."
+        description="Hear what our riders have to say about their journeywith us."
+      />
 
         {/* Loading */}
         {loading ? (

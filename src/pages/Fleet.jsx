@@ -105,7 +105,7 @@ useEffect(() => {
 }, []);
 
   return (
-    <main className="fleet-page">
+    <main className="fleet-page" id="fleet">
       <section className="fleet-section">
         <div className="fleet-top">
           <p className="fleet-label">

@@ -135,10 +135,10 @@
 
   color: #ffffff;
   font-family: "DM Sans", sans-serif;
-  font-size: clamp(55px, 7vw, 100px);
+  font-size: clamp(30px, 4vw, 50px);
   font-weight: 500;
   line-height: 0.96;
-  letter-spacing: -5px;
+  letter-spacing: -2px;
 }
 
 .section-heading h2 span {
