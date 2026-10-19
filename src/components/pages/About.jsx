@@ -1,146 +1,70 @@
-
-import {
-  ArrowUpRight,
-  Clock3,
-  ShieldCheck,
-  Sparkles,
-} from "lucide-react";
-
+import { ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import "../styles/about.css";
 
-const benefits = [
-  {
-    number: "01",
-    title: "Comfortable journeys",
-    description:
-      "A comfortable travel experience for everyday rides and longer journeys.",
-    icon: Sparkles,
-    label: "COMFORT",
-  },
-  {
-    number: "02",
-    title: "Simple booking",
-    description:
-      "Plan your pickup and destination through a straightforward booking process.",
-    icon: Clock3,
-    label: "CONVENIENCE",
-  },
-  {
-    number: "03",
-    title: "Travel with confidence",
-    description:
-      "Find ride options for city travel, airport transfers, and other destinations.",
-    icon: ShieldCheck,
-    label: "YOUR JOURNEY",
-  },
+const stats = [
+  { value: "24/7", label: "Ride booking" },
+  { value: "100%", label: "Customer focus" },
+  { value: "1", label: "Simple booking process" },
 ];
 
 function About() {
   return (
     <section id="about" className="about-section">
       <div className="about-container">
-        {/* LEFT: ABOUT CONTENT */}
-        <div className="about-content">
-          <p className="about-eyebrow">
-            <span />
-            ABOUT MANZILL 77
-          </p>
-
-          <h2>
-            More than a ride.
-            <br />
-            <span>It's your journey.</span>
-          </h2>
-
-          <p className="about-description">
-            At MANZILL 77, we believe getting from one
-            place to another should feel simple and
-            comfortable. From everyday city rides to
-            airport transfers and longer journeys, we're
-            here to make your travel experience easier.
-          </p>
-
-          <Link to="/booking" className="about-button">
-            Book Your Ride
-            <ArrowUpRight size={18} />
-          </Link>
-
-          <div className="about-availability">
-            <span className="about-availability-dot" />
-            <span>BOOKING ACCESS · 24/7</span>
-          </div>
-        </div>
-
-        {/* RIGHT: THREE BENEFITS */}
-        <div className="about-details">
-          <div className="about-details-heading">
-            <span className="about-mini-label">
-              THE MANZILL EXPERIENCE
+        <div className="about-main">
+          <div className="about-content">
+            <span className="about-eyebrow">
+              ABOUT MANZILL 777
             </span>
 
-            <p>
-              Thoughtful travel. Simple booking.
-              A better journey.
+            <h2 className="about-title">
+              More than a ride.
+              <br />
+              <span>It's your journey.</span>
+            </h2>
+
+            <p className="about-description">
+              At MANZILL 777, we make travelling simple,
+              comfortable, and reliable. Whether it’s your
+              daily commute, an airport transfer, or an
+              outstation trip, we’re here to help you get
+              where you need to go.
             </p>
+
+            <p className="about-description about-description-secondary">
+              Easy booking, comfortable rides, and service
+              you can count on — every journey matters.
+            </p>
+
+            <Link to="/booking" className="about-cta-button">
+              Book a Ride
+              <ArrowUpRight size={17} aria-hidden="true" />
+            </Link>
           </div>
+          
+<div className="about-image-wrapper">
+  <img
+    src="/images/car.jpg"
+    alt="Premium black car for MANZILL 777"
+    className="about-image"
+    loading="lazy"
+  />
+  <div className="about-image-glow"></div>
+</div>
 
-          {benefits.map((benefit) => {
-            const Icon = benefit.icon;
-
-            return (
-              <article
-                className="about-detail"
-                key={benefit.number}
-              >
-                <div className="about-detail-top">
-                  <span className="about-detail-number">
-                    {benefit.number}
-                  </span>
-                </div>
-
-                <h3>{benefit.title}</h3>
-
-                <p>{benefit.description}</p>
-
-                <div className="about-detail-bottom">
-                  <span>{benefit.label}</span>
-                  <ArrowUpRight size={16} />
-                </div>
-              </article>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* BOTTOM: SERVICE HIGHLIGHTS */}
-      <div className="about-highlights">
-        <div className="about-highlight-intro">
-          <span className="about-mini-label">
-            MADE FOR YOUR JOURNEY
-          </span>
-
-          <p>
-            One destination at a time.
-            <br />
-            <span>Your journey matters.</span>
-          </p>
         </div>
 
-        <div className="about-highlight">
-          <span className="about-highlight-number">01</span>
-          <span>City rides</span>
+        <div className="about-stats">
+          {stats.map((stat) => (
+            <div className="about-stat" key={stat.label}>
+              <h3>{stat.value}</h3>
+              <p>{stat.label}</p>
+            </div>
+          ))}
         </div>
 
-        <div className="about-highlight">
-          <span className="about-highlight-number">02</span>
-          <span>Airport transfers</span>
-        </div>
-
-        <div className="about-highlight">
-          <span className="about-highlight-number">03</span>
-          <span>Long-distance travel</span>
-        </div>
+        <div className="about-divider" />
       </div>
     </section>
   );
