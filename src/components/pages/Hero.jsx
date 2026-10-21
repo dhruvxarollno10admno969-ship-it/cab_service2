@@ -1,15 +1,15 @@
-import { ArrowUpRight, MapPin } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
+
 import LightPillar from "./Lightpillar";
 import QuickBooking from "./QuickBooking";
+import Title from "./Title";
+import "../styles/Title.css"
 
 function Hero() {
   return (
     <section className="hero-wrapper" id="home">
-
-      {/* ================================
-          LIGHT PILLAR BACKGROUND
-      ================================= */}
+      {/* LIGHT PILLAR BACKGROUND */}
       <div className="hero-pillar" aria-hidden="true">
         <LightPillar
           topColor="#5227FF"
@@ -27,80 +27,56 @@ function Hero() {
         />
       </div>
 
-      {/* ================================
-          DARK OVERLAY
-          Keeps text readable
-      ================================= */}
-      <div className="hero-overlay" aria-hidden="true"></div>
+      {/* DARK OVERLAY */}
+      <div className="hero-overlay" aria-hidden="true" />
 
-      {/* ================================
-          HERO CONTENT
-      ================================= */}
+      {/* HERO CONTENT */}
       <div className="hero-section">
-
-        {/* ============================
-            LEFT CONTENT
-        ============================= */}
+        {/* LEFT CONTENT */}
         <div className="hero-content">
+          <Title
+            className="hero-title"
+            label="PREMIUM CAB SERVICES"
+            title="Move smarter."
+            highlight="Ride better."
+            description="Reliable rides for everyday journeys, airport transfers, business trips and everything in between."
+            align="left"
+          />
 
-          <p className="eyebrow">
-            <span></span>
-            PREMIUM CAB SERVICES
-          </p>
-
-          <h1>
-            Move smarter.
-            <br />
-            <span>Ride better.</span>
-          </h1>
-
-          <p className="hero-description">
-            Reliable rides for everyday journeys, airport transfers,
-            business trips and everything in between.
-          </p>
-
+          {/* CTA */}
           <div className="hero-actions">
-
             <Link to="/booking" className="primary-button">
               <span>Book a Ride</span>
               <ArrowUpRight size={19} />
             </Link>
-
           </div>
 
-          {/* Small trust indicators */}
+          {/* TRUST INDICATORS */}
           <div className="hero-trust">
-
             <div className="trust-item">
               <strong>24/7</strong>
               <span>Availability</span>
             </div>
 
-            <div className="trust-divider"></div>
+            <div className="trust-divider" />
 
             <div className="trust-item">
               <strong>Safe</strong>
               <span>Professional rides</span>
             </div>
 
-            <div className="trust-divider"></div>
+            <div className="trust-divider" />
 
             <div className="trust-item">
               <strong>Fast</strong>
               <span>Easy booking</span>
             </div>
-
           </div>
-
         </div>
 
-        {/* ============================
-            QUICK BOOKING CARD
-        ============================= */}
-        <QuickBooking/>
-
+        {/* QUICK BOOKING */}
+        <QuickBooking />
       </div>
-
     </section>
   );
 }

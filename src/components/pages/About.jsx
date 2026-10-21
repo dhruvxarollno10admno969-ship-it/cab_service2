@@ -1,5 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import Title from "./Title";
+import "../styles/Title.css";
 import "../styles/about.css";
 
 const stats = [
@@ -14,23 +16,14 @@ function About() {
       <div className="about-container">
         <div className="about-main">
           <div className="about-content">
-            <span className="about-eyebrow">
-              ABOUT MANZILL 777
-            </span>
-
-            <h2 className="about-title">
-              More than a ride.
-              <br />
-              <span>It's your journey.</span>
-            </h2>
-
-            <p className="about-description">
-              At MANZILL 777, we make travelling simple,
-              comfortable, and reliable. Whether it’s your
-              daily commute, an airport transfer, or an
-              outstation trip, we’re here to help you get
-              where you need to go.
-            </p>
+            <Title
+              className="about-heading"
+              label="ABOUT MANZILL 777"
+              title="More than a ride."
+              highlight="It's your journey."
+              description="At MANZILL 777, we make travelling simple, comfortable, and reliable. Whether it’s your daily commute, an airport transfer, or an outstation trip, we’re here to help you get where you need to go."
+              align="left"
+            />
 
             <p className="about-description about-description-secondary">
               Easy booking, comfortable rides, and service
@@ -42,17 +35,16 @@ function About() {
               <ArrowUpRight size={17} aria-hidden="true" />
             </Link>
           </div>
-          
-<div className="about-image-wrapper">
-  <img
-    src="/images/car.jpg"
-    alt="Premium black car for MANZILL 777"
-    className="about-image"
-    loading="lazy"
-  />
-  <div className="about-image-glow"></div>
-</div>
 
+          <div className="about-image-wrapper">
+            <img
+              src="/images/car.jpg"
+              alt="Premium black car for MANZILL 777"
+              className="about-image"
+              loading="lazy"
+            />
+            <div className="about-image-glow" />
+          </div>
         </div>
 
         <div className="about-stats">

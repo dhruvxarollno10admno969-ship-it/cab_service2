@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import "./contact.css";
 
@@ -22,6 +21,8 @@ import {
 } from "firebase/firestore";
 
 import { db } from "../firebase";
+import Title from "../components/pages/Title";
+import "../components/styles/Title.css";
 
 function Contact() {
   const [submitting, setSubmitting] = useState(false);
@@ -78,7 +79,8 @@ function Contact() {
 
       setStatus({
         type: "success",
-        message: "Your enquiry has been submitted successfully. Thank you for contacting Manzill 777!",
+        message:
+          "Your enquiry has been submitted successfully. Thank you for contacting Manzill 777!",
       });
     } catch (error) {
       console.error("Contact enquiry submission failed:", error);
@@ -96,34 +98,37 @@ function Contact() {
   return (
     <main className="contact-page">
       <section className="contact-section">
-        <div className="contact-orb contact-orb-one" aria-hidden="true" />
-        <div className="contact-orb contact-orb-two" aria-hidden="true" />
-        <div className="contact-grid-overlay" aria-hidden="true" />
+        <div
+          className="contact-orb contact-orb-one"
+          aria-hidden="true"
+        />
+        <div
+          className="contact-orb contact-orb-two"
+          aria-hidden="true"
+        />
+        <div
+          className="contact-grid-overlay"
+          aria-hidden="true"
+        />
 
         <div className="contact-container">
           {/* HERO */}
-          <header className="contact-hero">
-            <div className="contact-eyebrow">
-              <span className="contact-eyebrow-icon">
-                <Sparkles size={15} />
-              </span>
-              YOUR JOURNEY, OUR PRIORITY
-            </div>
-
-            <h1>
-              Let's make your
-              <br />
-              next journey <span>effortless.</span>
-            </h1>
-
-            <p className="contact-hero-description">
-              Questions, travel plans, or help with your next ride?
-              We're here to make every journey comfortable,
-              convenient, and stress-free.
-            </p>
+          <div className="contact-hero">
+            <Title
+              as="h1"
+              className="contact-hero-title"
+              label="YOUR JOURNEY, OUR PRIORITY"
+              title="Let's make your"
+              highlight="next journey effortless."
+              description="Questions, travel plans, or help with your next ride? We're here to make every journey comfortable, convenient, and stress-free."
+              align="left"
+            />
 
             <div className="contact-hero-actions">
-              <a href="#contact-form" className="contact-primary-btn">
+              <a
+                href="#contact-form"
+                className="contact-primary-btn"
+              >
                 Get in touch
                 <ArrowUpRight size={18} />
               </a>
@@ -145,25 +150,33 @@ function Contact() {
               <span className="contact-trust-dot" />
               <span>Manzill 777</span>
             </div>
-          </header>
+          </div>
 
           {/* CONTACT INFORMATION */}
           <section
             className="contact-details-grid"
             aria-label="Contact information"
           >
-            <a href="tel:+919815489193" className="contact-detail-card">
+            <a
+              href="tel:+919815489193"
+              className="contact-detail-card"
+            >
               <div className="contact-icon">
                 <Phone size={21} />
               </div>
 
               <div className="contact-detail-content">
-                <span className="contact-detail-label">CALL US</span>
+                <span className="contact-detail-label">
+                  CALL US
+                </span>
                 <h2>+91 98154 89193</h2>
                 <p>Speak directly with our team</p>
               </div>
 
-              <ArrowUpRight className="contact-detail-arrow" size={19} />
+              <ArrowUpRight
+                className="contact-detail-arrow"
+                size={19}
+              />
             </a>
 
             <a
@@ -175,12 +188,17 @@ function Contact() {
               </div>
 
               <div className="contact-detail-content">
-                <span className="contact-detail-label">EMAIL US</span>
+                <span className="contact-detail-label">
+                  EMAIL US
+                </span>
                 <h2>hello@manzill777.com</h2>
                 <p>We'd love to hear from you</p>
               </div>
 
-              <ArrowUpRight className="contact-detail-arrow" size={19} />
+              <ArrowUpRight
+                className="contact-detail-arrow"
+                size={19}
+              />
             </a>
 
             <div className="contact-detail-card">
@@ -189,7 +207,9 @@ function Contact() {
               </div>
 
               <div className="contact-detail-content">
-                <span className="contact-detail-label">OUR LOCATION</span>
+                <span className="contact-detail-label">
+                  OUR LOCATION
+                </span>
                 <h2>Chandigarh &amp; Tricity</h2>
                 <p>Local rides and everyday journeys</p>
               </div>
@@ -201,7 +221,9 @@ function Contact() {
               </div>
 
               <div className="contact-detail-content">
-                <span className="contact-detail-label">AVAILABILITY</span>
+                <span className="contact-detail-label">
+                  AVAILABILITY
+                </span>
                 <h2>24/7 Ride Booking</h2>
                 <p>Plan your next journey anytime</p>
               </div>
@@ -209,9 +231,14 @@ function Contact() {
           </section>
 
           {/* ENQUIRY SECTION */}
-          <section className="contact-form-layout" id="contact-form">
+          <section
+            className="contact-form-layout"
+            id="contact-form"
+          >
             <div className="contact-form-intro">
-              <span className="contact-small-label">LET'S TALK</span>
+              <span className="contact-small-label">
+                LET'S TALK
+              </span>
 
               <h2>
                 We're just a
@@ -251,7 +278,10 @@ function Contact() {
               </div>
             </div>
 
-            <form className="contact-form" onSubmit={handleSubmit}>
+            <form
+              className="contact-form"
+              onSubmit={handleSubmit}
+            >
               <div className="contact-form-heading">
                 <span className="contact-form-overline">
                   SEND A MESSAGE
@@ -259,12 +289,17 @@ function Contact() {
 
                 <h3>How can we help?</h3>
 
-                <p>Fill in the details to submit your enquiry.</p>
+                <p>
+                  Fill in the details to submit your enquiry.
+                </p>
               </div>
 
               <div className="contact-input-row">
                 <div className="contact-field">
-                  <label htmlFor="contact-name">Full name</label>
+                  <label htmlFor="contact-name">
+                    Full name
+                  </label>
+
                   <input
                     id="contact-name"
                     type="text"
@@ -278,7 +313,10 @@ function Contact() {
                 </div>
 
                 <div className="contact-field">
-                  <label htmlFor="contact-phone">Phone number</label>
+                  <label htmlFor="contact-phone">
+                    Phone number
+                  </label>
+
                   <input
                     id="contact-phone"
                     type="tel"
@@ -295,7 +333,10 @@ function Contact() {
               </div>
 
               <div className="contact-field">
-                <label htmlFor="contact-email">Email address</label>
+                <label htmlFor="contact-email">
+                  Email address
+                </label>
+
                 <input
                   id="contact-email"
                   type="email"
@@ -308,7 +349,10 @@ function Contact() {
               </div>
 
               <div className="contact-field">
-                <label htmlFor="contact-message">Your message</label>
+                <label htmlFor="contact-message">
+                  Your message
+                </label>
+
                 <textarea
                   id="contact-message"
                   name="message"
@@ -330,11 +374,16 @@ function Contact() {
                 disabled={submitting}
               >
                 <span>
-                  {submitting ? "Submitting enquiry..." : "Send enquiry"}
+                  {submitting
+                    ? "Submitting enquiry..."
+                    : "Send enquiry"}
                 </span>
 
                 {submitting ? (
-                  <span className="contact-spinner" aria-hidden="true" />
+                  <span
+                    className="contact-spinner"
+                    aria-hidden="true"
+                  />
                 ) : (
                   <Send size={17} />
                 )}
@@ -343,7 +392,11 @@ function Contact() {
               {status.message && (
                 <div
                   className={`contact-form-status contact-status-${status.type}`}
-                  role={status.type === "error" ? "alert" : "status"}
+                  role={
+                    status.type === "error"
+                      ? "alert"
+                      : "status"
+                  }
                   aria-live="polite"
                 >
                   {status.type === "success" ? (
@@ -357,8 +410,8 @@ function Contact() {
               )}
 
               <p className="contact-form-footnote">
-                Your enquiry will be saved securely in our contact
-                records when the submission succeeds.
+                Your enquiry will be saved in our contact records
+                when the submission succeeds.
               </p>
             </form>
           </section>
@@ -381,7 +434,10 @@ function Contact() {
               </p>
             </div>
 
-            <a href="/booking" className="contact-banner-btn">
+            <a
+              href="/booking"
+              className="contact-banner-btn"
+            >
               Book your ride
               <ArrowUpRight size={18} />
             </a>
@@ -391,14 +447,19 @@ function Contact() {
           <footer className="contact-footer">
             <a href="/" className="contact-footer-brand">
               <span className="contact-footer-logo">M</span>
-              <span>MANZILL <b>777</b></span>
+              <span>
+                MANZILL <b>777</b>
+              </span>
             </a>
 
             <span className="contact-footer-tagline">
               Every journey matters.
             </span>
 
-            <a href="#contact-form" className="contact-footer-link">
+            <a
+              href="#contact-form"
+              className="contact-footer-link"
+            >
               Get in touch
               <ArrowUpRight size={14} />
             </a>

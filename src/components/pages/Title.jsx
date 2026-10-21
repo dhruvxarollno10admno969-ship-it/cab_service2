@@ -1,4 +1,3 @@
-
 import "../styles/title.css";
 
 function Title({
@@ -8,6 +7,7 @@ function Title({
   description,
   align = "left",
   className = "",
+  as: Heading = "h2",
 }) {
   return (
     <header
@@ -19,7 +19,7 @@ function Title({
         </span>
       )}
 
-      <h2 className="section-title__heading">
+      <Heading className="section-title__heading">
         {title}
         {highlight && (
           <>
@@ -27,7 +27,7 @@ function Title({
             <span>{highlight}</span>
           </>
         )}
-      </h2>
+      </Heading>
 
       {description && (
         <p className="section-title__description">

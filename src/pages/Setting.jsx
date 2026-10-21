@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   User,
   Mail,
@@ -11,6 +11,9 @@ import {
   Trash2,
   ChevronRight,
   ArrowLeft,
+  X,
+  CheckCircle2,
+  AlertTriangle,
 } from "lucide-react";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -34,10 +37,12 @@ import {
 } from "firebase/firestore";
 
 import { auth, db } from "../firebase";
-import "./Setting.css";
+import "./setting.css";
 
 function Settings() {
   const navigate = useNavigate();
+  const inputRef = useRef(null);
+  const resolverRef = useRef(null);
 
   const [user, setUser] = useState(null);
   const [name, setName] = useState("");
@@ -50,58 +55,91 @@ function Settings() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  // Load the authenticated user and their saved settings.
+  const [dialog, setDialog] = useState(null);
+  const [dialogValue, setDialogValue] = useState("");
+  const [dialogBusy, setDialogBusy] = useState(false);
+
+  // Custom dialog system
+  const showDialog = (options) =>
+    new Promise((resolve) => {
+      resolverRef.current = resolve;
+      setDialogValue(options.defaultValue || "");
+      setDialog(options);
+      setDialogBusy(false);
+    });
+
+  const closeDialog = (result = null) => {
+    if (dialogBusy) return;
+
+    const resolve = resolverRef.current;
+    resolverRef.current = null;
+    setDialog(null);
+    setDialogValue("");
+    resolve?.(result);
+  };
+
+  const showAlert = (message, title = "Notice") =>
+    showDialog({
+      type: "alert",
+      title,
+      message,
+    });
+
+  const showConfirm = (message, title = "Please confirm") =>
+    showDialog({
+      type: "confirm",
+      title,
+      message,
+    });
+
+  const showPrompt = (message, defaultValue = "", title = "Update details") =>
+    showDialog({
+      type: "prompt",
+      title,
+      message,
+      defaultValue,
+    });
+
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(
-      auth,
-      async (currentUser) => {
-        setUser(currentUser);
+    if (dialog?.type === "prompt") {
+      inputRef.current?.focus();
+      inputRef.current?.select();
+    }
+  }, [dialog]);
 
-        if (!currentUser) {
-          setLoading(false);
-          return;
-        }
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
 
-        try {
-          console.log("Authenticated user:", currentUser);
-          const userRef = doc(db, "users", currentUser.uid);
-          const snapshot = await getDoc(userRef);
-           console.log("Profile data:", snapshot.data());
-          const profile = snapshot.exists()
-            ? snapshot.data()
-            : {};
-            
-
-          setName(
-            profile.name || currentUser.displayName || ""
-          );
-
-          setEmail(currentUser.email || "");
-          setPhone(profile.phone || "");
-
-          setRideUpdates(
-            profile.settings?.rideUpdates ?? true
-          );
-
-          setPromotions(
-            profile.settings?.promotions ?? false
-          );
-        } catch (error) {
-          console.error("Settings load error:", error);
-          alert("Unable to load your settings. Please try again.");
-        } finally {
-          setLoading(false);
-        }
+      if (!currentUser) {
+        setLoading(false);
+        return;
       }
-    );
+
+      try {
+        const userRef = doc(db, "users", currentUser.uid);
+        const snapshot = await getDoc(userRef);
+        const profile = snapshot.exists() ? snapshot.data() : {};
+
+        setName(profile.name || currentUser.displayName || "");
+        setEmail(currentUser.email || "");
+        setPhone(profile.phone || "");
+        setRideUpdates(profile.settings?.rideUpdates ?? true);
+        setPromotions(profile.settings?.promotions ?? false);
+      } catch (error) {
+        console.error("Settings load error:", error);
+        await showAlert("Unable to load your settings. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    });
 
     return unsubscribe;
   }, []);
 
-  // Save account details without overwriting other profile fields.
   const saveProfile = async (updates) => {
     if (!auth.currentUser) {
-      alert("Please sign in to update your account.");
+      await showAlert("Please sign in to update your account.");
       return false;
     }
 
@@ -113,24 +151,24 @@ function Settings() {
         updates,
         { merge: true }
       );
-
       return true;
     } catch (error) {
       console.error("Profile update error:", error);
-      alert("Unable to save your changes. Please try again.");
+      await showAlert("Unable to save your changes. Please try again.");
       return false;
     } finally {
       setSaving(false);
     }
   };
 
-  // Edit the account name.
+  // Update name
   const handleName = async () => {
-    if (!user) return;
+    if (!user || saving) return;
 
-    const newName = window.prompt(
-      "Enter your name:",
-      name
+    const newName = await showPrompt(
+      "Enter the name you want to display on your account.",
+      name,
+      "Update your name"
     );
 
     if (newName === null) return;
@@ -138,21 +176,19 @@ function Settings() {
     const trimmedName = newName.trim();
 
     if (!trimmedName) {
-      alert("Name cannot be empty.");
+      await showAlert("Name cannot be empty.");
       return;
     }
 
     if (trimmedName.length > 100) {
-      alert("Name must be 100 characters or fewer.");
+      await showAlert("Name must be 100 characters or fewer.");
       return;
     }
 
     setSaving(true);
 
     try {
-      await updateProfile(user, {
-        displayName: trimmedName,
-      });
+      await updateProfile(user, { displayName: trimmedName });
 
       await setDoc(
         doc(db, "users", user.uid),
@@ -165,100 +201,95 @@ function Settings() {
       );
 
       setName(trimmedName);
-      alert("Name updated successfully.");
+      await showAlert("Your name has been updated successfully.", "All set!");
     } catch (error) {
       console.error("Name update error:", error);
-      alert(
-        "Unable to update your name. Please try again."
-      );
+      await showAlert("Unable to update your name. Please try again.");
     } finally {
       setSaving(false);
     }
   };
 
-  // Change email using Firebase's verification process.
+  // Update email
   const handleEmail = async () => {
-    if (!user) return;
+    if (!user || saving) return;
 
-    const newEmail = window.prompt(
-      "Enter your new email address:",
-      email
+    const newEmail = await showPrompt(
+      "Enter your new email address. You will need to verify it.",
+      email,
+      "Change email address"
     );
 
     if (newEmail === null) return;
 
     const trimmedEmail = newEmail.trim();
 
-    if (
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)
-    ) {
-      alert("Please enter a valid email address.");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      await showAlert("Please enter a valid email address.");
       return;
     }
 
     if (trimmedEmail.toLowerCase() === email.toLowerCase()) {
-      alert("This is already your email address.");
+      await showAlert("This is already your email address.");
       return;
     }
+
+    setSaving(true);
 
     try {
       await verifyBeforeUpdateEmail(user, trimmedEmail);
 
-      alert(
-        "A verification email has been sent. " +
-        "Verify the new address to complete the change."
+      await showAlert(
+        "A verification email has been sent. Verify the new address to complete the change.",
+        "Check your inbox"
       );
     } catch (error) {
       console.error("Email update error:", error);
 
+      let message = "Unable to send the verification email.";
+
       if (error.code === "auth/requires-recent-login") {
-        alert(
-          "For security, sign in again before changing your email."
-        );
-      } else {
-        alert(
-          error.code === "auth/operation-not-allowed"
-            ? "Email changes are not enabled for this sign-in method."
-            : error.code === "auth/too-many-requests"
-              ? "Too many attempts. Please try again later."
-              : "Unable to send the verification email."
-        );
+        message = "For security, sign in again before changing your email.";
+      } else if (error.code === "auth/operation-not-allowed") {
+        message = "Email changes are not enabled for this sign-in method.";
+      } else if (error.code === "auth/too-many-requests") {
+        message = "Too many attempts. Please try again later.";
       }
+
+      await showAlert(message);
+    } finally {
+      setSaving(false);
     }
   };
 
-  // Save the phone number to the user's Firestore profile.
+  // Update phone
   const handlePhone = async () => {
-    if (!user) return;
+    if (!user || saving) return;
 
-    const newPhone = window.prompt(
-      "Enter your phone number:",
-      phone
+    const newPhone = await showPrompt(
+      "Enter your contact number.",
+      phone,
+      "Update phone number"
     );
 
     if (newPhone === null) return;
 
     const trimmedPhone = newPhone.trim();
 
-    if (
-      trimmedPhone &&
-      !/^\+?[0-9\s()-]{7,20}$/.test(trimmedPhone)
-    ) {
-      alert("Please enter a valid phone number.");
+    if (trimmedPhone && !/^\+?[0-9\s()-]{7,20}$/.test(trimmedPhone)) {
+      await showAlert("Please enter a valid phone number.");
       return;
     }
 
-    const success = await saveProfile({
-      phone: trimmedPhone,
-    });
+    const success = await saveProfile({ phone: trimmedPhone });
 
     if (success) {
       setPhone(trimmedPhone);
-      alert("Phone number updated successfully.");
+      await showAlert("Your phone number has been updated.", "All set!");
     }
   };
 
-  // Persist each notification preference.
+  // Notification preferences
   const handleNotification = async (type, checked) => {
     if (!user || saving) return;
 
@@ -272,9 +303,7 @@ function Settings() {
     }
 
     const success = await saveProfile({
-      settings: {
-        [type]: checked,
-      },
+      settings: { [type]: checked },
     });
 
     if (!success) {
@@ -286,31 +315,29 @@ function Settings() {
     }
   };
 
-  // Send a password reset email.
+  // Password reset
   const handlePassword = async () => {
     if (!user?.email) {
-      alert("No email address is associated with this account.");
+      await showAlert("No email address is associated with this account.");
       return;
     }
 
-    if (
-      !window.confirm(
-        `Send a password reset email to ${user.email}?`
-      )
-    ) {
-      return;
-    }
+    const confirmed = await showConfirm(
+      `Send a password reset email to ${user.email}?`,
+      "Reset your password"
+    );
+
+    if (!confirmed) return;
 
     try {
       await sendPasswordResetEmail(auth, user.email);
-
-      alert(
-        "Password reset email sent. Check your inbox and spam folder."
+      await showAlert(
+        "Password reset email sent. Check your inbox and spam folder.",
+        "Email sent"
       );
     } catch (error) {
       console.error("Password reset error:", error);
-
-      alert(
+      await showAlert(
         error.code === "auth/too-many-requests"
           ? "Too many attempts. Please try again later."
           : "Unable to send the password reset email."
@@ -318,108 +345,110 @@ function Settings() {
     }
   };
 
-  // Sign out from this device.
+  // Sign out
   const handleSignOut = async () => {
-    if (
-      !window.confirm("Are you sure you want to sign out?")
-    ) {
-      return;
-    }
+    const confirmed = await showConfirm(
+      "Are you sure you want to sign out from this device?",
+      "Sign out"
+    );
+
+    if (!confirmed) return;
 
     try {
       await signOut(auth);
       navigate("/", { replace: true });
     } catch (error) {
       console.error("Sign out error:", error);
-      alert("Unable to sign out. Please try again.");
+      await showAlert("Unable to sign out. Please try again.");
     }
   };
 
-  // Permanently delete the authenticated account.
+  // Permanently delete account
   const handleDeleteAccount = async () => {
     const currentUser = auth.currentUser;
 
     if (!currentUser) {
-      alert("Please sign in first.");
+      await showAlert("Please sign in first.");
       return;
     }
 
-    const confirmed = window.confirm(
-      "Permanently delete your account? This action cannot be undone."
+    const confirmed = await showConfirm(
+      "This permanently deletes your Firebase Authentication account and user profile. This action cannot be undone.",
+      "Delete account permanently"
     );
 
     if (!confirmed) return;
 
-    const confirmationText = window.prompt(
-      'Type DELETE to confirm account deletion:'
+    const confirmationText = await showPrompt(
+      'Type DELETE exactly to confirm account deletion.',
+      "",
+      "Final confirmation"
     );
 
     if (confirmationText !== "DELETE") {
-      alert("Account deletion cancelled.");
+      if (confirmationText !== null) {
+        await showAlert("Confirmation did not match. Account deletion cancelled.");
+      }
       return;
     }
 
+    const passwordProvider = currentUser.providerData.some(
+      (provider) => provider.providerId === "password"
+    );
+
+    if (!passwordProvider) {
+      await showAlert(
+        "For security, sign in again using your original sign-in method, then retry account deletion."
+      );
+      return;
+    }
+
+    const password = await showPrompt(
+      "Enter your current password to verify your identity.",
+      "",
+      "Verify your password"
+    );
+
+    if (password === null) return;
+
+    if (!password) {
+      await showAlert("Password is required to delete your account.");
+      return;
+    }
+
+    setSaving(true);
+
     try {
-      // Reauthenticate email/password users before deletion.
-      const passwordProvider = currentUser.providerData.some(
-        (provider) => provider.providerId === "password"
+      const credential = EmailAuthProvider.credential(
+        currentUser.email,
+        password
       );
 
-      if (passwordProvider) {
-        const password = window.prompt(
-          "Enter your current password to confirm:"
-        );
+      await reauthenticateWithCredential(currentUser, credential);
 
-        if (password === null) return;
-
-        const credential = EmailAuthProvider.credential(
-          currentUser.email,
-          password
-        );
-
-        await reauthenticateWithCredential(
-          currentUser,
-          credential
-        );
-      } else {
-        // Do not delete data unless the user can be
-        // securely reauthenticated through their provider.
-        alert(
-          "For security, sign in again using your original " +
-          "sign-in method, then retry account deletion."
-        );
-        return;
-      }
-
-      // Delete the known user profile document first.
-      // Other collections need an explicit cleanup strategy.
-      await deleteDoc(
-        doc(db, "users", currentUser.uid)
-      );
-
-      // Delete the Firebase Authentication account.
+      await deleteDoc(doc(db, "users", currentUser.uid));
       await deleteUser(currentUser);
 
-      alert("Your account has been deleted.");
+      await showAlert("Your account has been deleted.", "Account deleted");
       navigate("/", { replace: true });
     } catch (error) {
       console.error("Account deletion error:", error);
 
-      if (error.code === "auth/wrong-password" ||
-          error.code === "auth/invalid-credential") {
-        alert("Incorrect password. Your account was not deleted.");
-      } else if (
-        error.code === "auth/requires-recent-login"
+      let message =
+        "Account deletion could not be completed. Please check your connection and Firebase permissions.";
+
+      if (
+        error.code === "auth/wrong-password" ||
+        error.code === "auth/invalid-credential"
       ) {
-        alert(
-          "Your session has expired. Sign in again and retry."
-        );
-      } else {
-        alert(
-          "Account deletion could not be completed. " +
-          "Please check your connection and Firebase permissions."
-        );
+        message = "Incorrect password. Your account was not deleted.";
+      } else if (error.code === "auth/requires-recent-login") {
+        message = "Your session has expired. Sign in again and retry.";
       }
+
+      await showAlert(message);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -448,17 +477,14 @@ function Settings() {
   return (
     <main className="settings-page">
       <div className="settings-container">
-
-        {/* BACK */}
         <Link to="/" className="settings-back">
           <ArrowLeft size={17} />
           Back to Home
         </Link>
 
-        {/* HEADER */}
         <div className="settings-heading">
           <p className="settings-eyebrow">
-            <span></span>
+            <span />
             ACCOUNT SETTINGS
           </p>
 
@@ -491,9 +517,7 @@ function Settings() {
               onClick={handleName}
               disabled={saving}
             >
-              <div className="settings-row-icon">
-                <User size={19} />
-              </div>
+              <div className="settings-row-icon"><User size={19} /></div>
               <div className="settings-row-content">
                 <span>Name</span>
                 <strong>{name || "Add your name"}</strong>
@@ -505,10 +529,9 @@ function Settings() {
               type="button"
               className="settings-row settings-button"
               onClick={handleEmail}
+              disabled={saving}
             >
-              <div className="settings-row-icon">
-                <Mail size={19} />
-              </div>
+              <div className="settings-row-icon"><Mail size={19} /></div>
               <div className="settings-row-content">
                 <span>Email</span>
                 <strong>{email || "No email available"}</strong>
@@ -522,9 +545,7 @@ function Settings() {
               onClick={handlePhone}
               disabled={saving}
             >
-              <div className="settings-row-icon">
-                <Phone size={19} />
-              </div>
+              <div className="settings-row-icon"><Phone size={19} /></div>
               <div className="settings-row-content">
                 <span>Phone number</span>
                 <strong>{phone || "Add phone number"}</strong>
@@ -546,9 +567,7 @@ function Settings() {
 
           <div className="settings-card">
             <div className="settings-row">
-              <div className="settings-row-icon">
-                <Bell size={19} />
-              </div>
+              <div className="settings-row-icon"><Bell size={19} /></div>
               <div className="settings-row-content">
                 <span>Ride updates</span>
                 <strong>Booking and driver updates</strong>
@@ -559,20 +578,15 @@ function Settings() {
                   checked={rideUpdates}
                   disabled={saving}
                   onChange={(event) =>
-                    handleNotification(
-                      "rideUpdates",
-                      event.target.checked
-                    )
+                    handleNotification("rideUpdates", event.target.checked)
                   }
                 />
-                <span></span>
+                <span />
               </label>
             </div>
 
             <div className="settings-row">
-              <div className="settings-row-icon">
-                <Bell size={19} />
-              </div>
+              <div className="settings-row-icon"><Bell size={19} /></div>
               <div className="settings-row-content">
                 <span>Offers & promotions</span>
                 <strong>Receive special offers</strong>
@@ -583,13 +597,10 @@ function Settings() {
                   checked={promotions}
                   disabled={saving}
                   onChange={(event) =>
-                    handleNotification(
-                      "promotions",
-                      event.target.checked
-                    )
+                    handleNotification("promotions", event.target.checked)
                   }
                 />
-                <span></span>
+                <span />
               </label>
             </div>
           </div>
@@ -610,10 +621,9 @@ function Settings() {
               type="button"
               className="settings-row settings-button"
               onClick={handlePassword}
+              disabled={saving}
             >
-              <div className="settings-row-icon">
-                <Lock size={19} />
-              </div>
+              <div className="settings-row-icon"><Lock size={19} /></div>
               <div className="settings-row-content">
                 <span>Password</span>
                 <strong>Reset your password by email</strong>
@@ -625,10 +635,9 @@ function Settings() {
               type="button"
               className="settings-row settings-button"
               onClick={handleSignOut}
+              disabled={saving}
             >
-              <div className="settings-row-icon">
-                <LogOut size={19} />
-              </div>
+              <div className="settings-row-icon"><LogOut size={19} /></div>
               <div className="settings-row-content">
                 <span>Sign out</span>
                 <strong>Log out from this device</strong>
@@ -661,13 +670,111 @@ function Settings() {
               type="button"
               className="delete-account-button"
               onClick={handleDeleteAccount}
+              disabled={saving}
             >
               Delete
             </button>
           </div>
         </section>
-
       </div>
+
+      {/* CUSTOM DIALOG */}
+      {dialog && (
+        <div
+          className="custom-dialog-overlay"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget && !dialogBusy) {
+              closeDialog(null);
+            }
+          }}
+          onKeyDown={(event) => {
+            if (event.key === "Escape" && !dialogBusy) {
+              closeDialog(null);
+            }
+          }}
+        >
+          <div
+            className="custom-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="custom-dialog-title"
+          >
+            <button
+              type="button"
+              className="custom-dialog-close"
+              aria-label="Close dialog"
+              disabled={dialogBusy}
+              onClick={() => closeDialog(null)}
+            >
+              <X size={18} />
+            </button>
+
+            <div className={`custom-dialog-icon ${dialog.type === "confirm" ? "is-confirm" : ""}`}>
+              {dialog.type === "alert" ? (
+                <CheckCircle2 size={24} />
+              ) : dialog.type === "confirm" ? (
+                <AlertTriangle size={24} />
+              ) : (
+                <User size={24} />
+              )}
+            </div>
+
+            <p className="custom-dialog-eyebrow">
+              MANZILL <span>77</span>
+            </p>
+
+            <h2 id="custom-dialog-title">{dialog.title}</h2>
+            <p className="custom-dialog-message">{dialog.message}</p>
+
+            {dialog.type === "prompt" && (
+              <input
+                ref={inputRef}
+                className="custom-dialog-input"
+                value={dialogValue}
+                onChange={(event) => setDialogValue(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" && !dialogBusy) {
+                    closeDialog(dialogValue);
+                  }
+                }}
+                placeholder="Enter here..."
+                type="text"
+                autoComplete="off"
+              />
+            )}
+
+            <div className="custom-dialog-actions">
+              {dialog.type !== "alert" && (
+                <button
+                  type="button"
+                  className="custom-dialog-cancel"
+                  disabled={dialogBusy}
+                  onClick={() => closeDialog(null)}
+                >
+                  Cancel
+                </button>
+              )}
+
+              <button
+                type="button"
+                className="custom-dialog-confirm"
+                disabled={dialogBusy}
+                onClick={() =>
+                  closeDialog(
+                    dialog.type === "prompt" ? dialogValue : true
+                  )
+                }
+              >
+                {dialog.type === "alert"
+                  ? "Got it"
+                  : dialog.type === "confirm"
+                    ? "Confirm"
+                    : "Continue"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

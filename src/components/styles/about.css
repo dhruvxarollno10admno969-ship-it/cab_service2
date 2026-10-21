@@ -1,5 +1,6 @@
 /* =========================================
-   MANZILL 777 — ABOUT SECTION
+   MANZILL 777 — PREMIUM ABOUT SECTION
+   Full-width layout + soft dropping light
 ========================================= */
 
 .about-section {
@@ -10,18 +11,52 @@
   --about-muted: #c1bacb;
 
   position: relative;
+  isolation: isolate;
   width: 100%;
-  padding: 90px 24px 70px;
+  min-height: 100vh;
+  padding: clamp(80px, 9vw, 130px) clamp(20px, 5.5vw, 90px) 55px;
   overflow: hidden;
-  background:
-    radial-gradient(
-      ellipse at 15% 25%,
-      rgba(124, 58, 237, 0.09),
-      transparent 42%
-    ),
-    #08060d;
+  background: #08060d;
   color: var(--about-text);
   box-sizing: border-box;
+}
+
+/* Soft dropping light from the top */
+
+.about-section::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -190px;
+  left: 50%;
+  width: min(1100px, 110vw);
+  height: 440px;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    ellipse at 50% 0%,
+    rgba(124, 58, 237, 0.30) 0%,
+    rgba(82, 39, 255, 0.15) 35%,
+    rgba(255, 159, 252, 0.05) 58%,
+    transparent 75%
+  );
+  filter: blur(30px);
+  pointer-events: none;
+}
+
+/* Subtle light on the left */
+
+.about-section::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 25%;
+  left: -240px;
+  width: 460px;
+  height: 460px;
+  border-radius: 50%;
+  background: rgba(124, 58, 237, 0.09);
+  filter: blur(100px);
+  pointer-events: none;
 }
 
 .about-section *,
@@ -30,36 +65,50 @@
   box-sizing: border-box;
 }
 
+/* FULL-WIDTH CONTAINER */
+
 .about-container {
+  position: relative;
   width: 100%;
-  max-width: 1120px;
-  margin: 0 auto;
+  max-width: 1440px;
+  margin-inline: auto;
 }
 
-/* MAIN LAYOUT */
+/* MAIN TWO-COLUMN LAYOUT */
 
 .about-main {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
   align-items: center;
-  gap: 40px;
+  gap: clamp(35px, 6vw, 100px);
+  width: 100%;
 }
 
 .about-content {
   width: 100%;
-  max-width: 620px;
+  max-width: 720px;
   min-width: 0;
 }
 
-/* SECTION LABEL */
+/* LABEL */
 
 .about-eyebrow {
-  display: inline-block;
-  margin-bottom: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 24px;
   color: #b69aff;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 2.5px;
+  text-transform: uppercase;
+}
+
+.about-eyebrow::before {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background: linear-gradient(90deg, #7c3aed, #ff9ffc);
 }
 
 /* HEADING */
@@ -67,59 +116,62 @@
 .about-title {
   margin: 0;
   color: #ffffff;
-  font-size: clamp(36px, 4.3vw, 54px);
-  font-weight: 700;
-  letter-spacing: -1.8px;
-  line-height: 1.15;
+  font-size: clamp(38px, 4.3vw, 68px);
+  font-weight: 750;
+  letter-spacing: -2.2px;
+  line-height: 1.12;
   overflow-wrap: break-word;
 }
 
 .about-title span {
+  display: inline;
   color: #b69aff;
 }
 
 /* DESCRIPTION */
 
 .about-description {
-  max-width: 560px;
-  margin: 22px 0 0;
+  max-width: 650px;
+  margin: 24px 0 0;
   color: var(--about-muted);
-  font-size: 14px;
+  font-size: clamp(14px, 1.1vw, 16px);
   font-weight: 400;
   line-height: 1.9;
 }
 
 .about-description-secondary {
-  margin-top: 12px;
+  margin-top: 14px;
   color: #958b9f;
 }
 
-/* BOOKING BUTTON */
+/* BOOK A RIDE */
 
 .about-cta-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  margin-top: 26px;
-  padding: 13px 19px;
-  border: 1px solid #7950cf;
-  border-radius: 8px;
-  background: #7543d8;
+  gap: 12px;
+  min-height: 50px;
+  margin-top: 30px;
+  padding: 14px 22px;
+  border: 1px solid rgba(182, 154, 255, 0.35);
+  border-radius: 10px;
+  background: linear-gradient(135deg, #7543d8, #6635cb);
   color: #ffffff;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 650;
   text-decoration: none;
+  box-shadow: 0 8px 30px rgba(82, 39, 255, 0.13);
   transition:
-    background 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.2s ease;
+    background 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
 }
 
 .about-cta-button:hover {
-  border-color: #a78bfa;
-  background: #8656e8;
-  transform: translateY(-2px);
+  background: linear-gradient(135deg, #8959eb, #7543d8);
+  box-shadow: 0 12px 34px rgba(124, 58, 237, 0.28);
+  transform: translateY(-3px);
 }
 
 .about-cta-button:focus-visible {
@@ -127,28 +179,33 @@
   outline-offset: 4px;
 }
 
-/* CAR IMAGE — SIZE CONTROL */
+/* CAR IMAGE */
 
 .about-image-wrapper {
+  position: relative;
   width: 100%;
-  max-width: 420px;
+  max-width: 560px;
   min-width: 0;
   justify-self: end;
+  aspect-ratio: 16 / 10;
+  padding: 6px;
   overflow: hidden;
-  border: 1px solid rgba(182, 154, 255, 0.16);
-  border-radius: 14px;
-  background: #100b19;
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(182, 154, 255, 0.24);
+  border-radius: 20px;
+  background: rgba(20, 13, 32, 0.88);
+  box-shadow:
+    0 25px 75px rgba(0, 0, 0, 0.30),
+    0 0 45px rgba(124, 58, 237, 0.08);
 }
 
 .about-image {
   display: block;
   width: 100%;
-  height: 280px;
-  max-height: 280px;
+  height: 100%;
+  margin: 0;
+  border-radius: 14px;
   object-fit: cover;
   object-position: center;
-  border-radius: inherit;
 }
 
 /* STATS */
@@ -156,30 +213,37 @@
 .about-stats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 30px;
-  max-width: 780px;
-  margin-top: 60px;
+  gap: clamp(18px, 3vw, 45px);
+  width: 100%;
+  max-width: 1000px;
+  margin-top: clamp(50px, 6vw, 85px);
 }
 
 .about-stat {
   min-width: 0;
-  padding-left: 18px;
-  border-left: 2px solid #6241a8;
+  padding: 5px 0 5px 20px;
+  border-left: 2px solid rgba(139, 92, 246, 0.85);
+  transition: border-color 0.25s ease;
+}
+
+.about-stat:hover {
+  border-left-color: #ff9ffc;
 }
 
 .about-stat h3 {
-  margin: 0 0 9px;
+  margin: 0 0 10px;
   color: #ffffff;
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: -0.8px;
+  font-size: clamp(24px, 2.2vw, 34px);
+  font-weight: 750;
+  letter-spacing: -1px;
 }
 
 .about-stat p {
   margin: 0;
   color: #a69bad;
-  font-size: 12px;
-  line-height: 1.6;
+  font-size: 13px;
+  line-height: 1.7;
+  overflow-wrap: break-word;
 }
 
 /* BOTTOM DIVIDER */
@@ -187,57 +251,58 @@
 .about-divider {
   width: 100%;
   height: 1px;
-  margin-top: 60px;
+  margin-top: clamp(45px, 5vw, 75px);
   background: linear-gradient(
     90deg,
     rgba(124, 58, 237, 0.65),
-    rgba(255, 159, 252, 0.2),
+    rgba(255, 159, 252, 0.22) 60%,
     transparent
   );
 }
 
-/* TABLET */
+/* MEDIUM LAPTOPS & TABLETS */
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
   .about-section {
-    padding: 75px 22px 60px;
+    min-height: auto;
+    padding: 85px 32px 45px;
   }
 
   .about-main {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
-    gap: 28px;
+    gap: 32px;
   }
 
   .about-title {
-    font-size: clamp(34px, 4.5vw, 44px);
-    letter-spacing: -1.3px;
+    font-size: clamp(36px, 5vw, 52px);
+    letter-spacing: -1.6px;
   }
 
   .about-image-wrapper {
-    max-width: 360px;
-  }
-
-  .about-image {
-    height: 240px;
-    max-height: 240px;
+    max-width: 460px;
   }
 
   .about-stats {
-    gap: 20px;
-    margin-top: 48px;
+    margin-top: 55px;
   }
 }
 
-/* MOBILE */
+/* MOBILE & PORTRAIT TABLETS */
 
-@media (max-width: 680px) {
+@media (max-width: 700px) {
   .about-section {
-    padding: 60px 20px 45px;
+    min-height: auto;
+    padding: 75px 22px 30px;
+  }
+
+  .about-section::before {
+    top: -140px;
+    height: 330px;
+    opacity: 0.8;
   }
 
   .about-main {
     grid-template-columns: minmax(0, 1fr);
-    gap: 28px;
+    gap: 34px;
   }
 
   .about-content {
@@ -245,144 +310,131 @@
   }
 
   .about-eyebrow {
-    margin-bottom: 18px;
+    margin-bottom: 19px;
     font-size: 10px;
     letter-spacing: 2px;
   }
 
   .about-title {
-    font-size: clamp(32px, 8vw, 40px);
-    letter-spacing: -1.2px;
-    line-height: 1.2;
+    font-size: clamp(35px, 7.8vw, 48px);
+    letter-spacing: -1.5px;
+    line-height: 1.15;
   }
 
   .about-description {
-    margin-top: 18px;
-    font-size: 13px;
+    margin-top: 19px;
+    font-size: 14px;
     line-height: 1.85;
   }
 
   .about-description-secondary {
-    margin-top: 10px;
+    margin-top: 11px;
   }
 
   .about-cta-button {
-    margin-top: 23px;
-    padding: 12px 16px;
+    margin-top: 24px;
   }
 
   .about-image-wrapper {
+    justify-self: stretch;
     width: 100%;
-    max-width: 420px;
-    justify-self: start;
+    max-width: none;
+    aspect-ratio: 16 / 10;
+    border-radius: 16px;
   }
 
   .about-image {
-    width: 100%;
-    height: auto;
-    max-height: none;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
+    border-radius: 11px;
   }
 
   .about-stats {
-    gap: 12px;
-    margin-top: 40px;
+    gap: 14px;
+    margin-top: 42px;
   }
 
   .about-stat {
-    padding-left: 9px;
+    padding-left: 12px;
   }
 
   .about-stat h3 {
-    margin-bottom: 7px;
-    font-size: 22px;
+    margin-bottom: 8px;
+    font-size: clamp(21px, 5vw, 27px);
   }
 
   .about-stat p {
-    font-size: 10px;
-    line-height: 1.5;
-    overflow-wrap: anywhere;
+    font-size: 11px;
+    line-height: 1.6;
   }
 
   .about-divider {
-    margin-top: 40px;
+    margin-top: 42px;
   }
 }
 
 /* SMALL PHONES */
 
-@media (max-width: 360px) {
+@media (max-width: 380px) {
   .about-section {
     padding-right: 16px;
     padding-left: 16px;
   }
 
   .about-title {
-    font-size: 30px;
+    font-size: 32px;
+    letter-spacing: -1.2px;
   }
 
   .about-stats {
-    gap: 8px;
+    gap: 9px;
   }
 
   .about-stat {
-    padding-left: 7px;
+    padding-left: 8px;
   }
 
   .about-stat h3 {
-    font-size: 19px;
+    font-size: 20px;
   }
 
   .about-stat p {
-    font-size: 9px;
+    font-size: 10px;
   }
 }
 
-/* ACCESSIBILITY */
+/* REDUCED MOTION */
 
 @media (prefers-reduced-motion: reduce) {
-  .about-cta-button {
+  .about-cta-button,
+  .about-stat {
     transition: none;
   }
 }
 
 
-.about-main {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 300px;
-  align-items: center;
-  gap: 64px;
+/* ABOUT — DISTINCT SECTION START */
+
+.about-section {
+  border-top: 1px solid rgba(167, 139, 250, 0.65);
+
+  box-shadow:
+    0 -1px 12px rgba(124, 58, 237, 0.20);
 }
 
-.about-image-wrapper {
-  width: 150%;
-  max-width: 500%;
-  aspect-ratio: 16 / 9;
-  overflow: absolute;
-  border-radius: 16px;
-  background: #15101f;
-  border: 1px solid rgba(167, 139, 250, 0.2);
-}
+/* Fresh dropping light for About */
 
-.about-image {
-  width: 95%;
-  height: 95%;
-  display: absolute;
-  object-fit: cover;
-  object-position: center;
-  margin-left: 4.5px;
-}
+.about-section::before {
+  top: -100px;
+  left: 50%;
+  width: 85%;
+  height: 300px;
 
-@media (max-width: 768px) {
-  .about-main {
-    grid-template-columns: 1fr;
-    gap: 28px;
-  }
+  background: radial-gradient(
+    ellipse at top,
+    rgba(124, 58, 237, 0.20),
+    rgba(255, 159, 252, 0.06) 45%,
+    transparent 75%
+  );
 
-  .about-image-wrapper {
-    max-width: 200%;
-    width: 200%;
-    aspect-ratio: 16 / 9;
-  }
+  filter: blur(35px);
+  pointer-events: none;
 }

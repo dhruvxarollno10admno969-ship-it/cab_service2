@@ -1,8 +1,20 @@
+
 import { useEffect, useState } from "react";
+import {
+  Link,
+  useSearchParams,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 
-import { Link, useSearchParams, useLocation, useNavigate } from "react-router-dom";
-
-import { ArrowLeft, ArrowUpRight, MapPin, Minus, Plus } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  MapPin,
+  Minus,
+  Plus,
+  CarFront,
+} from "lucide-react";
 
 import {
   addDoc,
@@ -19,47 +31,25 @@ import {
 import { getAuth } from "firebase/auth";
 
 import { db } from "../../firebase";
-
 import "./booking.css";
 
-// =====================================================
-// VEHICLES
-// =====================================================
-
-const vehicles = [
-  {
-    name: "Sedan",
-    description: "Comfortable everyday ride",
-    price: 12,
-    seats: "4 seats",
-    baseFare: 50,
-    maxPassengers: 4,
-  },
-
-  {
-    name: "SUV",
-    description: "More space for passengers",
-    price: 16,
-    seats: "6 seats",
-    baseFare: 80,
-    maxPassengers: 6,
-  },
-
-  {
-    name: "Premium",
-    description: "Executive travel experience",
-    price: 22,
-    seats: "4 seats",
-    baseFare: 120,
-    maxPassengers: 4,
-  },
-];
-
-// =====================================================
-// FIREBASE AUTH
-// =====================================================
-
 const auth = getAuth();
+
+// =====================================================
+// VEHICLE DATA HELPERS
+// =====================================================
+
+const getVehicleName = (data) =>
+  data.name || data.vehicleName || data.model || data.title || "Car";
+
+const getVehiclePrice = (data) =>
+  Number(data.pricePerKm ?? data.price ?? data.ratePerKm ?? 12);
+
+const getVehicleSeats = (data) =>
+  Number(data.seats ?? data.capacity ?? data.maxPassengers ?? 4);
+
+const getVehicleBaseFare = (data) =>
+  Number(data.baseFare ?? data.basePrice ?? 50);
 
 // =====================================================
 // BOOKING
@@ -67,71 +57,126 @@ const auth = getAuth();
 
 function Booking() {
   const navigate = useNavigate();
-  // ---------------------------------------------------
-  // URL PARAMETERS
-  // ---------------------------------------------------
-
   const [searchParams] = useSearchParams();
-
   const location = useLocation();
 
-  // ---------------------------------------------------
-  // JOURNEY
-  // ---------------------------------------------------
-
   const [pickup, setPickup] = useState(
-    location.state?.pickup || searchParams.get("pickup") || "",
+    location.state?.pickup || searchParams.get("pickup") || ""
   );
 
   const [destination, setDestination] = useState(
-    location.state?.destination || searchParams.get("destination") || "",
+    location.state?.destination || searchParams.get("destination") || ""
   );
 
-  // ---------------------------------------------------
-  // VEHICLE
-  // ---------------------------------------------------
-
-  const [vehicle, setVehicle] = useState("Sedan");
-
-  // ---------------------------------------------------
-  // DATE / TIME
-  // ---------------------------------------------------
+  const [vehicles, setVehicles] = useState([]);
+  const [vehicle, setVehicle] = useState("");
+  const [vehiclesLoading, setVehiclesLoading] = useState(true);
+  const [vehiclesError, setVehiclesError] = useState("");
 
   const [date, setDate] = useState("");
-
   const [time, setTime] = useState("");
-
-  // ---------------------------------------------------
-  // PASSENGERS
-  // ---------------------------------------------------
-
   const [passengers, setPassengers] = useState(1);
 
-  // ---------------------------------------------------
-  // ROUTE
-  // ---------------------------------------------------
-
   const [distance, setDistance] = useState(null);
-
   const [duration, setDuration] = useState(null);
 
-  // ---------------------------------------------------
-  // STATUS
-  // ---------------------------------------------------
-
   const [loading, setLoading] = useState(false);
-
   const [error, setError] = useState("");
-
   const [success, setSuccess] = useState("");
 
-  // ---------------------------------------------------
-  // RIDE BOOKED POPUP
-  // ---------------------------------------------------
-
   const [showRideBookedPopup, setShowRideBookedPopup] = useState(false);
-
   const [acceptedBookingId, setAcceptedBookingId] = useState(null);
+
+  // ===================================================
+  // REAL-TIME FIREBASE VEHICLES
+  // ===================================================
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      collection(db, "vehicles"),
+      (snapshot) => {
+        const firebaseVehicles = snapshot.docs
+          .map((vehicleDoc) => {
+            const data = vehicleDoc.data();
+
+            const name = getVehicleName(data);
+            const price = getVehiclePrice(data);
+            const maxPassengers = getVehicleSeats(data);
+            const baseFare = getVehicleBaseFare(data);
+
+            return {
+              id: vehicleDoc.id,
+              name,
+              description:
+                data.description ||
+                data.details ||
+                "Comfortable ride for your journey",
+              price,
+              baseFare,
+              maxPassengers,
+              seats: `${maxPassengers} seats`,
+              image: data.image || data.imageUrl || data.photoURL || "",
+              available:
+                data.available !== false &&
+                data.isAvailable !== false,
+            };
+          })
+          .filter(
+            (item) =>
+              item.available &&
+              Number.isFinite(item.price) &&
+              item.price >= 0 &&
+              Number.isFinite(item.baseFare) &&
+              item.baseFare >= 0 &&
+              Number.isFinite(item.maxPassengers) &&
+              item.maxPassengers >= 1
+          );
+
+        setVehicles(firebaseVehicles);
+        setVehiclesError("");
+
+        setVehicle((currentVehicle) => {
+          const stillExists = firebaseVehicles.some(
+            (item) => item.name === currentVehicle
+          );
+
+          return stillExists
+            ? currentVehicle
+            : firebaseVehicles[0]?.name || "";
+        });
+
+        setPassengers((currentPassengers) => {
+          const selected = firebaseVehicles.find(
+            (item) =>
+              item.name ===
+              (firebaseVehicles.some(
+                (v) => v.name === vehicle
+              )
+                ? vehicle
+                : firebaseVehicles[0]?.name)
+          );
+
+          return selected
+            ? Math.min(
+                Math.max(1, currentPassengers),
+                selected.maxPassengers
+              )
+            : 1;
+        });
+
+        setVehiclesLoading(false);
+      },
+      (firebaseError) => {
+        console.error("Vehicles listener error:", firebaseError);
+        setVehiclesError(
+          "Could not load cars. Check your Firebase permissions and try again."
+        );
+        setVehiclesLoading(false);
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
 
   // ===================================================
   // LISTEN FOR ADMIN ACCEPTANCE
@@ -140,45 +185,28 @@ function Booking() {
   useEffect(() => {
     const user = auth.currentUser;
 
-    if (!user) {
-      return;
-    }
+    if (!user) return;
 
-    // Get all bookings belonging to this customer
     const bookingsQuery = query(
       collection(db, "bookings"),
-      where("uid", "==", user.uid),
+      where("uid", "==", user.uid)
     );
 
-    // Listen for real-time changes
     const unsubscribe = onSnapshot(
       bookingsQuery,
       async (snapshot) => {
         for (const bookingDocument of snapshot.docs) {
           const booking = bookingDocument.data();
-
           const bookingId = bookingDocument.id;
-
-          // ------------------------------------------------
-          // ADMIN ACCEPTED THE RIDE
-          // ------------------------------------------------
 
           if (
             booking.status === "Accepted" &&
-            booking.notificationShown !== true
+            booking.notificationShown !== true &&
+            acceptedBookingId !== bookingId
           ) {
-            // Prevent duplicate popup in this browser session
-            if (acceptedBookingId === bookingId) {
-              continue;
-            }
-
-            // Save booking ID locally
             setAcceptedBookingId(bookingId);
-
-            // Show popup
             setShowRideBookedPopup(true);
 
-            // Mark notification as shown
             try {
               await updateDoc(doc(db, "bookings", bookingId), {
                 notificationShown: true,
@@ -186,20 +214,17 @@ function Booking() {
             } catch (notificationError) {
               console.error(
                 "Could not mark notification as shown:",
-                notificationError,
+                notificationError
               );
             }
           }
         }
       },
-
       (listenerError) => {
         console.error("Booking listener error:", listenerError);
-      },
+      }
     );
 
-    // Cleanup listener when page closes
-    // or component unmounts
     return () => unsubscribe();
   }, [acceptedBookingId]);
 
@@ -208,30 +233,32 @@ function Booking() {
   // ===================================================
 
   const selectedVehicle =
-    vehicles.find((item) => item.name === vehicle) || vehicles[0];
+    vehicles.find((item) => item.name === vehicle) || null;
 
   // ===================================================
   // FARE
   // ===================================================
 
-  const fare = distance
-    ? Math.ceil(selectedVehicle.baseFare + distance * selectedVehicle.price)
-    : null;
+  const fare =
+    distance !== null && selectedVehicle
+      ? Math.ceil(
+          selectedVehicle.baseFare +
+            distance * selectedVehicle.price
+        )
+      : null;
 
   // ===================================================
-  // GET COORDINATES
+  // GEOCODING
   // ===================================================
 
   const getCoordinates = async (locationName) => {
     const response = await fetch(
       `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=in&q=${encodeURIComponent(
-        locationName,
+        locationName
       )}`,
       {
-        headers: {
-          Accept: "application/json",
-        },
-      },
+        headers: { Accept: "application/json" },
+      }
     );
 
     if (!response.ok) {
@@ -257,32 +284,16 @@ function Booking() {
   const calculateRoute = async () => {
     if (!pickup.trim() || !destination.trim()) {
       setError("Enter both pickup and destination.");
-
       return;
     }
 
     setLoading(true);
-
     setError("");
-
     setSuccess("");
 
     try {
-      // -----------------------------------------------
-      // PICKUP COORDINATES
-      // -----------------------------------------------
-
       const pickupCoordinates = await getCoordinates(pickup);
-
-      // -----------------------------------------------
-      // DESTINATION COORDINATES
-      // -----------------------------------------------
-
       const destinationCoordinates = await getCoordinates(destination);
-
-      // -----------------------------------------------
-      // OSRM ROUTE
-      // -----------------------------------------------
 
       const routeUrl =
         `https://router.project-osrm.org/route/v1/driving/` +
@@ -298,38 +309,22 @@ function Booking() {
 
       const data = await response.json();
 
-      if (data.code !== "Ok" || !data.routes || !data.routes.length) {
+      if (data.code !== "Ok" || !data.routes?.length) {
         throw new Error("No driving route was found.");
       }
 
-      // -----------------------------------------------
-      // ROUTE DATA
-      // -----------------------------------------------
-
       const route = data.routes[0];
 
-      const distanceInKm = route.distance / 1000;
-
-      const durationInMinutes = Math.ceil(route.duration / 60);
-
-      // -----------------------------------------------
-      // SAVE ROUTE
-      // -----------------------------------------------
-
-      setDistance(distanceInKm);
-
-      setDuration(durationInMinutes);
-
+      setDistance(route.distance / 1000);
+      setDuration(Math.ceil(route.duration / 60));
       setError("");
     } catch (err) {
       console.error("Route calculation error:", err);
-
       setDistance(null);
-
       setDuration(null);
-
       setError(
-        err.message || "Something went wrong while calculating the route.",
+        err.message ||
+          "Something went wrong while calculating the route."
       );
     } finally {
       setLoading(false);
@@ -337,21 +332,20 @@ function Booking() {
   };
 
   // ===================================================
-  // VEHICLE
+  // CHANGE VEHICLE
   // ===================================================
 
   const handleVehicleChange = (name) => {
-    setVehicle(name);
-
-    setError("");
-
-    setSuccess("");
-
     const selected = vehicles.find((item) => item.name === name);
 
-    if (selected && passengers > selected.maxPassengers) {
-      setPassengers(selected.maxPassengers);
-    }
+    if (!selected) return;
+
+    setVehicle(name);
+    setPassengers((current) =>
+      Math.min(current, selected.maxPassengers)
+    );
+    setError("");
+    setSuccess("");
   };
 
   // ===================================================
@@ -363,8 +357,10 @@ function Booking() {
   };
 
   const increasePassengers = () => {
+    if (!selectedVehicle) return;
+
     setPassengers((current) =>
-      Math.min(selectedVehicle.maxPassengers, current + 1),
+      Math.min(selectedVehicle.maxPassengers, current + 1)
     );
   };
 
@@ -376,63 +372,51 @@ function Booking() {
     event.preventDefault();
 
     setError("");
-
     setSuccess("");
 
-    // -------------------------------------------------
-    // VALIDATION
-    // -------------------------------------------------
-
-    if (!pickup.trim()) {
-      setError("Please enter a pickup location.");
-
+    if (!pickup.trim() || !destination.trim()) {
+      setError("Please enter pickup and destination.");
       return;
     }
 
-    if (!destination.trim()) {
-      setError("Please enter a destination.");
-
-      return;
-    }
-
-    if (!distance) {
+    if (distance === null || !Number.isFinite(distance)) {
       setError("Please calculate the route before continuing.");
+      return;
+    }
 
+    if (!selectedVehicle) {
+      setError("Please select an available vehicle.");
       return;
     }
 
     if (!date || !time) {
       setError("Please select your date and time.");
-
       return;
     }
-
-    // -------------------------------------------------
-    // CHECK AUTHENTICATION
-    // -------------------------------------------------
 
     const user = auth.currentUser;
 
     if (!user) {
       setError("Please log in before creating a booking.");
-
       return;
     }
 
+    if (
+      passengers < 1 ||
+      passengers > selectedVehicle.maxPassengers
+    ) {
+      setError("Passenger count exceeds the selected car's capacity.");
+      return;
+    }
+
+    setLoading(true);
+
     try {
-      setLoading(true);
-
-      // ------------------------------------------------
-      // GET CUSTOMER PROFILE
-      // ------------------------------------------------
-
       let customerName = user.displayName || "Customer";
-
       let customerPhone = "";
 
       try {
         const customerRef = doc(db, "customers", user.uid);
-
         const customerSnapshot = await getDoc(customerRef);
 
         if (customerSnapshot.exists()) {
@@ -447,122 +431,71 @@ function Booking() {
           customerPhone = customerData.phone || "";
         }
       } catch (profileError) {
-        console.warn("Could not load customer profile:", profileError);
-
-        // Do not prevent booking
-        // if profile lookup fails.
+        console.warn(
+          "Could not load customer profile:",
+          profileError
+        );
       }
 
-      // ------------------------------------------------
-      // FARE
-      // ------------------------------------------------
-
-      const finalFare = Number(fare || 0);
-
-      const finalBaseFare = Number(selectedVehicle.baseFare || 0);
-
-      // ------------------------------------------------
-      // TOLL
-      // ------------------------------------------------
-
-      const toll = 0;
-
-      // ------------------------------------------------
-      // BOOKING DATA
-      // ------------------------------------------------
-
       const bookingData = {
-        // Firebase Authentication UID
         uid: user.uid,
-
-        // Customer information
         customer: customerName,
-
         email: user.email || "",
-
         phone: customerPhone,
 
-        // Route
         pickup: pickup.trim(),
-
         destination: destination.trim(),
 
-        // Vehicle
         vehicle: selectedVehicle.name,
-
+        vehicleId: selectedVehicle.id,
         passengers: Number(passengers),
 
-        // Date / Time
-        date: date,
+        date,
+        time,
 
-        time: time,
-
-        // Route information
         distance: Number(distance.toFixed(1)),
-
         duration: Number(duration),
 
-        // Fare
-        fare: finalFare,
-
-        baseFare: finalBaseFare,
-
-        toll: toll,
-
+        fare: Number(fare),
+        baseFare: Number(selectedVehicle.baseFare),
+        toll: 0,
         pricePerKm: Number(selectedVehicle.price),
 
-        // ------------------------------------------------
-        // IMPORTANT STATUS
-        // ------------------------------------------------
-
         status: "Pending",
-
-        // Used to make popup one-time
         notificationShown: false,
 
-        // Human-readable booking time
         bookedAt: new Date().toISOString(),
-
-        // Firestore server timestamp
         createdAt: serverTimestamp(),
       };
 
       console.log("Creating Firebase booking:", bookingData);
 
-      // ------------------------------------------------
-      // CREATE BOOKING
-      // ------------------------------------------------
-
-      const bookingRef = await addDoc(collection(db, "bookings"), bookingData);
+      const bookingRef = await addDoc(
+        collection(db, "bookings"),
+        bookingData
+      );
 
       console.log("Booking created successfully:", bookingRef.id);
-
-      // ------------------------------------------------
-      // SUCCESS
-      // ------------------------------------------------
 
       setSuccess("Booking request submitted successfully!");
 
       alert("Booking request submitted successfully!");
+      navigate("/");
     } catch (firebaseError) {
       console.error("Booking creation error:", firebaseError);
 
-      // Give a more useful error for
-      // Firebase permission problems.
-
       if (firebaseError?.code === "permission-denied") {
         setError(
-          "Firebase permission denied. Please make sure you are logged in and your Firestore rules allow booking creation.",
+          "Firebase permission denied. Check your Firestore security rules."
         );
       } else {
         setError(
           firebaseError?.message ||
-            "Unable to create booking. Please try again.",
+            "Unable to create booking. Please try again."
         );
       }
     } finally {
       setLoading(false);
-      navigate("/");
     }
   };
 
@@ -572,29 +505,22 @@ function Booking() {
 
   return (
     <main className="booking-page">
-      {/* =================================================
-          RIDE BOOKED POPUP
-      ================================================= */}
-
       {showRideBookedPopup && (
         <div className="ride-popup-overlay">
           <div className="ride-popup">
             <div className="ride-popup-icon">✓</div>
-
             <h2>Ride Booked!</h2>
-
             <p>Your ride has been accepted by the admin.</p>
 
-            <button type="button" onClick={() => setShowRideBookedPopup(false)}>
+            <button
+              type="button"
+              onClick={() => setShowRideBookedPopup(false)}
+            >
               Okay
             </button>
           </div>
         </div>
       )}
-
-      {/* =================================================
-          HEADER
-      ================================================= */}
 
       <header className="booking-header">
         <Link to="/" className="booking-back">
@@ -603,15 +529,7 @@ function Booking() {
         </Link>
       </header>
 
-      {/* =================================================
-          CONTENT
-      ================================================= */}
-
       <section className="booking-container">
-        {/* =================================================
-            TITLE
-        ================================================= */}
-
         <div className="booking-title">
           <p className="eyebrow">
             <span></span>
@@ -625,53 +543,33 @@ function Booking() {
           </h1>
 
           <p>
-            Enter your journey details and we'll calculate the route and
-            estimated fare.
+            Enter your journey details and we'll calculate the route
+            and estimated fare.
           </p>
         </div>
 
-        {/* =================================================
-            FORM
-        ================================================= */}
-
         <form className="booking-layout" onSubmit={handleSubmit}>
-          {/* =================================================
-              LEFT SIDE
-          ================================================= */}
-
           <div className="booking-form">
-            {/* =================================================
-                JOURNEY
-            ================================================= */}
-
             <div className="booking-block">
               <div className="booking-block-header">
                 <span>01</span>
-
                 <h2>Journey</h2>
               </div>
 
               <div className="location-fields">
-                {/* PICKUP */}
-
                 <label className="booking-location">
                   <span className="booking-dot pickup-dot"></span>
 
                   <div>
                     <small>FROM</small>
-
                     <input
                       type="text"
                       value={pickup}
                       onChange={(event) => {
                         setPickup(event.target.value);
-
                         setDistance(null);
-
                         setDuration(null);
-
                         setError("");
-
                         setSuccess("");
                       }}
                       placeholder="e.g. Phagwara"
@@ -680,30 +578,21 @@ function Booking() {
                   </div>
                 </label>
 
-                {/* LINE */}
-
                 <div className="booking-location-line"></div>
-
-                {/* DESTINATION */}
 
                 <label className="booking-location">
                   <span className="booking-dot destination-dot"></span>
 
                   <div>
                     <small>TO</small>
-
                     <input
                       type="text"
                       value={destination}
                       onChange={(event) => {
                         setDestination(event.target.value);
-
                         setDistance(null);
-
                         setDuration(null);
-
                         setError("");
-
                         setSuccess("");
                       }}
                       placeholder="e.g. Jalandhar"
@@ -712,8 +601,6 @@ function Booking() {
                   </div>
                 </label>
 
-                {/* CALCULATE */}
-
                 <button
                   type="button"
                   className="calculate-route"
@@ -721,119 +608,105 @@ function Booking() {
                   disabled={loading}
                 >
                   {loading ? "Calculating route..." : "Calculate Route"}
-
                   {!loading && <ArrowUpRight size={17} />}
                 </button>
 
-                {/* ERROR */}
+                {error && (
+                  <p className="booking-error">{error}</p>
+                )}
 
-                {error && <p className="booking-error">{error}</p>}
-
-                {/* SUCCESS */}
-
-                {success && <p className="booking-success">{success}</p>}
+                {success && (
+                  <p className="booking-success">{success}</p>
+                )}
               </div>
             </div>
 
-            {/* =================================================
-                ROUTE RESULT
-            ================================================= */}
-
-            {distance && (
+            {distance !== null && (
               <div className="route-result">
                 <div>
                   <span>DISTANCE</span>
-
                   <strong>{distance.toFixed(1)} km</strong>
                 </div>
 
                 <div>
                   <span>EST. TIME</span>
-
                   <strong>{duration} min</strong>
                 </div>
               </div>
             )}
 
-            {/* =================================================
-                VEHICLE
-            ================================================= */}
-
             <div className="booking-block">
               <div className="booking-block-header">
                 <span>02</span>
-
                 <h2>Choose your ride</h2>
               </div>
 
-              <div className="vehicle-options">
-                {vehicles.map((item) => (
-                  <button
-                    key={item.name}
-                    type="button"
-                    className={`vehicle-option ${
-                      vehicle === item.name ? "selected" : ""
-                    }`}
-                    onClick={() => handleVehicleChange(item.name)}
-                  >
-                    <div className="vehicle-info">
-                      <strong>{item.name}</strong>
+              {vehiclesLoading ? (
+                <p className="vehicle-message">Loading available cars...</p>
+              ) : vehiclesError ? (
+                <p className="booking-error">{vehiclesError}</p>
+              ) : vehicles.length === 0 ? (
+                <div className="vehicle-empty">
+                  <CarFront size={28} />
+                  <p>No cars are available right now.</p>
+                  <small>Please check back later.</small>
+                </div>
+              ) : (
+                <div className="vehicle-options">
+                  {vehicles.map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      className={`vehicle-option ${
+                        vehicle === item.name ? "selected" : ""
+                      }`}
+                      onClick={() => handleVehicleChange(item.name)}
+                    >
+                      <div className="vehicle-info">
+                        <strong>{item.name}</strong>
+                        <span>{item.description}</span>
+                        <small>{item.seats}</small>
+                      </div>
 
-                      <span>{item.description}</span>
-
-                      <small>{item.seats}</small>
-                    </div>
-
-                    <div className="vehicle-price">₹{item.price}/km</div>
-                  </button>
-                ))}
-              </div>
+                      <div className="vehicle-price">
+                        ₹{item.price}/km
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-
-            {/* =================================================
-                DATE / TIME
-            ================================================= */}
 
             <div className="booking-block">
               <div className="booking-block-header">
                 <span>03</span>
-
                 <h2>Date & Time</h2>
               </div>
 
               <div className="booking-date-row">
-                {/* DATE */}
-
                 <label>
                   <small>DATE</small>
-
                   <input
                     type="date"
+                    min={new Date().toLocaleDateString("en-CA")}
                     value={date}
                     onChange={(event) => {
                       setDate(event.target.value);
-
                       setError("");
-
                       setSuccess("");
                     }}
                     required
                   />
                 </label>
 
-                {/* TIME */}
-
                 <label>
                   <small>TIME</small>
-
                   <input
                     type="time"
                     value={time}
                     onChange={(event) => {
                       setTime(event.target.value);
-
                       setError("");
-
                       setSuccess("");
                     }}
                     required
@@ -842,14 +715,9 @@ function Booking() {
               </div>
             </div>
 
-            {/* =================================================
-                PASSENGERS
-            ================================================= */}
-
             <div className="booking-block">
               <div className="booking-block-header">
                 <span>04</span>
-
                 <h2>Passengers</h2>
               </div>
 
@@ -857,21 +725,25 @@ function Booking() {
                 <button
                   type="button"
                   onClick={decreasePassengers}
-                  disabled={passengers === 1}
+                  disabled={passengers === 1 || !selectedVehicle}
                 >
                   <Minus size={18} />
                 </button>
 
                 <div>
                   <strong>{passengers}</strong>
-
-                  <span>{passengers === 1 ? "Passenger" : "Passengers"}</span>
+                  <span>
+                    {passengers === 1 ? "Passenger" : "Passengers"}
+                  </span>
                 </div>
 
                 <button
                   type="button"
                   onClick={increasePassengers}
-                  disabled={passengers === selectedVehicle.maxPassengers}
+                  disabled={
+                    !selectedVehicle ||
+                    passengers >= selectedVehicle.maxPassengers
+                  }
                 >
                   <Plus size={18} />
                 </button>
@@ -879,106 +751,81 @@ function Booking() {
             </div>
           </div>
 
-          {/* =================================================
-              RIGHT SUMMARY
-          ================================================= */}
-
           <aside className="booking-summary">
-            {/* TOP */}
-
             <div className="summary-top">
               <span>YOUR JOURNEY</span>
-
               <MapPin size={20} />
             </div>
 
-            {/* ROUTE */}
-
             <div className="summary-route">
-              {/* PICKUP */}
-
               <div className="summary-location">
                 <span className="summary-dot pickup-dot"></span>
-
                 <div>
                   <small>PICKUP</small>
-
                   <strong>{pickup || "Your pickup location"}</strong>
                 </div>
               </div>
 
               <div className="summary-line"></div>
 
-              {/* DESTINATION */}
-
               <div className="summary-location">
                 <span className="summary-dot destination-dot"></span>
-
                 <div>
                   <small>DESTINATION</small>
-
                   <strong>{destination || "Your destination"}</strong>
                 </div>
               </div>
             </div>
 
-            {/* =================================================
-                DETAILS
-            ================================================= */}
-
             <div className="summary-details">
               <div>
                 <span>Vehicle</span>
-
-                <strong>{selectedVehicle.name}</strong>
+                <strong>{selectedVehicle?.name || "--"}</strong>
               </div>
 
               <div>
                 <span>Passengers</span>
-
                 <strong>{passengers}</strong>
               </div>
 
               <div>
                 <span>Distance</span>
-
-                <strong>{distance ? `${distance.toFixed(1)} km` : "--"}</strong>
+                <strong>
+                  {distance !== null ? `${distance.toFixed(1)} km` : "--"}
+                </strong>
               </div>
 
               <div>
                 <span>Time</span>
-
-                <strong>{duration ? `${duration} min` : "--"}</strong>
+                <strong>{duration !== null ? `${duration} min` : "--"}</strong>
               </div>
             </div>
-
-            {/* =================================================
-                FARE
-            ================================================= */}
 
             <div className="summary-fare">
               <span>Estimated fare</span>
 
-              <strong>{fare ? `₹${fare}` : "--"}</strong>
+              <strong>
+                {fare !== null ? `₹${fare}` : "--"}
+              </strong>
 
               <small>
-                Base fare ₹{selectedVehicle.baseFare}
-                {" + "}₹{selectedVehicle.price}
-                /km
+                {selectedVehicle
+                  ? `Base fare ₹${selectedVehicle.baseFare} + ₹${selectedVehicle.price}/km`
+                  : "Select an available car to view pricing"}
               </small>
             </div>
-
-            {/* =================================================
-                CONTINUE
-            ================================================= */}
 
             <button
               type="submit"
               className="confirm-booking"
-              disabled={loading}
+              disabled={
+                loading ||
+                vehiclesLoading ||
+                !selectedVehicle ||
+                vehicles.length === 0
+              }
             >
               {loading ? "Submitting..." : "Continue Booking"}
-
               {!loading && <ArrowUpRight size={19} />}
             </button>
 
