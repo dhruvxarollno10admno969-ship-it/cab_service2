@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import {
@@ -48,8 +47,9 @@ function Fleet() {
   return (
     <main className="fleet-page" id="fleet">
       <section className="fleet-section">
+        {/* REUSABLE SECTION TITLE */}
         <Title
-          className="fleet-heading"
+          className="fleet-section-title"
           label="MANZILL 777 / OUR FLEET"
           title="Find your"
           highlight="perfect ride."
@@ -57,22 +57,27 @@ function Fleet() {
           align="left"
         />
 
+        {/* LOADING STATE */}
         {loading && (
           <div className="fleet-message">
             Loading our fleet...
           </div>
         )}
 
+        {/* ERROR STATE */}
         {!loading && error && (
           <div className="fleet-message fleet-error">
             {error}
           </div>
         )}
 
+        {/* EMPTY STATE */}
         {!loading && !error && vehicles.length === 0 && (
           <div className="fleet-message">
             <CarFront size={38} />
+
             <h2>Our fleet is getting ready.</h2>
+
             <p>
               New vehicles will appear here when they are added
               through the MANZILL 777 admin panel.
@@ -80,6 +85,7 @@ function Fleet() {
           </div>
         )}
 
+        {/* FIREBASE VEHICLES */}
         {!loading && !error && vehicles.length > 0 && (
           <div className="fleet-grid">
             {vehicles.map((vehicle, index) => (
@@ -89,6 +95,7 @@ function Fleet() {
                 }`}
                 key={vehicle.id}
               >
+                {/* VEHICLE IMAGE */}
                 <div className="fleet-image">
                   {vehicle.image ? (
                     <img
@@ -112,15 +119,21 @@ function Fleet() {
                     </span>
                   )}
 
-                  <span className="fleet-image-number">777</span>
+                  <span className="fleet-image-number">
+                    777
+                  </span>
                 </div>
 
+                {/* VEHICLE NAME AND PRICE */}
                 <div className="fleet-info">
                   <div className="fleet-title-group">
                     <span className="fleet-type">
                       MANZILL COLLECTION
                     </span>
-                    <h2>{vehicle.name || vehicle.type || "Vehicle"}</h2>
+
+                    <h2>
+                      {vehicle.name || vehicle.type || "Vehicle"}
+                    </h2>
                   </div>
 
                   <p className="fleet-price">
@@ -129,12 +142,14 @@ function Fleet() {
                   </p>
                 </div>
 
+                {/* DESCRIPTION */}
                 {vehicle.description && (
                   <p className="fleet-description">
                     {vehicle.description}
                   </p>
                 )}
 
+                {/* VEHICLE FEATURES */}
                 <div className="fleet-features">
                   <span>
                     <Users size={15} />
@@ -147,6 +162,7 @@ function Fleet() {
                   </span>
                 </div>
 
+                {/* AVAILABILITY AND BOOKING */}
                 <div className="fleet-card-bottom">
                   <span className="fleet-price-note">
                     {vehicle.status === "Available"
@@ -180,9 +196,12 @@ function Fleet() {
           </div>
         )}
 
+        {/* BOTTOM NOTE */}
         <div className="fleet-footer-note">
           <span className="fleet-footer-line" />
+
           <p>YOUR JOURNEY. YOUR COMFORT. YOUR MANZILL.</p>
+
           <span className="fleet-footer-line" />
         </div>
       </section>

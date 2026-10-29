@@ -1,0 +1,182 @@
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // =========================
+    // AUTHENTICATION HELPERS
+    // =========================
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn()
+        && request.auth.token.email == "admin@gmail.com";
+    }
+
+    // =========================
+    // CUSTOMER PROFILES
+    // =========================
+
+    match /customers/{userId} {
+      allow create: if isSignedIn()
+        && (request.auth.uid == userId || isAdmin());
+
+      allow read, update: if isSignedIn()
+        && (request.auth.uid == userId || isAdmin());
+
+      allow delete: if isAdmin();
+    }
+
+    // =========================
+    // BOOKINGS
+    // =========================
+
+    match /bookings/{bookingId} {
+
+      // Customers can create bookings only for themselves.
+      allow create: if isSignedIn()
+        && request.resource.data.uid == request.auth.uid;
+
+      // Customers can read their own bookings.
+      // Admin can read every booking.
+      allow read: if isAdmin()
+        || (
+          isSignedIn()
+          && resource.data.uid == request.auth.uid
+        );
+
+      // Admin can update bookings.
+      // Customers can only mark their notification as shown.
+      allow update: if isAdmin()
+        || (
+          isSignedIn()
+          && resource.data.uid == request.auth.uid
+          && request.resource.data.diff(resource.data)
+              .affectedKeys().hasOnly(["notificationShown"])
+          && request.resource.data.notificationShown == true
+        );
+
+      // Only admin can delete bookings.
+      allow delete: if isAdmin();
+    }
+
+    // =========================
+    // DRIVERS
+    // =========================
+
+    match /drivers/{driverId} {
+      allow read, write: if isAdmin();
+    }
+
+    // =========================
+    // VEHICLES
+    // =========================
+
+    match /vehicles/{vehicleId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // =========================
+    // PRICING
+    // =========================
+
+    match /pricingCategories/{pricingId} {
+      allow read, write: if isAdmin();
+    }
+
+    // =========================
+    // SETTINGS
+    // =========================
+
+    match /settings/{userId} {
+      allow read, write: if isSignedIn()
+        && request.auth.uid == userId;
+    }
+
+    // =========================
+    // USER PROFILES
+    // =========================
+
+    match /users/{userId} {
+      allow read, create, update: if isSignedIn()
+        && (request.auth.uid == userId || isAdmin());
+
+      allow delete: if isAdmin();
+    }
+
+    // =========================
+    // FEEDBACK
+    // =========================
+
+    match /feedback/{feedbackId} {
+      allow read, write: if isAdmin();
+
+      // Public can read approved testimonials.
+      allow read: if resource.data.status == "approved";
+
+      // Signed-in customers can submit feedback.
+      allow create: if isSignedIn();
+    }
+
+    // =========================
+    // CONTACT ENQUIRIES
+    // =========================
+
+    match /contactEnquiries/{enquiryId} {
+
+      // Public contact form submissions.
+      allow create: if
+        request.resource.data.keys().hasAll([
+          "name",
+          "phone",
+          "email",
+          "message",
+          "status",
+          "source",
+          "createdAt"
+        ])
+        && request.resource.data.keys().hasOnly([
+          "name",
+          "phone",
+          "email",
+          "message",
+          "status",
+          "source",
+          "createdAt"
+        ])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() >= 2
+        && request.resource.data.name.size() <= 100
+        && request.resource.data.phone is string
+        && request.resource.data.phone.size() >= 7
+        && request.resource.data.phone.size() <= 20
+        && request.resource.data.email is string
+        && request.resource.data.email.size() <= 254
+        && request.resource.data.message is string
+        && request.resource.data.message.size() >= 5
+        && request.resource.data.message.size() <= 3000
+        && request.resource.data.status == "new"
+        && request.resource.data.source == "contact-page"
+        && request.resource.data.createdAt == request.time;
+
+      // Admin can read enquiries.
+      allow read: if isAdmin();
+
+      // No updates or deletes through client-side Firestore.
+      allow update, delete: if false;
+    }
+
+    // =========================
+    // DENY ALL OTHER COLLECTIONS
+    // =========================
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

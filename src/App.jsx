@@ -37,7 +37,7 @@ import Drivers from "./admin/pages/AdminDriver";
 import Vehicles from "./admin/pages/AdminVehicles";
 import Pricing from "./admin/pages/AdminPricing";
 import NotFound from "./admin/pages/NotFound";
-
+import EmailOtpVerification from "./pages/Authentication/EmailOtpVerification"
 import AdminFeedback from "./admin/pages/AdminFeedback";
 
 
@@ -79,6 +79,8 @@ function App() {
         <Route path="/login" element={<Login />} />
 
         <Route path="/signup" element={<Signup />} />
+
+        <Route path="/verify-email" element={<EmailOtpVerification />} />
 
         {/* MAIN PAGES */}
         <Route path="/services" element={<Service />} />

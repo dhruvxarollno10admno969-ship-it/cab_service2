@@ -57,7 +57,7 @@ const Testimonials = () => {
 
          <Title
         label="CUSTOMER STORIES"
-        title="Good rides.."
+        title="Good rides."
         highlight="Better experiences."
         description="Hear what our riders have to say about their journeywith us."
       />
