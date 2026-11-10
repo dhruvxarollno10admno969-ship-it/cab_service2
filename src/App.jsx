@@ -23,6 +23,7 @@ import Navbar from "./components/pages/Navbar";
 import Footer from "./components/pages/Footer";
 
 import MyRides from "./components/pages/MyRides";
+import CompleteProfile from "./pages/Authentication/CompleteProfile";
 
 // ========================================
 // ADMIN PANEL
@@ -37,9 +38,7 @@ import Drivers from "./admin/pages/AdminDriver";
 import Vehicles from "./admin/pages/AdminVehicles";
 import Pricing from "./admin/pages/AdminPricing";
 import NotFound from "./admin/pages/NotFound";
-import EmailOtpVerification from "./pages/Authentication/EmailOtpVerification"
 import AdminFeedback from "./admin/pages/AdminFeedback";
-
 
 // ========================================
 // CUSTOMER WEBSITE LAYOUT
@@ -73,14 +72,13 @@ function App() {
       <Route element={<CustomerLayout />}>
         {/* HOME */}
         <Route path="/" element={<Home />} />
-        
+
+        <Route path="/complete-profile" element={<CompleteProfile />} />
 
         {/* AUTHENTICATION */}
         <Route path="/login" element={<Login />} />
 
         <Route path="/signup" element={<Signup />} />
-
-        <Route path="/verify-email" element={<EmailOtpVerification />} />
 
         {/* MAIN PAGES */}
         <Route path="/services" element={<Service />} />
@@ -95,11 +93,11 @@ function App() {
 
         <Route element={<PrivateRoute />}>
           <Route path="/booking" element={<Booking />} />
-          
+
           <Route path="/my-rides" element={<MyRides />} />
 
           <Route path="/profile" element={<Profile />} />
-          
+
           <Route path="/settings" element={<Setting />} />
         </Route>
       </Route>
@@ -164,24 +162,16 @@ function App() {
         />
 
         {/* FEEDBACK */}
-  <Route
-    path="/admin/contact-enquiries"
-    element={
-      <AdminLayout>
-        <AdminFeedback />
-      </AdminLayout>
-    }
-  />
-
-
-         <Route
-          path="/admin/auth"
+        <Route
+          path="/admin/contact-enquiries"
           element={
             <AdminLayout>
-           
+              <AdminFeedback />
             </AdminLayout>
           }
         />
+
+        <Route path="/admin/auth" element={<AdminLayout></AdminLayout>} />
 
         <Route
           path="/admin/pricing"

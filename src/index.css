@@ -1,4 +1,29 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap");
+
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap");
+
+/* =========================================================
+   GLOBAL THEME
+========================================================= */
+
+:root {
+  font-family: "DM Sans", sans-serif;
+
+  color-scheme: dark;
+
+  --bg-primary: #08060d;
+  --bg-secondary: #100d19;
+  --bg-card: #151020;
+
+  --purple-primary: #5227ff;
+  --purple-secondary: #7c3aed;
+  --pink-accent: #ff9ffc;
+
+  --text-primary: #ffffff;
+  --text-secondary: #aaa3b8;
+  --text-muted: #71697e;
+
+  --border-color: rgba(180, 150, 255, .16);
+}
 
 /* =========================================================
    GLOBAL RESET
@@ -10,11 +35,6 @@
   box-sizing: border-box;
 }
 
-
-/* =========================================================
-   HTML / BODY / ROOT
-========================================================= */
-
 html {
   width: 100%;
   min-height: 100%;
@@ -23,38 +43,34 @@ html {
   padding: 0;
 
   scroll-behavior: smooth;
-
-  overflow-x: hidden;
+  overflow-x: clip;
 }
-
 
 body {
   width: 100%;
+  min-width: 320px;
   min-height: 100vh;
 
   margin: 0;
   padding: 0;
 
+  background: var(--bg-primary);
+  color: var(--text-primary);
+
   font-family: "DM Sans", sans-serif;
 
-  overflow-x: hidden;
-
-  background: #08060d;
-  color: #ffffff;
+  overflow-x: clip;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-
 #root {
   width: 100%;
   min-height: 100vh;
-
   margin: 0;
   padding: 0;
 }
-
 
 /* =========================================================
    MEDIA
@@ -67,15 +83,23 @@ svg {
   max-width: 100%;
 }
 
+img,
+video {
+  display: block;
+}
 
 /* =========================================================
-   LINKS / BUTTONS
+   LINKS
 ========================================================= */
 
 a {
   color: inherit;
   text-decoration: none;
 }
+
+/* =========================================================
+   FORM ELEMENTS
+========================================================= */
 
 button,
 input,
@@ -88,9 +112,18 @@ button {
   cursor: pointer;
 }
 
+button:disabled {
+  cursor: not-allowed;
+}
+
+input,
+textarea,
+select {
+  max-width: 100%;
+}
 
 /* =========================================================
-   REMOVE DEFAULT MARGINS
+   TYPOGRAPHY
 ========================================================= */
 
 h1,
@@ -103,13 +136,61 @@ p {
   margin-top: 0;
 }
 
+/* =========================================================
+   SELECTION
+========================================================= */
+
+::selection {
+  background: rgba(124, 58, 237, .45);
+  color: #ffffff;
+}
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #08060d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #38245f;
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7045bd;
+}
 
 /* =========================================================
    ROOT RESPONSIVE WIDTH
 ========================================================= */
 
-#root,
+html,
 body,
-html {
+#root {
   max-width: 100%;
+}
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #a987ff;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
