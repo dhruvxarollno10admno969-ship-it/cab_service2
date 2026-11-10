@@ -28,7 +28,7 @@ import { auth } from "../../firebase";
 import "../styles/Navbar.css";
 
 // Admin account
-const ADMIN_EMAIL = "admin@gmail.com";
+const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL;
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);

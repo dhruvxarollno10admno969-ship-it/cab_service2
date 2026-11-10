@@ -849,3 +849,172 @@
     transform: rotate(360deg);
   }
 }
+
+
+/* ========================================
+   GOOGLE SIGN-IN — SIGNUP
+======================================== */
+
+.signup-google-button {
+  width: 100%;
+  min-height: 56px;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  padding: 12px 18px;
+
+  border: 1px solid #dedbd4;
+  border-radius: 12px;
+
+  background: #fff;
+  color: #171717;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
+
+/* FIX GOOGLE LOGO SIZE */
+
+.signup-google-button .signup-google-icon {
+  width: 22px !important;
+  height: 22px !important;
+
+  min-width: 22px;
+  max-width: 22px;
+
+  flex-shrink: 0;
+  display: block;
+}
+
+/* GOOGLE BUTTON TEXT */
+
+.signup-google-button > span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ARROW */
+
+.signup-google-button .signup-google-arrow {
+  width: 16px !important;
+  height: 16px !important;
+
+  flex-shrink: 0;
+}
+
+/* HOVER */
+
+.signup-google-button:hover:not(:disabled) {
+  background: #f7f5fa;
+  border-color: #a78bfa;
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 8px 20px rgba(17, 17, 17, 0.06);
+}
+
+.signup-google-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* DISABLED */
+
+.signup-google-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* GOOGLE LOADER */
+
+.signup-google-loader {
+  width: 19px;
+  height: 19px;
+
+  flex-shrink: 0;
+
+  border: 2px solid #e5dafa;
+  border-top-color: #7c3aed;
+
+  border-radius: 50%;
+
+  animation: google-spin 0.7s linear infinite;
+}
+
+/* CONNECTED ACCOUNT */
+
+.signup-google-connected {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 13px 15px;
+
+  margin-bottom: 22px;
+
+  border: 1px solid #dedbd4;
+  border-radius: 11px;
+
+  background: #fff;
+
+  color: #68655f;
+  font-size: 11px;
+
+  overflow-wrap: anywhere;
+}
+
+.signup-google-connected-dot {
+  width: 7px;
+  height: 7px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+  background: #34a853;
+}
+
+/* GOOGLE CANCEL */
+
+.signup-google-cancel {
+  width: 100%;
+
+  padding: 12px;
+
+  border: 1px solid #dedbd4;
+  border-radius: 10px;
+
+  background: transparent;
+  color: #77736b;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+.signup-google-cancel:hover {
+  background: #f0eee9;
+  color: #111;
+}
+
+/* SHARED LOADER */
+
+@keyframes google-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+  
