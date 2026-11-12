@@ -21,7 +21,7 @@ import {
   EyeOff,
 } from "lucide-react";
 
-import "../styles/adminLogin.css";
+import "../styles/adminlogin.css";
 
 // =====================================================
 // ADMIN EMAIL

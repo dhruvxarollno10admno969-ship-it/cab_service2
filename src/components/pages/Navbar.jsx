@@ -25,7 +25,7 @@ import {
 } from "firebase/auth";
 
 import { auth } from "../../firebase";
-import "../styles/Navbar.css";
+import "../styles/navbar.css";
 
 // Admin account
 const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL;
