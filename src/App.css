@@ -903,3 +903,33 @@
 .booking-button {
   text-decoration: none;
 }
+
+/* =========================================
+   HERO — TABLET RESPONSIVENESS
+   Only affects screens from 801px to 1100px
+========================================= */
+
+@media (min-width: 801px) and (max-width: 1100px) {
+
+  .hero-wrapper {
+    min-height: auto;
+  }
+
+  .hero-section {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: auto;
+    gap: 48px;
+    padding: 75px clamp(28px, 6vw, 65px);
+  }
+
+  .hero-content {
+    width: 100%;
+    max-width: 720px;
+  }
+
+  .booking-card {
+    justify-self: start;
+    width: 100%;
+  }
+
+}

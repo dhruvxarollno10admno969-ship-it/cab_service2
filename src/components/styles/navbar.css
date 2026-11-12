@@ -781,3 +781,121 @@
     color: #c13a51 !important;
   }
 }
+
+/* =====================================================
+   RESPONSIVE FIX — TABLET AND MOBILE NAVBAR
+   Desktop layout remains unchanged above 1024px
+===================================================== */
+
+@media (max-width: 1024px) {
+  .navbar {
+    height: 70px;
+    padding: 0 20px;
+  }
+
+  /* Hide desktop navigation and actions */
+  .navbar-links,
+  .navbar-actions {
+    display: none;
+  }
+
+  /* Show hamburger button */
+  .navbar-menu {
+    display: inline-flex;
+    margin-left: auto;
+  }
+
+  /* Mobile and tablet dropdown */
+  .mobile-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1100;
+
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    width: 100%;
+    max-height: calc(100dvh - 70px);
+
+    padding: 18px 20px 22px;
+    box-sizing: border-box;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+
+    border-bottom: 1px solid #e8e0f3;
+    background: #faf9f6;
+    box-shadow: 0 18px 38px rgba(34, 19, 62, 0.12);
+  }
+
+  .mobile-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .mobile-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+
+    margin-top: 2px;
+    padding-top: 15px;
+    border-top: 1px solid #e8e0f3;
+  }
+
+  .mobile-actions > .navbar-login,
+  .mobile-actions > .navbar-signup,
+  .mobile-actions > .navbar-book {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+  }
+
+  /* Keep mobile menu text visible */
+  .navbar .mobile-menu,
+  .navbar .mobile-menu-item {
+    color: #30283c;
+  }
+
+  .navbar .mobile-nav-links a {
+    color: #30283c;
+  }
+
+  .navbar .mobile-account-info strong {
+    color: #211a2d;
+  }
+
+  .navbar .mobile-account-info > div > span {
+    color: #6e647c;
+  }
+
+  .navbar .mobile-menu-item.logout-item,
+  .navbar .mobile-menu-item.logout-item > svg {
+    color: #c13a51;
+  }
+}
+
+/* Small phones */
+@media (max-width: 380px) {
+  .navbar {
+    padding: 0 14px;
+  }
+
+  .logo-mark {
+    width: 32px;
+    height: 32px;
+  }
+
+  .logo-text {
+    font-size: 12px;
+  }
+
+  .mobile-menu {
+    padding: 14px;
+  }
+}

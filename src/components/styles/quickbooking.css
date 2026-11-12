@@ -1,46 +1,48 @@
+
 /* =========================================
-   QUICK BOOKING
+   QUICK BOOKING CARD
 ========================================= */
 
 .booking-card {
+  position: relative;
+  z-index: 5;
+
   width: 100%;
   max-width: 400px;
+  min-width: 0;
 
   padding: 28px;
+  box-sizing: border-box;
 
   background: #ebe9e2;
-
   border: 1px solid #dedbd3;
-
   border-radius: 24px;
 
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
 }
 
-
 /* HEADER */
 
 .booking-header {
   display: flex;
-
   align-items: flex-start;
-
   justify-content: space-between;
 
+  gap: 12px;
   margin-bottom: 28px;
+}
+
+.booking-header > div {
+  min-width: 0;
 }
 
 .booking-header span {
   display: block;
-
   margin-bottom: 7px;
 
   color: #858178;
-
   font-size: 9px;
-
   font-weight: 700;
-
   letter-spacing: 1.5px;
 }
 
@@ -48,110 +50,103 @@
   margin: 0;
 
   color: #111;
-
   font-size: 22px;
-
   font-weight: 600;
-
   letter-spacing: -0.7px;
+
+  overflow-wrap: break-word;
 }
 
 .booking-header svg {
+  flex-shrink: 0;
   color: #77736b;
 }
 
-
 /* LOCATION */
 
-.location-input {
+.booking-card .location-input {
   display: flex;
-
   align-items: center;
 
   gap: 13px;
 
   width: 100%;
-}
+  min-width: 0;
 
+  box-sizing: border-box;
+}
 
 /* DOT */
 
-.input-dot {
+.booking-card .input-dot {
   width: 9px;
   height: 9px;
 
   flex-shrink: 0;
-
   border-radius: 50%;
 }
 
-.input-dot.pickup {
+.booking-card .input-dot.pickup {
   background: #111;
 }
 
-.input-dot.destination {
+.booking-card .input-dot.destination {
   border: 2px solid #111;
-
   background: transparent;
 }
-
 
 /* FIELD */
 
-.location-field {
+.booking-card .location-field {
   width: 100%;
+  min-width: 0;
 
   display: flex;
-
   flex-direction: column;
-
   gap: 5px;
 }
 
-.location-field label {
+.booking-card .location-field label {
   color: #858178;
-
   font-size: 9px;
-
   font-weight: 600;
 
   text-transform: uppercase;
-
   letter-spacing: 1px;
 }
 
-.location-field input {
+.booking-card .location-field input {
+  display: block;
+
   width: 100%;
+  min-width: 0;
 
   padding: 4px 0 8px;
+  box-sizing: border-box;
 
   border: none;
-
   border-bottom: 1px solid #ccc8bf;
-
   outline: none;
 
   background: transparent;
-
   color: #111;
 
   font-size: 13px;
 }
 
-.location-field input::placeholder {
+.booking-card .location-field input::placeholder {
   color: #aaa69e;
+  opacity: 1;
 }
 
-.location-field input:focus {
+.booking-card .location-field input:focus {
   border-bottom-color: #111;
 }
 
-
 /* CONNECTING LINE */
 
-.location-line {
+.booking-card .location-line {
   width: 1px;
-
   height: 25px;
 
   margin: 2px 0 2px 4px;
@@ -159,36 +154,34 @@
   background: #cfcac1;
 }
 
-
 /* BUTTON */
 
-.booking-button {
+.booking-card .booking-button {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
   gap: 8px;
 
   margin-top: 24px;
+  padding: 15px 12px;
 
-  padding: 15px 20px;
+  box-sizing: border-box;
 
   border: none;
-
   border-radius: 50px;
 
   background: #111;
-
   color: white;
 
   font-size: 12px;
-
   font-weight: 500;
 
+  white-space: normal;
   cursor: pointer;
 
   transition:
@@ -196,49 +189,157 @@
     background 0.25s ease;
 }
 
-.booking-button:hover {
-  background: #292929;
+.booking-card .booking-button svg {
+  flex-shrink: 0;
+}
 
+.booking-card .booking-button:hover {
+  background: #292929;
   transform: translateY(-2px);
 }
 
-.booking-button:active {
+.booking-card .booking-button:active {
   transform: translateY(0);
 }
 
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1000px) {
+  .booking-card {
+    width: 100%;
+    max-width: 520px;
+    justify-self: start;
+  }
+}
 
 /* =========================================
    MOBILE
 ========================================= */
 
-@media (max-width: 600px) {
-
+@media (max-width: 650px) {
   .booking-card {
-  width: 400px;
-  max-width: 100%;
+    width: 100%;
+    max-width: 100%;
 
-  padding: 28px;
+    padding: 20px;
+    border-radius: 20px;
+  }
 
-  background: #ebe9e2;
+  .booking-header {
+    margin-bottom: 24px;
+  }
 
-  border: 1px solid #dedbd3;
-  border-radius: 24px;
-
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
-}
   .booking-header h2 {
     font-size: 20px;
   }
 
-  .location-field input {
+  .booking-card .location-field input {
     font-size: 14px;
   }
-.booking-wrapper {
+
+  .booking-card .booking-button {
+    margin-top: 20px;
+    padding: 14px 12px;
+  }
+}
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 400px) {
+  .booking-card {
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .booking-header h2 {
+    font-size: 18px;
+  }
+
+  .booking-card .location-input {
+    gap: 10px;
+  }
+
+  .booking-card .location-field input {
+    font-size: 12px;
+  }
+
+  .booking-card .booking-button {
+    font-size: 12px;
+  }
+}
+
+/* =========================================
+   EXTRA SMALL SCREENS
+========================================= */
+
+@media (max-width: 320px) {
+  .booking-card {
+    padding: 14px;
+  }
+
+  .booking-header h2 {
+    font-size: 16px;
+  }
+
+  .booking-header {
+    gap: 8px;
+  }
+
+  .booking-card .location-field input {
+    font-size: 11px;
+  }
+}
+
+/* =========================================
+   HERO RESPONSIVE WIDTH FIX
+========================================= */
+
+.hero-wrapper,
+.hero-section {
   width: 100%;
-
-  display: flex;
-  justify-content: center;
-
-  padding: 80px 7%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
+
+.hero-section > * {
+  min-width: 0;
+  max-width: 100%;
 }
+
+.hero-content {
+  min-width: 0;
+}
+
+@media (max-width: 1000px) {
+  .hero-section {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 650px) {
+  .hero-section {
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+@media (max-width: 400px) {
+  .hero-section {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+@media (max-width: 320px) {
+  .hero-section {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+  
