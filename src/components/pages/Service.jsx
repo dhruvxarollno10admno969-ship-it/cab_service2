@@ -3,14 +3,14 @@ import { Link } from "react-router-dom";
 import "../styles/servies.css";
 import Title from "./Title";
 
+
 const services = [
   {
     id: 1,
     number: "01",
     title: "City Rides",
-    description:
-      "Quick and comfortable rides for your everyday journeys.",
-    image: "/public/images/city-rides.jpg",
+    description: "Quick and comfortable rides for your everyday journeys.",
+    image: "/images/city_rides.jpg",
   },
   {
     id: 2,

@@ -134,6 +134,10 @@
   line-height: 1.6;
 }
 
+.vehicles-form-error {
+  margin: 0 26px 18px;
+}
+
 /* =====================================================
    VEHICLE TABLE CONTAINER
 ===================================================== */
@@ -245,6 +249,8 @@
   font-size: 11px;
 }
 
+/* IMAGE CONTAINER */
+
 .vehicles-thumbnail,
 .vehicles-thumbnail-placeholder {
   display: flex;
@@ -259,8 +265,26 @@
   background: #f0e9ff;
 }
 
+/* ACTUAL IMAGE */
+
 .vehicles-thumbnail {
+  display: block;
   object-fit: cover;
+  object-position: center;
+  border: 1px solid #eee8f8;
+  transition: transform 0.25s ease;
+}
+
+.vehicles-name-cell:hover .vehicles-thumbnail {
+  transform: scale(1.06);
+}
+
+/* FALLBACK PLACEHOLDER */
+
+.vehicles-thumbnail-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* =====================================================
@@ -714,6 +738,10 @@
     grid-column: auto;
   }
 
+  .vehicles-form-error {
+    margin: 0 19px 15px;
+  }
+
   .vehicles-form-actions {
     padding: 15px 19px;
   }
@@ -737,3 +765,13 @@
   outline-offset: 3px;
 }
 
+/* REDUCED MOTION */
+
+@media (prefers-reduced-motion: reduce) {
+  .vehicles-page *,
+  .vehicles-page *::before,
+  .vehicles-page *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

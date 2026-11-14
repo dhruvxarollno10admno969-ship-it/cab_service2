@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import "../styles/Drivers.css";
 
@@ -5,11 +6,11 @@ import {
   collection,
   onSnapshot,
   addDoc,
-  deleteDoc,
   updateDoc,
+  deleteDoc,
   doc,
   serverTimestamp,
-  writeBatch,
+  runTransaction,
 } from "firebase/firestore";
 
 import { db } from "../../firebase";
@@ -52,10 +53,8 @@ const AdminDrivers = () => {
   // =========================================================
 
   useEffect(() => {
-    const driversRef = collection(db, "drivers");
-
     const unsubscribe = onSnapshot(
-      driversRef,
+      collection(db, "drivers"),
       (snapshot) => {
         const driverList = snapshot.docs.map((firebaseDoc) => {
           const data = firebaseDoc.data();
@@ -69,7 +68,7 @@ const AdminDrivers = () => {
             phone: data.phone || "",
             status: data.status || "Inactive",
 
-            // New relationship
+            // Firestore vehicle document ID
             vehicleId: data.vehicleId || "",
 
             joined: data.joined || "",
@@ -107,10 +106,8 @@ const AdminDrivers = () => {
   // =========================================================
 
   useEffect(() => {
-    const vehiclesRef = collection(db, "vehicles");
-
     const unsubscribe = onSnapshot(
-      vehiclesRef,
+      collection(db, "vehicles"),
       (snapshot) => {
         const vehicleList = snapshot.docs.map((firebaseDoc) => {
           const data = firebaseDoc.data();
@@ -144,7 +141,7 @@ const AdminDrivers = () => {
   }, []);
 
   // =========================================================
-  // ADD ASSIGNED VEHICLE DATA TO DRIVERS
+  // GET ASSIGNED VEHICLE
   // =========================================================
 
   const getDriverVehicle = (driver) => {
@@ -152,21 +149,21 @@ const AdminDrivers = () => {
 
     return (
       vehicles.find(
-        (vehicle) =>
-          vehicle.firebaseId === driver.vehicleId ||
-          vehicle.id === driver.vehicleId
+        (vehicle) => vehicle.firebaseId === driver.vehicleId
       ) || null
     );
   };
+
+  // =========================================================
+  // DRIVER DATA WITH VEHICLES
+  // =========================================================
 
   const driversWithVehicles = drivers.map((driver) => {
     const vehicle = getDriverVehicle(driver);
 
     return {
       ...driver,
-
       assignedVehicle: vehicle,
-
       vehicleName: vehicle?.name || "",
       vehicleNumber: vehicle?.number || "",
     };
@@ -292,14 +289,12 @@ const AdminDrivers = () => {
 
       await addDoc(collection(db, "drivers"), {
         id: driverId,
-
         name,
         email,
         phone,
-
         status: newDriver.status,
 
-        // Driver starts without a vehicle.
+        // New drivers are never assigned automatically.
         vehicleId: "",
 
         joined,
@@ -325,6 +320,7 @@ const AdminDrivers = () => {
 
   // =========================================================
   // DELETE DRIVER
+  // SYNCHRONIZE VEHICLE ASSIGNMENT
   // =========================================================
 
   const handleDelete = async () => {
@@ -333,42 +329,71 @@ const AdminDrivers = () => {
     try {
       setDeletingDriver(true);
 
-      const batch = writeBatch(db);
+      const driverRef = doc(
+        db,
+        "drivers",
+        driverToDelete.firebaseId
+      );
 
-      // -------------------------------------------------------
-      // If this driver has a vehicle, unassign it first.
-      // -------------------------------------------------------
+      await runTransaction(db, async (transaction) => {
+        // READ DRIVER
+        const driverSnapshot = await transaction.get(driverRef);
 
-      const assignedVehicle = getDriverVehicle(driverToDelete);
+        if (!driverSnapshot.exists()) {
+          throw new Error("Driver no longer exists.");
+        }
 
-      if (assignedVehicle) {
-        batch.update(doc(db, "vehicles", assignedVehicle.firebaseId), {
-          driverId: "",
-          driver: "Unassigned",
-          updatedAt: serverTimestamp(),
-        });
-      }
+        const driverData = driverSnapshot.data();
 
-      // -------------------------------------------------------
-      // Delete driver
-      // -------------------------------------------------------
+        const assignedVehicleId = driverData.vehicleId || "";
 
-      batch.delete(doc(db, "drivers", driverToDelete.firebaseId));
+        let vehicleRef = null;
+        let vehicleSnapshot = null;
 
-      await batch.commit();
+        // READ ASSIGNED VEHICLE
+        if (assignedVehicleId) {
+          vehicleRef = doc(
+            db,
+            "vehicles",
+            assignedVehicleId
+          );
+
+          vehicleSnapshot = await transaction.get(vehicleRef);
+        }
+
+        // ALL READS ARE COMPLETE. NOW WRITE.
+
+        // Unassign vehicle only if it belongs to this driver.
+        if (
+          vehicleSnapshot?.exists() &&
+          vehicleSnapshot.data().driverId === driverToDelete.firebaseId
+        ) {
+          transaction.update(vehicleRef, {
+            driverId: "",
+            driver: "Unassigned",
+            updatedAt: serverTimestamp(),
+          });
+        }
+
+        // Delete driver.
+        transaction.delete(driverRef);
+      });
 
       if (
-        selectedDriver?.firebaseId ===
-        driverToDelete.firebaseId
+        selectedDriver?.firebaseId === driverToDelete.firebaseId
       ) {
         setSelectedDriver(null);
       }
 
       setDriverToDelete(null);
+
     } catch (error) {
       console.error("Error deleting driver:", error);
 
-      alert("Failed to remove driver. Please try again.");
+      alert(
+        error.message || "Failed to remove driver. Please try again."
+      );
+
     } finally {
       setDeletingDriver(false);
     }
@@ -385,14 +410,13 @@ const AdminDrivers = () => {
       setUpdatingStatus(true);
 
       const newStatus =
-        driver.status === "Active"
-          ? "Inactive"
-          : "Active";
+        driver.status === "Active" ? "Inactive" : "Active";
 
       await updateDoc(
         doc(db, "drivers", driver.firebaseId),
         {
           status: newStatus,
+          updatedAt: serverTimestamp(),
         }
       );
     } catch (error) {
@@ -436,12 +460,9 @@ const AdminDrivers = () => {
   return (
     <div className="driver-content">
 
-      {/* =====================================================
-          HEADER
-      ===================================================== */}
+      {/* HEADER */}
 
       <div className="driver-page-header">
-
         <div>
           <span className="driver-page-label">
             DRIVER MANAGEMENT
@@ -458,12 +479,9 @@ const AdminDrivers = () => {
           <span>Total Drivers</span>
           <strong>{totalDrivers}</strong>
         </div>
-
       </div>
 
-      {/* =====================================================
-          SUMMARY
-      ===================================================== */}
+      {/* SUMMARY */}
 
       <div
         style={{
@@ -500,9 +518,7 @@ const AdminDrivers = () => {
         </div>
       </div>
 
-      {/* =====================================================
-          FIREBASE ERROR
-      ===================================================== */}
+      {/* FIREBASE ERROR */}
 
       {firebaseError && (
         <div
@@ -520,9 +536,7 @@ const AdminDrivers = () => {
         </div>
       )}
 
-      {/* =====================================================
-          TOOLBAR
-      ===================================================== */}
+      {/* TOOLBAR */}
 
       <div
         className="driver-tools"
@@ -533,7 +547,6 @@ const AdminDrivers = () => {
           alignItems: "center",
         }}
       >
-
         <div className="driver-search">
           <span>⌕</span>
 
@@ -562,12 +575,9 @@ const AdminDrivers = () => {
         >
           + Add Driver
         </button>
-
       </div>
 
-      {/* =====================================================
-          TABLE
-      ===================================================== */}
+      {/* TABLE */}
 
       <div className="driver-table-card">
 
@@ -601,35 +611,25 @@ const AdminDrivers = () => {
               <tbody>
 
                 {filteredDrivers.length === 0 ? (
-
                   <tr>
-                    <td
-                      colSpan="7"
-                      className="driver-empty"
-                    >
+                    <td colSpan="7" className="driver-empty">
                       <div>
                         <strong>No drivers found</strong>
 
                         <span>
                           {drivers.length === 0
                             ? "No drivers have been added yet."
-                            : "Try searching with a different name or ID."
-                          }
+                            : "Try searching with a different name or ID."}
                         </span>
                       </div>
                     </td>
                   </tr>
-
                 ) : (
-
                   filteredDrivers.map((driver) => (
-
                     <tr
                       key={driver.firebaseId}
                       className="driver-row"
-                      onClick={() =>
-                        setSelectedDriver(driver)
-                      }
+                      onClick={() => setSelectedDriver(driver)}
                     >
 
                       <td>
@@ -640,21 +640,14 @@ const AdminDrivers = () => {
 
                       <td>
                         <div className="driver-user">
-
                           <div className="driver-avatar">
                             {getInitials(driver.name)}
                           </div>
 
                           <div>
-                            <strong>
-                              {driver.name}
-                            </strong>
-
-                            <span>
-                              Driver
-                            </span>
+                            <strong>{driver.name}</strong>
+                            <span>Driver</span>
                           </div>
-
                         </div>
                       </td>
 
@@ -672,7 +665,6 @@ const AdminDrivers = () => {
 
                       <td>
                         <div className="driver-vehicle">
-
                           {driver.assignedVehicle ? (
                             <>
                               <strong>
@@ -685,16 +677,10 @@ const AdminDrivers = () => {
                             </>
                           ) : (
                             <>
-                              <strong>
-                                Unassigned
-                              </strong>
-
-                              <span>
-                                No vehicle
-                              </span>
+                              <strong>Unassigned</strong>
+                              <span>No vehicle</span>
                             </>
                           )}
-
                         </div>
                       </td>
 
@@ -712,20 +698,14 @@ const AdminDrivers = () => {
                       </td>
 
                       <td>
-
                         <div
                           className="driver-actions"
-                          onClick={(e) =>
-                            e.stopPropagation()
-                          }
+                          onClick={(e) => e.stopPropagation()}
                         >
-
                           <button
                             type="button"
                             className="driver-edit-btn"
-                            onClick={() =>
-                              setSelectedDriver(driver)
-                            }
+                            onClick={() => setSelectedDriver(driver)}
                           >
                             View
                           </button>
@@ -733,21 +713,15 @@ const AdminDrivers = () => {
                           <button
                             type="button"
                             className="driver-delete-btn"
-                            onClick={() =>
-                              setDriverToDelete(driver)
-                            }
+                            onClick={() => setDriverToDelete(driver)}
                           >
                             Delete
                           </button>
-
                         </div>
-
                       </td>
 
                     </tr>
-
                   ))
-
                 )}
 
               </tbody>
@@ -764,53 +738,40 @@ const AdminDrivers = () => {
 
       </div>
 
-      {/* =====================================================
-          DRIVER DETAILS DRAWER
-      ===================================================== */}
+      {/* DRIVER DETAILS DRAWER */}
 
       {selectedDriver && (
-
         <>
           <div
             className="driver-drawer-overlay"
-            onClick={() =>
-              setSelectedDriver(null)
-            }
+            onClick={() => setSelectedDriver(null)}
           ></div>
 
           <aside className="driver-drawer drawer-open">
 
             <div className="drawer-header">
-
               <div>
                 <span>DRIVER DETAILS</span>
-
                 <h2>Driver Profile</h2>
               </div>
 
               <button
                 type="button"
                 className="drawer-close"
-                onClick={() =>
-                  setSelectedDriver(null)
-                }
+                onClick={() => setSelectedDriver(null)}
               >
                 ×
               </button>
-
             </div>
 
             {/* PROFILE */}
 
             <div className="drawer-profile">
-
               <div className="drawer-avatar">
                 {getInitials(selectedDriver.name)}
               </div>
 
-              <h3>
-                {selectedDriver.name}
-              </h3>
+              <h3>{selectedDriver.name}</h3>
 
               <span className="drawer-driver-id">
                 {selectedDriver.id}
@@ -826,41 +787,31 @@ const AdminDrivers = () => {
                 <i></i>
                 {selectedDriver.status}
               </span>
-
             </div>
 
             {/* CONTACT */}
 
             <div className="drawer-section">
-
               <h4>Contact Information</h4>
 
               <div className="drawer-info">
 
                 <div className="drawer-info-item">
                   <span>Email</span>
-
-                  <strong>
-                    {selectedDriver.email}
-                  </strong>
+                  <strong>{selectedDriver.email}</strong>
                 </div>
 
                 <div className="drawer-info-item">
                   <span>Phone</span>
-
-                  <strong>
-                    {selectedDriver.phone}
-                  </strong>
+                  <strong>{selectedDriver.phone}</strong>
                 </div>
 
               </div>
-
             </div>
 
             {/* VEHICLE */}
 
             <div className="drawer-section">
-
               <h4>Assigned Vehicle</h4>
 
               <div className="drawer-info">
@@ -878,8 +829,7 @@ const AdminDrivers = () => {
                   <span>Vehicle Number</span>
 
                   <strong>
-                    {selectedDriver.assignedVehicle?.number ||
-                      "—"}
+                    {selectedDriver.assignedVehicle?.number || "—"}
                   </strong>
                 </div>
 
@@ -887,8 +837,7 @@ const AdminDrivers = () => {
                   <span>Vehicle Type</span>
 
                   <strong>
-                    {selectedDriver.assignedVehicle?.type ||
-                      "—"}
+                    {selectedDriver.assignedVehicle?.type || "—"}
                   </strong>
                 </div>
 
@@ -896,41 +845,31 @@ const AdminDrivers = () => {
                   <span>Vehicle Status</span>
 
                   <strong>
-                    {selectedDriver.assignedVehicle?.status ||
-                      "—"}
+                    {selectedDriver.assignedVehicle?.status || "—"}
                   </strong>
                 </div>
 
               </div>
-
             </div>
 
             {/* ACCOUNT */}
 
             <div className="drawer-section">
-
               <h4>Account Information</h4>
 
               <div className="drawer-info">
 
                 <div className="drawer-info-item">
                   <span>Driver ID</span>
-
-                  <strong>
-                    {selectedDriver.id}
-                  </strong>
+                  <strong>{selectedDriver.id}</strong>
                 </div>
 
                 <div className="drawer-info-item">
                   <span>Joined</span>
-
-                  <strong>
-                    {selectedDriver.joined || "—"}
-                  </strong>
+                  <strong>{selectedDriver.joined || "—"}</strong>
                 </div>
 
               </div>
-
             </div>
 
             {/* ACTIONS */}
@@ -941,23 +880,19 @@ const AdminDrivers = () => {
                 type="button"
                 className="drawer-edit-btn"
                 disabled={updatingStatus}
-                onClick={() =>
-                  handleToggleStatus(selectedDriver)
-                }
+                onClick={() => handleToggleStatus(selectedDriver)}
               >
                 {updatingStatus
                   ? "Updating..."
                   : selectedDriver.status === "Active"
-                  ? "Set Inactive"
-                  : "Set Active"}
+                    ? "Set Inactive"
+                    : "Set Active"}
               </button>
 
               <button
                 type="button"
                 className="drawer-delete-btn"
-                onClick={() =>
-                  setDriverToDelete(selectedDriver)
-                }
+                onClick={() => setDriverToDelete(selectedDriver)}
               >
                 Remove Driver
               </button>
@@ -966,15 +901,11 @@ const AdminDrivers = () => {
 
           </aside>
         </>
-
       )}
 
-      {/* =====================================================
-          ADD DRIVER MODAL
-      ===================================================== */}
+      {/* ADD DRIVER MODAL */}
 
       {showAddDriver && (
-
         <div
           style={{
             position: "fixed",
@@ -996,12 +927,9 @@ const AdminDrivers = () => {
               background: "#ffffff",
               borderRadius: "16px",
               padding: "26px",
-              boxShadow:
-                "0 20px 60px rgba(0,0,0,0.2)",
+              boxShadow: "0 20px 60px rgba(0,0,0,0.2)",
             }}
-            onClick={(e) =>
-              e.stopPropagation()
-            }
+            onClick={(e) => e.stopPropagation()}
           >
 
             <div
@@ -1077,9 +1005,7 @@ const AdminDrivers = () => {
               </div>
 
               <div style={formGroupStyle}>
-                <label style={labelStyle}>
-                  Email
-                </label>
+                <label style={labelStyle}>Email</label>
 
                 <input
                   style={inputStyle}
@@ -1097,9 +1023,7 @@ const AdminDrivers = () => {
               </div>
 
               <div style={formGroupStyle}>
-                <label style={labelStyle}>
-                  Phone
-                </label>
+                <label style={labelStyle}>Phone</label>
 
                 <input
                   style={inputStyle}
@@ -1117,9 +1041,7 @@ const AdminDrivers = () => {
               </div>
 
               <div style={formGroupStyle}>
-                <label style={labelStyle}>
-                  Status
-                </label>
+                <label style={labelStyle}>Status</label>
 
                 <select
                   style={inputStyle}
@@ -1131,13 +1053,8 @@ const AdminDrivers = () => {
                     })
                   }
                 >
-                  <option value="Active">
-                    Active
-                  </option>
-
-                  <option value="Inactive">
-                    Inactive
-                  </option>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
                 </select>
               </div>
 
@@ -1158,8 +1075,7 @@ const AdminDrivers = () => {
 
                 <br />
 
-                You can assign a vehicle from the
-                Vehicles page.
+                You can manually assign a vehicle from the Vehicles page.
               </div>
 
               <div
@@ -1172,8 +1088,7 @@ const AdminDrivers = () => {
                   color: "#64748b",
                 }}
               >
-                Driver ID will be automatically
-                generated as{" "}
+                Driver ID will be automatically generated as{" "}
 
                 <strong style={{ color: "#111827" }}>
                   {generateDriverId()}
@@ -1215,15 +1130,11 @@ const AdminDrivers = () => {
                     padding: "11px 20px",
                     borderRadius: "8px",
                     fontWeight: "600",
-                    cursor: savingDriver
-                      ? "not-allowed"
-                      : "pointer",
+                    cursor: savingDriver ? "not-allowed" : "pointer",
                     opacity: savingDriver ? 0.6 : 1,
                   }}
                 >
-                  {savingDriver
-                    ? "Adding..."
-                    : "Add Driver"}
+                  {savingDriver ? "Adding..." : "Add Driver"}
                 </button>
 
               </div>
@@ -1233,15 +1144,11 @@ const AdminDrivers = () => {
           </div>
 
         </div>
-
       )}
 
-      {/* =====================================================
-          DELETE MODAL
-      ===================================================== */}
+      {/* DELETE MODAL */}
 
       {driverToDelete && (
-
         <div className="delete-modal-overlay">
 
           <div className="delete-modal">
@@ -1250,16 +1157,11 @@ const AdminDrivers = () => {
               !
             </div>
 
-            <h3>
-              Remove Driver?
-            </h3>
+            <h3>Remove Driver?</h3>
 
             <p>
               Are you sure you want to remove{" "}
-              <strong>
-                {driverToDelete.name}
-              </strong>
-              ?
+              <strong>{driverToDelete.name}</strong>?
 
               <br />
 
@@ -1280,9 +1182,7 @@ const AdminDrivers = () => {
                 type="button"
                 className="cancel-delete"
                 disabled={deletingDriver}
-                onClick={() =>
-                  setDriverToDelete(null)
-                }
+                onClick={() => setDriverToDelete(null)}
               >
                 Cancel
               </button>
@@ -1293,9 +1193,7 @@ const AdminDrivers = () => {
                 disabled={deletingDriver}
                 onClick={handleDelete}
               >
-                {deletingDriver
-                  ? "Removing..."
-                  : "Remove Driver"}
+                {deletingDriver ? "Removing..." : "Remove Driver"}
               </button>
 
             </div>
@@ -1303,7 +1201,6 @@ const AdminDrivers = () => {
           </div>
 
         </div>
-
       )}
 
     </div>
