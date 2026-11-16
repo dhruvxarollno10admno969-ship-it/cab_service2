@@ -12,7 +12,7 @@ const services = [
     description: "Quick and comfortable rides for your everyday journeys.",
     image: "/images/city_rides.jpg",
   },
-  {
+    {
     id: 2,
     number: "02",
     title: "Airport Transfers",
