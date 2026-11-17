@@ -46,7 +46,7 @@ const getVehiclePrice = (data) =>
   Number(data.pricePerKm ?? data.price ?? data.ratePerKm ?? 12);
 
 const getVehicleSeats = (data) =>
-  Number(data.seats ?? data.capacity ?? data.maxPassengers ?? 4);
+  Number(data.seats ?? data.capacity ?? data.maxPassengers ?? data.passengers ?? 4);
 
 const getVehicleBaseFare = (data) =>
   Number(data.baseFare ?? data.basePrice ?? 50);
@@ -69,7 +69,10 @@ function Booking() {
   );
 
   const [vehicles, setVehicles] = useState([]);
-  const [vehicle, setVehicle] = useState("");
+
+  // IMPORTANT: Store the unique Firestore document ID, not the name.
+  const [vehicleId, setVehicleId] = useState("");
+
   const [vehiclesLoading, setVehiclesLoading] = useState(true);
   const [vehiclesError, setVehiclesError] = useState("");
 
@@ -118,7 +121,8 @@ function Booking() {
               image: data.image || data.imageUrl || data.photoURL || "",
               available:
                 data.available !== false &&
-                data.isAvailable !== false,
+                data.isAvailable !== false &&
+                data.status !== "Unavailable",
             };
           })
           .filter(
@@ -135,48 +139,52 @@ function Booking() {
         setVehicles(firebaseVehicles);
         setVehiclesError("");
 
-        setVehicle((currentVehicle) => {
+        // Keep the selected vehicle if its document still exists.
+        // Otherwise, select the first available vehicle.
+        setVehicleId((currentId) => {
           const stillExists = firebaseVehicles.some(
-            (item) => item.name === currentVehicle
+            (item) => item.id === currentId
           );
 
           return stillExists
-            ? currentVehicle
-            : firebaseVehicles[0]?.name || "";
-        });
-
-        setPassengers((currentPassengers) => {
-          const selected = firebaseVehicles.find(
-            (item) =>
-              item.name ===
-              (firebaseVehicles.some(
-                (v) => v.name === vehicle
-              )
-                ? vehicle
-                : firebaseVehicles[0]?.name)
-          );
-
-          return selected
-            ? Math.min(
-                Math.max(1, currentPassengers),
-                selected.maxPassengers
-              )
-            : 1;
+            ? currentId
+            : firebaseVehicles[0]?.id || "";
         });
 
         setVehiclesLoading(false);
       },
       (firebaseError) => {
         console.error("Vehicles listener error:", firebaseError);
+
         setVehiclesError(
           "Could not load cars. Check your Firebase permissions and try again."
         );
+
         setVehiclesLoading(false);
       }
     );
 
     return () => unsubscribe();
   }, []);
+
+  // ===================================================
+  // GET EXACT SELECTED VEHICLE
+  // ===================================================
+
+  const selectedVehicle =
+    vehicles.find((item) => item.id === vehicleId) || null;
+
+  // Adjust passengers when the selected vehicle changes.
+  useEffect(() => {
+    if (!selectedVehicle) {
+      setPassengers(1);
+      return;
+    }
+
+    setPassengers((current) =>
+      Math.min(Math.max(1, current), selectedVehicle.maxPassengers)
+    );
+  }, [vehicleId, selectedVehicle?.maxPassengers]);
 
   // ===================================================
   // LISTEN FOR ADMIN ACCEPTANCE
@@ -227,13 +235,6 @@ function Booking() {
 
     return () => unsubscribe();
   }, [acceptedBookingId]);
-
-  // ===================================================
-  // SELECTED VEHICLE
-  // ===================================================
-
-  const selectedVehicle =
-    vehicles.find((item) => item.name === vehicle) || null;
 
   // ===================================================
   // FARE
@@ -320,8 +321,10 @@ function Booking() {
       setError("");
     } catch (err) {
       console.error("Route calculation error:", err);
+
       setDistance(null);
       setDuration(null);
+
       setError(
         err.message ||
           "Something went wrong while calculating the route."
@@ -335,15 +338,18 @@ function Booking() {
   // CHANGE VEHICLE
   // ===================================================
 
-  const handleVehicleChange = (name) => {
-    const selected = vehicles.find((item) => item.name === name);
+  const handleVehicleChange = (id) => {
+    const selected = vehicles.find((item) => item.id === id);
 
     if (!selected) return;
 
-    setVehicle(name);
+    // Select by unique Firestore ID.
+    setVehicleId(id);
+
     setPassengers((current) =>
       Math.min(current, selected.maxPassengers)
     );
+
     setError("");
     setSuccess("");
   };
@@ -446,8 +452,10 @@ function Booking() {
         pickup: pickup.trim(),
         destination: destination.trim(),
 
+        // Save the exact selected vehicle.
         vehicle: selectedVehicle.name,
         vehicleId: selectedVehicle.id,
+
         passengers: Number(passengers),
 
         date,
@@ -658,9 +666,9 @@ function Booking() {
                       key={item.id}
                       type="button"
                       className={`vehicle-option ${
-                        vehicle === item.name ? "selected" : ""
+                        vehicleId === item.id ? "selected" : ""
                       }`}
-                      onClick={() => handleVehicleChange(item.name)}
+                      onClick={() => handleVehicleChange(item.id)}
                     >
                       <div className="vehicle-info">
                         <strong>{item.name}</strong>
