@@ -28,7 +28,7 @@ import { auth } from "../../firebase";
 import "../styles/navbar.css";
 
 // Admin account
-const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL;
+const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL || "";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -51,6 +51,7 @@ function Navbar() {
   // ================= ADMIN CHECK =================
 
   const isAdmin =
+    !!ADMIN_EMAIL &&
     user?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
   // ================= MENU HELPERS =================
@@ -62,11 +63,61 @@ function Navbar() {
 
   const isActive = (path) => location.pathname === path;
 
-  // Close menus when navigating to another route
+  // ================= SECTION NAVIGATION =================
+
+  const handleSectionClick = (event, sectionId) => {
+    event.preventDefault();
+
+    closeMenu();
+
+    const hash = `#${sectionId}`;
+
+    // Already on homepage
+    if (location.pathname === "/") {
+      if (location.hash !== hash) {
+        navigate({ pathname: "/", hash });
+      } else {
+        document.getElementById(sectionId)?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+
+      return;
+    }
+
+    // Navigate to homepage with section hash
+    navigate({
+      pathname: "/",
+      hash,
+    });
+  };
+
+  // ================= CLOSE MENUS ON ROUTE CHANGE =================
+
   useEffect(() => {
     setMenuOpen(false);
     setProfileOpen(false);
   }, [location.pathname]);
+
+  // ================= SCROLL TO SECTION =================
+
+  useEffect(() => {
+    if (location.pathname !== "/" || !location.hash) return;
+
+    const sectionId = decodeURIComponent(
+      location.hash.substring(1)
+    );
+
+    const frame = requestAnimationFrame(() => {
+      document.getElementById(sectionId)?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [location.pathname, location.hash]);
 
   // ================= LOGOUT =================
 
@@ -99,6 +150,17 @@ function Navbar() {
     user?.email?.split("@")[0] ||
     "User";
 
+  // ================= SECTION LINK HELPER =================
+
+  const SectionLink = ({ section, children, mobile = false }) => (
+    <a
+      href={`/#${section}`}
+      onClick={(event) => handleSectionClick(event, section)}
+    >
+      {children}
+    </a>
+  );
+
   return (
     <header className="navbar">
       {/* ================= LOGO ================= */}
@@ -126,11 +188,11 @@ function Navbar() {
           Home
         </Link>
 
-        <a href="/#services">Services</a>
-        <a href="/#fleet">Fleet</a>
-        <a href="/#about">About</a>
-        <a href="/#testimonials">Rating</a>
-        <a href="/#contact">Contact</a>
+        <SectionLink section="services">Services</SectionLink>
+        <SectionLink section="fleet">Fleet</SectionLink>
+        <SectionLink section="about">About</SectionLink>
+        <SectionLink section="testimonials">Rating</SectionLink>
+        <SectionLink section="contact">Contact</SectionLink>
       </nav>
 
       {/* ================= DESKTOP ACTIONS ================= */}
@@ -175,8 +237,6 @@ function Navbar() {
 
             {profileOpen && (
               <div className="profile-dropdown">
-                {/* ACCOUNT INFORMATION */}
-
                 <div className="profile-header">
                   <div className="profile-avatar large">
                     {avatarLetter}
@@ -212,7 +272,6 @@ function Navbar() {
                     />
                   </button>
                 ) : (
-                  /* CUSTOMER MENU */
                   <>
                     <Link
                       to="/profile"
@@ -285,25 +344,11 @@ function Navbar() {
               Home
             </Link>
 
-            <a href="/#services" onClick={closeMenu}>
-              Services
-            </a>
-
-            <a href="/#fleet" onClick={closeMenu}>
-              Fleet
-            </a>
-
-            <a href="/#about" onClick={closeMenu}>
-              About
-            </a>
-
-            <a href="/#testimonials" onClick={closeMenu}>
-              Rating
-            </a>
-
-            <a href="/#contact" onClick={closeMenu}>
-              Contact
-            </a>
+            <SectionLink section="services">Services</SectionLink>
+            <SectionLink section="fleet">Fleet</SectionLink>
+            <SectionLink section="about">About</SectionLink>
+            <SectionLink section="testimonials">Rating</SectionLink>
+            <SectionLink section="contact">Contact</SectionLink>
           </nav>
 
           <div className="mobile-actions">
@@ -336,7 +381,9 @@ function Navbar() {
 
                   <div>
                     <strong>{displayName}</strong>
-                    <span>{isAdmin ? "Administrator" : user.email}</span>
+                    <span>
+                      {isAdmin ? "Administrator" : user.email}
+                    </span>
                   </div>
                 </div>
 
@@ -353,7 +400,6 @@ function Navbar() {
                     <ArrowUpRight size={16} />
                   </button>
                 ) : (
-                  /* CUSTOMER MOBILE MENU */
                   <>
                     <Link
                       to="/profile"
