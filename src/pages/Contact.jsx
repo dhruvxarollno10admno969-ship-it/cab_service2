@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import "./contact.css";
 
@@ -31,6 +32,8 @@ function Contact() {
     message: "",
   });
 
+  // ================= FORM SUBMISSION =================
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -58,6 +61,7 @@ function Contact() {
         type: "error",
         message: "Please check your details and try again.",
       });
+
       return;
     }
 
@@ -80,10 +84,13 @@ function Contact() {
       setStatus({
         type: "success",
         message:
-          "Your enquiry has been submitted successfully. Thank you for contacting Manzill 777!",
+          "Your enquiry has been submitted successfully. Thank you for contacting Manzill 77!",
       });
     } catch (error) {
-      console.error("Contact enquiry submission failed:", error);
+      console.error(
+        "Contact enquiry submission failed:",
+        error
+      );
 
       setStatus({
         type: "error",
@@ -97,22 +104,32 @@ function Contact() {
 
   return (
     <main className="contact-page">
-      <section className="contact-section">
+
+      {/* ================= CONTACT SECTION ================= */}
+
+      <section
+        id="contact"
+        className="contact-section"
+      >
         <div
           className="contact-orb contact-orb-one"
           aria-hidden="true"
         />
+
         <div
           className="contact-orb contact-orb-two"
           aria-hidden="true"
         />
+
         <div
           className="contact-grid-overlay"
           aria-hidden="true"
         />
 
         <div className="contact-container">
-          {/* HERO */}
+
+          {/* ================= HERO ================= */}
+
           <div className="contact-hero">
             <Title
               as="h1"
@@ -123,40 +140,23 @@ function Contact() {
               description="Questions, travel plans, or help with your next ride? We're here to make every journey comfortable, convenient, and stress-free."
               align="left"
             />
-
-            <div className="contact-hero-actions">
-              <a
-                href="#contact-form"
-                className="contact-primary-btn"
-              >
-                Get in touch
-                <ArrowUpRight size={18} />
-              </a>
-
-              <a
-                href="https://wa.me/919815489193"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="contact-secondary-btn"
-              >
-                <MessageCircle size={18} />
-                Chat on WhatsApp
-              </a>
-            </div>
-
+            
             <div className="contact-trust-line">
               <ShieldCheck size={18} />
               <span>Reliable support for every journey.</span>
               <span className="contact-trust-dot" />
-              <span>Manzill 777</span>
+              <span>Manzill 77</span>
             </div>
           </div>
 
-          {/* CONTACT INFORMATION */}
+          {/* ================= CONTACT INFORMATION ================= */}
+
           <section
             className="contact-details-grid"
             aria-label="Contact information"
           >
+            {/* PHONE */}
+
             <a
               href="tel:+919815489193"
               className="contact-detail-card"
@@ -169,7 +169,9 @@ function Contact() {
                 <span className="contact-detail-label">
                   CALL US
                 </span>
+
                 <h2>+91 98154 89193</h2>
+
                 <p>Speak directly with our team</p>
               </div>
 
@@ -179,27 +181,30 @@ function Contact() {
               />
             </a>
 
-            <a
-              href="mailto:hello@manzill777.com"
-              className="contact-detail-card"
-            >
-              <div className="contact-icon">
-                <Mail size={21} />
-              </div>
+            {/* EMAIL */}
 
-              <div className="contact-detail-content">
-                <span className="contact-detail-label">
-                  EMAIL US
-                </span>
-                <h2>hello@manzill777.com</h2>
-                <p>We'd love to hear from you</p>
-              </div>
+           <a
+  href="https://mail.google.com/mail/?view=cm&fs=1&to=manzill7712@gmail.com"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="contact-detail-card"
+>
+  <div className="contact-icon">
+    <Mail size={21} />
+  </div>
 
-              <ArrowUpRight
-                className="contact-detail-arrow"
-                size={19}
-              />
-            </a>
+  <div className="contact-detail-content">
+    <span className="contact-detail-label">
+      EMAIL US
+    </span>
+
+    <h2>manzill7712@gmail.com</h2>
+
+    <p>We'd love to hear from you</p>
+  </div>
+</a>
+
+            {/* LOCATION */}
 
             <div className="contact-detail-card">
               <div className="contact-icon">
@@ -210,10 +215,14 @@ function Contact() {
                 <span className="contact-detail-label">
                   OUR LOCATION
                 </span>
-                <h2>Chandigarh &amp; Tricity</h2>
+
+                <h2>Jalandhar, Punjab</h2>
+
                 <p>Local rides and everyday journeys</p>
               </div>
             </div>
+
+            {/* AVAILABILITY */}
 
             <div className="contact-detail-card">
               <div className="contact-icon">
@@ -224,13 +233,16 @@ function Contact() {
                 <span className="contact-detail-label">
                   AVAILABILITY
                 </span>
+
                 <h2>24/7 Ride Booking</h2>
+
                 <p>Plan your next journey anytime</p>
               </div>
             </div>
           </section>
 
-          {/* ENQUIRY SECTION */}
+          {/* ================= ENQUIRY SECTION ================= */}
+
           <section
             className="contact-form-layout"
             id="contact-form"
@@ -252,6 +264,8 @@ function Contact() {
                 plan your next journey.
               </p>
 
+              {/* WHATSAPP NOTE */}
+
               <div className="contact-response-note">
                 <div className="contact-response-icon">
                   <MessageCircle size={22} />
@@ -259,7 +273,10 @@ function Contact() {
 
                 <div className="contact-response-content">
                   <h3>Prefer a direct conversation?</h3>
-                  <p>Connect with our team on WhatsApp.</p>
+
+                  <p>
+                    Connect with our team on WhatsApp.
+                  </p>
 
                   <a
                     href="https://wa.me/919815489193"
@@ -278,6 +295,8 @@ function Contact() {
               </div>
             </div>
 
+            {/* ================= CONTACT FORM ================= */}
+
             <form
               className="contact-form"
               onSubmit={handleSubmit}
@@ -293,6 +312,8 @@ function Contact() {
                   Fill in the details to submit your enquiry.
                 </p>
               </div>
+
+              {/* NAME AND PHONE */}
 
               <div className="contact-input-row">
                 <div className="contact-field">
@@ -332,6 +353,8 @@ function Contact() {
                 </div>
               </div>
 
+              {/* EMAIL */}
+
               <div className="contact-field">
                 <label htmlFor="contact-email">
                   Email address
@@ -347,6 +370,8 @@ function Contact() {
                   required
                 />
               </div>
+
+              {/* MESSAGE */}
 
               <div className="contact-field">
                 <label htmlFor="contact-message">
@@ -368,6 +393,8 @@ function Contact() {
                 </span>
               </div>
 
+              {/* SUBMIT BUTTON */}
+
               <button
                 type="submit"
                 className="contact-submit-btn"
@@ -388,6 +415,8 @@ function Contact() {
                   <Send size={17} />
                 )}
               </button>
+
+              {/* FORM STATUS */}
 
               {status.message && (
                 <div
@@ -416,7 +445,8 @@ function Contact() {
             </form>
           </section>
 
-          {/* BOOKING CTA */}
+          {/* ================= BOOKING CTA ================= */}
+
           <section className="contact-bottom-banner">
             <div
               className="contact-banner-decoration"
@@ -427,7 +457,9 @@ function Contact() {
 
             <div className="contact-banner-copy">
               <span>YOUR NEXT JOURNEY STARTS HERE</span>
+
               <h2>Ready when you are.</h2>
+
               <p>
                 Comfortable rides. Reliable service.
                 A better way to get there.
@@ -443,27 +475,6 @@ function Contact() {
             </a>
           </section>
 
-          {/* FOOTER */}
-          <footer className="contact-footer">
-            <a href="/" className="contact-footer-brand">
-              <span className="contact-footer-logo">M</span>
-              <span>
-                MANZILL <b>777</b>
-              </span>
-            </a>
-
-            <span className="contact-footer-tagline">
-              Every journey matters.
-            </span>
-
-            <a
-              href="#contact-form"
-              className="contact-footer-link"
-            >
-              Get in touch
-              <ArrowUpRight size={14} />
-            </a>
-          </footer>
         </div>
       </section>
     </main>

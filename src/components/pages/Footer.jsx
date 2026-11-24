@@ -10,7 +10,12 @@ import {
   MoveUp,
 } from "lucide-react";
 
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
+
 import { onAuthStateChanged } from "firebase/auth";
 
 import { auth } from "../../firebase";
@@ -18,11 +23,13 @@ import "../styles/Footer.css";
 
 function Footer() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
 
-  // Track whether any Firebase user is logged in
+  // ================= FIREBASE AUTH =================
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setIsLoggedIn(Boolean(user));
@@ -32,6 +39,66 @@ function Footer() {
     return () => unsubscribe();
   }, []);
 
+  // ================= SCROLL TO SECTION =================
+
+  const handleSectionClick = (event, sectionId) => {
+    event.preventDefault();
+
+    const hash = `#${sectionId}`;
+
+    if (location.pathname === "/" && location.hash === hash) {
+      document.getElementById(sectionId)?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+
+      return;
+    }
+
+    navigate({
+      pathname: "/",
+      hash,
+    });
+  };
+
+  // ================= HANDLE HASH NAVIGATION =================
+
+  useEffect(() => {
+    if (location.pathname !== "/" || !location.hash) return;
+
+    const sectionId = decodeURIComponent(
+      location.hash.substring(1)
+    );
+
+    const frame = requestAnimationFrame(() => {
+      document.getElementById(sectionId)?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [location.pathname, location.hash]);
+
+  // ================= HOME NAVIGATION =================
+
+  const handleHomeClick = (event) => {
+    event.preventDefault();
+
+    if (location.pathname === "/" && !location.hash) {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+
+      return;
+    }
+
+    navigate("/");
+  };
+
+  // ================= BACK TO TOP =================
+
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -39,20 +106,27 @@ function Footer() {
     });
   };
 
+  // ================= ADMIN LOGIN =================
+
   const handleAdminLogin = () => {
     navigate("/admin/login");
   };
 
   return (
     <footer className="site-footer">
-      {/* MAIN FOOTER */}
+
+      {/* ================= MAIN FOOTER ================= */}
+
       <div className="footer-main">
+
         {/* BRAND */}
+
         <div className="footer-brand">
           <Link
             to="/"
             className="footer-logo"
-            aria-label="MANZILL 777 Home"
+            aria-label="MANZILL 77 Home"
+            onClick={handleHomeClick}
           >
             <span className="footer-logo-mark">M</span>
 
@@ -78,7 +152,6 @@ function Footer() {
             <span>+91 98154 89193</span>
           </a>
 
-          {/* Hide Admin Login for every logged-in user */}
           {!authLoading && !isLoggedIn && (
             <button
               type="button"
@@ -92,18 +165,57 @@ function Footer() {
           )}
         </div>
 
-        {/* NAVIGATION */}
+        {/* ================= EXPLORE ================= */}
+
         <div className="footer-column">
           <h3 className="footer-title">EXPLORE</h3>
 
-          <Link to="/">Home</Link>
-          <Link to="/services">Services</Link>
-          <Link to="/fleet">Our Fleet</Link>
-          <Link to="/about">About Us</Link>
-          <Link to="/contact">Contact</Link>
+          <a
+            href="/"
+            onClick={handleHomeClick}
+          >
+            Home
+          </a>
+
+          <a
+            href="/#services"
+            onClick={(event) =>
+              handleSectionClick(event, "services")
+            }
+          >
+            Services
+          </a>
+
+          <a
+            href="/#fleet"
+            onClick={(event) =>
+              handleSectionClick(event, "fleet")
+            }
+          >
+            Our Fleet
+          </a>
+
+          <a
+            href="/#about"
+            onClick={(event) =>
+              handleSectionClick(event, "about")
+            }
+          >
+            About Us
+          </a>
+
+          <a
+            href="/#contact"
+            onClick={(event) =>
+              handleSectionClick(event, "contact")
+            }
+          >
+            Contact
+          </a>
         </div>
 
-        {/* SERVICES */}
+        {/* ================= OUR SERVICES ================= */}
+
         <div className="footer-column">
           <h3 className="footer-title">OUR SERVICES</h3>
 
@@ -114,7 +226,8 @@ function Footer() {
           <Link to="/booking">Book a Ride</Link>
         </div>
 
-        {/* CONTACT */}
+        {/* ================= CONTACT ================= */}
+
         <div className="footer-column footer-contact-column">
           <h3 className="footer-title">GET IN TOUCH</h3>
 
@@ -129,23 +242,25 @@ function Footer() {
             <span>+91 98154 89193</span>
           </a>
 
-          <a
-            href="mailto:hello@manzill77.com"
-            className="footer-contact-link"
-          >
-            <span className="footer-contact-icon">
-              <Mail size={16} />
-            </span>
+        <a
+  href="https://mail.google.com/mail/?view=cm&fs=1&to=manzill7712%40gmail.com"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="footer-contact-link"
+>
+  <span className="footer-contact-icon">
+    <Mail size={16} />
+  </span>
 
-            <span>hello@manzill77.com</span>
-          </a>
+  <span>manzill7712@gmail.com</span>
+</a>
 
           <div className="footer-contact-link footer-location">
             <span className="footer-contact-icon">
               <MapPin size={16} />
             </span>
 
-            <span>Chandigarh &amp; Tricity</span>
+            <span>Jalandhar, Punjab </span>
           </div>
 
           <span className="footer-service-status">
@@ -155,15 +270,20 @@ function Footer() {
         </div>
       </div>
 
-      {/* BOTTOM BAR */}
+      {/* ================= BOTTOM BAR ================= */}
+
       <div className="footer-bottom">
         <p className="footer-copyright">
-          © {new Date().getFullYear()} MANZILL 777.
+          © {new Date().getFullYear()} MANZILL 77.
           All rights reserved.
         </p>
 
-        <Link to="/" className="footer-bottom-brand">
-          MANZILL <span>777</span>
+        <Link
+          to="/"
+          className="footer-bottom-brand"
+          onClick={handleHomeClick}
+        >
+          MANZILL <span>77</span>
         </Link>
 
         <p className="footer-bottom-tagline">
@@ -171,7 +291,8 @@ function Footer() {
         </p>
       </div>
 
-      {/* BACK TO TOP */}
+      {/* ================= BACK TO TOP ================= */}
+
       <button
         type="button"
         className="footer-top"
@@ -181,6 +302,7 @@ function Footer() {
       >
         <MoveUp size={17} />
       </button>
+
     </footer>
   );
 }

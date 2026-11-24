@@ -1,3 +1,4 @@
+
 import { ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import Title from "./Title";
@@ -39,7 +40,7 @@ function About() {
           <div className="about-image-wrapper">
             <img
               src="/images/car.jpg"
-              alt="Premium black car for MANZILL 777"
+              alt="Premium black car for MANZILL 77"
               className="about-image"
               loading="lazy"
             />
@@ -55,8 +56,6 @@ function About() {
             </div>
           ))}
         </div>
-
-        <div className="about-divider" />
       </div>
     </section>
   );

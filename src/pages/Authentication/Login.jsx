@@ -189,7 +189,7 @@ function Login() {
           <p>
             Sign in to your account and continue
             <br />
-            your journey with MANZILL 777.
+            your journey with MANZIL 777.
           </p>
         </div>
 
@@ -266,7 +266,7 @@ function Login() {
       </section>
 
       <div className="login-bottom">
-        <span>MANZILL 777</span>
+        <span>MANZIL 777</span>
         <i />
         <span>PREMIUM TRAVEL EXPERIENCE</span>
       </div>

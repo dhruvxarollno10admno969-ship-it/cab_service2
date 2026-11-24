@@ -50,10 +50,10 @@ function Fleet() {
         {/* REUSABLE SECTION TITLE */}
         <Title
           className="fleet-section-title"
-          label="MANZILL 777 / OUR FLEET"
+          label="MANZILL 77 / OUR FLEET"
           title="Find your"
           highlight="perfect ride."
-          description="From everyday city rides to premium long-distance journeys, travel your way with MANZILL 777. Comfort, space and reliability for wherever your journey takes you."
+          description="From everyday city rides to premium long-distance journeys, travel your way with MANZILL 77. Comfort, space and reliability for wherever your journey takes you."
           align="left"
         />
 
@@ -80,7 +80,7 @@ function Fleet() {
 
             <p>
               New vehicles will appear here when they are added
-              through the MANZILL 777 admin panel.
+              through the MANZILL 77 admin panel.
             </p>
           </div>
         )}

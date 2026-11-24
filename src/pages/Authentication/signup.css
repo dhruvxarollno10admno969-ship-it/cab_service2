@@ -32,6 +32,40 @@
   font-family: "DM Sans", sans-serif;
 }
 
+/* FULL-WIDTH BOTTOM PURPLE/PINK GLOW */
+
+.signup-page::after {
+  content: "";
+  position: absolute;
+  left: -5%;
+  right: -5%;
+  bottom: 0;
+
+  width: 110%;
+  height: 420px;
+
+  z-index: 0;
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      ellipse 100% 85% at 50% 100%,
+      rgba(255, 105, 220, 0.38) 0%,
+      rgba(255, 105, 220, 0.20) 35%,
+      transparent 75%
+    ),
+    linear-gradient(
+      to top,
+      rgba(82, 39, 255, 0.45) 0%,
+      rgba(124, 58, 237, 0.25) 45%,
+      rgba(82, 39, 255, 0.08) 80%,
+      transparent 100%
+    );
+
+  filter: blur(18px);
+  opacity: 1;
+}
+
 /* BACKGROUND GRID */
 
 .signup-grid {
@@ -454,6 +488,7 @@
   bottom: 24px;
   left: 0;
   right: 0;
+  z-index: 1;
 
   display: flex;
   align-items: center;
@@ -762,6 +797,11 @@
     padding: 85px 16px 65px;
   }
 
+  .signup-page::after {
+    height: 420px;
+    bottom: 0;
+  }
+
   .signup-topbar {
     top: 20px;
     left: 18px;
@@ -890,4 +930,63 @@
     transition-duration: .01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* =========================================
+   GRADIENT THEME — SIGNUP
+========================================= */
+
+.signup-google-button {
+  background: linear-gradient(
+    110deg,
+    #5227ff 0%,
+    #7c3aed 50%,
+    #ff9ffc 100%
+  );
+
+  border: 1px solid rgba(255, 159, 252, 0.4);
+  color: #ffffff;
+
+  box-shadow: 0 8px 25px rgba(82, 39, 255, 0.2);
+}
+
+.signup-google-arrow {
+  color: #ffffff;
+}
+
+.signup-google-button:hover:not(:disabled) {
+  background: linear-gradient(
+    110deg,
+    #704cff 0%,
+    #9252ed 50%,
+    #ffb0ff 100%
+  );
+
+  border-color: #ff9ffc;
+
+  box-shadow: 0 12px 35px rgba(124, 58, 237, 0.35);
+  transform: translateY(-3px);
+}
+
+.signup-switch a {
+  background: linear-gradient(100deg, #b99aff, #ff9ffc);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.signup-security svg {
+  color: #d1a2ff;
+}
+
+.signup-eyebrow {
+  background: linear-gradient(100deg, #b99aff, #ff9ffc);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.signup-google-button:focus-visible {
+  outline: 2px solid #ff9ffc;
+  outline-offset: 4px;
 }

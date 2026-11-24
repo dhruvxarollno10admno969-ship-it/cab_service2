@@ -181,7 +181,7 @@
 
     display: grid;
     grid-template-columns: 1.5fr 0.8fr 1fr 1.25fr;
-    gap: 55px;
+    /* gap: 55px; */
 
     padding: 90px 0 75px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -727,7 +727,7 @@
   .site-footer {
     position: relative;
     isolation: isolate;
-    margin-top: 90px;
+    margin-top: -2px;
 
     border-top: 1px solid rgba(167, 139, 250, 0.2);
 

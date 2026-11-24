@@ -46,7 +46,7 @@ function Services() {
         label="OUR SERVICES"
         title="One platform."
         highlight="Every journey."
-        description="From everyday city rides to long-distance journeys, MANZILL 777 makes every trip simple, comfortable and reliable."
+        description="From everyday city rides to long-distance journeys, MANZILL 77 makes every trip simple, comfortable and reliable."
       />
 
       <div className="services-list">

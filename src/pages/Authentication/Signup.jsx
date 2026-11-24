@@ -271,7 +271,7 @@ function Signup() {
       </section>
 
       <div className="signup-bottom">
-        <span>MANZILL 777</span>
+        <span>MANZIL 777</span>
         <i />
         <span>PREMIUM TRAVEL EXPERIENCE</span>
       </div>
