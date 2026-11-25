@@ -8,10 +8,12 @@ import {
   MapPin,
   Phone,
   Mail,
-  LogOut,
 } from "lucide-react";
 
-import { useNavigate } from "react-router-dom";
+import {
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 
 import {
   onAuthStateChanged,
@@ -32,6 +34,10 @@ import "./complete-profile.css";
 
 function CompleteProfile() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Page to return to after profile completion.
+  const returnTo = location.state?.from || "/";
 
   const [user, setUser] = useState(null);
 
@@ -50,106 +56,118 @@ function CompleteProfile() {
   const [error, setError] = useState("");
 
   // ========================================
-  // CHECK AUTHENTICATION
+  // CHECK AUTHENTICATION & LOAD PROFILE
   // ========================================
 
   useEffect(() => {
     let active = true;
 
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (!currentUser) {
-        navigate("/login", { replace: true });
-        return;
-      }
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      async (currentUser) => {
+        if (!currentUser) {
+          navigate("/login", { replace: true });
+          return;
+        }
 
-      try {
-        const customerRef = doc(db, "customers", currentUser.uid);
-        const snapshot = await getDoc(customerRef);
-
-        if (!active) return;
-
-        if (snapshot.exists()) {
-          const data = snapshot.data();
-
-          // Check whether the profile is already complete.
-          const requiredFields = [
-            "name",
-            "phone",
-            "address",
-            "city",
-            "state",
-            "country",
-          ];
-
-          const complete = requiredFields.every((field) =>
-            String(data[field] || "").trim()
+        try {
+          const customerRef = doc(
+            db,
+            "customers",
+            currentUser.uid
           );
 
-          if (complete && data.profileCompleted === true) {
-            navigate("/", { replace: true });
-            return;
-          }
-
-          setForm({
-            name: data.name || currentUser.displayName || "",
-            email: currentUser.email || "",
-            phone: data.phone || "",
-            address: data.address || "",
-            city: data.city || "",
-            state: data.state || "",
-            country: data.country || "India",
-          });
-        } else {
-          // Create missing customer record.
-          await setDoc(customerRef, {
-            uid: currentUser.uid,
-            name: currentUser.displayName || "",
-            email: currentUser.email || "",
-            phone: "",
-            address: "",
-            city: "",
-            state: "",
-            country: "India",
-            role: "customer",
-            emailVerified: currentUser.emailVerified,
-            authProvider: "google",
-            profileCompleted: false,
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp(),
-          });
+          const snapshot = await getDoc(customerRef);
 
           if (!active) return;
 
-          setForm({
-            name: currentUser.displayName || "",
-            email: currentUser.email || "",
-            phone: "",
-            address: "",
-            city: "",
-            state: "",
-            country: "India",
-          });
-        }
+          if (snapshot.exists()) {
+            const data = snapshot.data();
 
-        setUser(currentUser);
-      } catch (err) {
-        console.error("Profile loading error:", err);
+            const requiredFields = [
+              "name",
+              "phone",
+              "address",
+              "city",
+              "state",
+              "country",
+            ];
 
-        if (active) {
-          setError("Unable to load your profile. Please refresh and try again.");
-        }
-      } finally {
-        if (active) {
-          setLoading(false);
+            const complete = requiredFields.every((field) =>
+              String(data[field] || "").trim()
+            );
+
+            if (
+              complete &&
+              data.profileCompleted === true
+            ) {
+              navigate(returnTo, { replace: true });
+              return;
+            }
+
+            setForm({
+              name: data.name || currentUser.displayName || "",
+              email: currentUser.email || "",
+              phone: data.phone || "",
+              address: data.address || "",
+              city: data.city || "",
+              state: data.state || "",
+              country: data.country || "India",
+            });
+          } else {
+            await setDoc(customerRef, {
+              uid: currentUser.uid,
+              name: currentUser.displayName || "",
+              email: currentUser.email || "",
+              phone: "",
+              address: "",
+              city: "",
+              state: "",
+              country: "India",
+              role: "customer",
+              emailVerified: currentUser.emailVerified,
+              authProvider:
+                currentUser.providerData?.[0]?.providerId || "password",
+              profileCompleted: false,
+              createdAt: serverTimestamp(),
+              updatedAt: serverTimestamp(),
+            });
+
+            if (!active) return;
+
+            setForm({
+              name: currentUser.displayName || "",
+              email: currentUser.email || "",
+              phone: "",
+              address: "",
+              city: "",
+              state: "",
+              country: "India",
+            });
+          }
+
+          setUser(currentUser);
+        } catch (err) {
+          console.error("Profile loading error:", err);
+
+          if (active) {
+            setError(
+              "Unable to load your profile. Please refresh and try again."
+            );
+          }
+        } finally {
+          if (active) {
+            setLoading(false);
+          }
         }
       }
-    });
+    );
 
     return () => {
       active = false;
       unsubscribe();
     };
-  }, [navigate]);
+  }, [navigate, returnTo]);
 
   // ========================================
   // INPUT HANDLER
@@ -175,7 +193,9 @@ function CompleteProfile() {
     setError("");
 
     if (!user || auth.currentUser?.uid !== user.uid) {
-      setError("Your session has expired. Please sign in again.");
+      setError(
+        "Your session has expired. Please sign in again."
+      );
       return;
     }
 
@@ -196,8 +216,6 @@ function CompleteProfile() {
     }
 
     const cleanedPhone = form.phone.trim();
-
-    // Accept Indian numbers with optional +91 prefix.
     const phoneDigits = cleanedPhone.replace(/\D/g, "");
 
     const validIndianPhone =
@@ -205,25 +223,38 @@ function CompleteProfile() {
       /^91[6-9]\d{9}$/.test(phoneDigits);
 
     if (!validIndianPhone) {
-      setError("Please enter a valid Indian mobile number.");
+      setError(
+        "Please enter a valid Indian mobile number."
+      );
       return;
     }
 
     try {
       setSaving(true);
 
-      const customerRef = doc(db, "customers", user.uid);
+      const customerRef = doc(
+        db,
+        "customers",
+        user.uid
+      );
 
       const customerSnapshot = await getDoc(customerRef);
 
       if (!customerSnapshot.exists()) {
-        throw new Error("Customer record not found. Please sign in again.");
+        throw new Error(
+          "Customer record not found. Please sign in again."
+        );
       }
 
       const existingData = customerSnapshot.data();
 
-      if (existingData.role && existingData.role !== "customer") {
-        throw new Error("This account is not registered as a customer.");
+      if (
+        existingData.role &&
+        existingData.role !== "customer"
+      ) {
+        throw new Error(
+          "This account is not registered as a customer."
+        );
       }
 
       const profileData = {
@@ -237,7 +268,8 @@ function CompleteProfile() {
         country: form.country.trim(),
         role: "customer",
         emailVerified: user.emailVerified,
-        authProvider: "google",
+        authProvider:
+          user.providerData?.[0]?.providerId || "password",
         profileCompleted: true,
         updatedAt: serverTimestamp(),
       };
@@ -255,13 +287,15 @@ function CompleteProfile() {
         });
       }
 
-      navigate("/", { replace: true });
+      // Return customer to the page they came from.
+      navigate(returnTo, { replace: true });
 
     } catch (err) {
       console.error("Profile completion error:", err);
 
       setError(
-        err.message || "Unable to save your profile. Please try again."
+        err.message ||
+          "Unable to save your profile. Please try again."
       );
     } finally {
       setSaving(false);
@@ -278,7 +312,10 @@ function CompleteProfile() {
       navigate("/login", { replace: true });
     } catch (err) {
       console.error("Logout error:", err);
-      setError("Unable to sign out. Please try again.");
+
+      setError(
+        "Unable to sign out. Please try again."
+      );
     }
   };
 
@@ -471,7 +508,10 @@ function CompleteProfile() {
           </label>
 
           {error && (
-            <div className="complete-profile-error" role="alert">
+            <div
+              className="complete-profile-error"
+              role="alert"
+            >
               <span />
               {error}
             </div>
@@ -483,7 +523,9 @@ function CompleteProfile() {
             disabled={saving}
           >
             <span>
-              {saving ? "SAVING YOUR PROFILE..." : "COMPLETE REGISTRATION"}
+              {saving
+                ? "SAVING YOUR PROFILE..."
+                : "COMPLETE REGISTRATION"}
             </span>
 
             {saving ? (

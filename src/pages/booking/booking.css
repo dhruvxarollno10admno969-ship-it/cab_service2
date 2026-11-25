@@ -1,7 +1,6 @@
-
 /* =====================================================
    MANZILL 777 — BOOKING PAGE
-   Brand: Black · Purple · Pink · White
+   Premium responsive theme: Black · Purple · Pink · White
 ===================================================== */
 
 .booking-page {
@@ -50,7 +49,6 @@
 }
 
 /* HEADER */
-
 .booking-page .booking-header {
   width: min(1200px, calc(100% - 64px));
   min-height: 76px;
@@ -82,7 +80,6 @@
 }
 
 /* MAIN CONTAINER */
-
 .booking-page .booking-container {
   width: min(1200px, calc(100% - 64px));
   margin: 0 auto;
@@ -90,7 +87,6 @@
 }
 
 /* PAGE TITLE */
-
 .booking-page .booking-title {
   max-width: 740px;
   margin: 0 0 46px;
@@ -137,7 +133,6 @@
 }
 
 /* MAIN GRID */
-
 .booking-page .booking-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.75fr);
@@ -152,8 +147,8 @@
 }
 
 /* FORM SECTIONS */
-
 .booking-page .booking-block {
+  min-width: 0;
   padding: 27px 0;
   border-top: 1px solid var(--booking-border);
 }
@@ -193,13 +188,75 @@
   letter-spacing: -0.5px;
 }
 
-/* JOURNEY FIELDS */
+/* TRIP TYPE */
+.booking-page .booking-trip-type {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+  margin: 0 0 5px;
+}
 
+.booking-page .trip-type-option {
+  min-height: 46px;
+  padding: 11px 16px;
+  border: 1px solid var(--booking-border);
+  border-radius: 11px;
+  background: #110c1a;
+  color: #b9aec9;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.booking-page .trip-type-option:hover {
+  border-color: rgba(167, 139, 250, 0.65);
+  color: #fff;
+}
+
+.booking-page .trip-type-option.active {
+  border-color: var(--booking-purple);
+  background: linear-gradient(110deg, rgba(82, 39, 255, 0.28), rgba(124, 58, 237, 0.16));
+  color: #fff;
+  box-shadow: inset 0 0 0 1px rgba(124, 58, 237, 0.18), 0 5px 20px rgba(82, 39, 255, 0.12);
+}
+
+/* JOURNEY FIELDS */
 .booking-page .location-fields {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 42px minmax(0, 1fr);
   align-items: center;
   gap: 12px;
+}
+
+/* The JSX keeps all journey controls inside this grid.
+   Explicit placement prevents the trip selector shifting the route fields. */
+.booking-page .location-fields > .booking-trip-type {
+  grid-column: 1 / -1;
+  grid-row: 1;
+}
+
+.booking-page .location-fields > .booking-location:first-of-type {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.booking-page .location-fields > .booking-location-line {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.booking-page .location-fields > .booking-location:nth-of-type(2) {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.booking-page .location-fields > .booking-return-info,
+.booking-page .location-fields > .calculate-route,
+.booking-page .location-fields > .booking-error,
+.booking-page .location-fields > .booking-success {
+  grid-column: 1 / -1;
 }
 
 .booking-page .booking-location {
@@ -290,8 +347,28 @@
   font-size: 19px;
 }
 
-/* BUTTONS */
+.booking-page .booking-return-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  margin: 2px 0;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 159, 252, 0.18);
+  border-radius: 11px;
+  background: rgba(255, 159, 252, 0.055);
+  color: #d9c8e9;
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
 
+.booking-page .booking-return-info svg {
+  flex-shrink: 0;
+  color: var(--booking-pink);
+}
+
+/* BUTTONS */
 .booking-page .calculate-route,
 .booking-page .confirm-booking {
   display: flex;
@@ -312,12 +389,11 @@
 }
 
 .booking-page .calculate-route {
-  grid-column: 1 / -1;
   margin-top: 5px;
 }
 
-.booking-page .calculate-route:hover,
-.booking-page .confirm-booking:hover {
+.booking-page .calculate-route:hover:not(:disabled),
+.booking-page .confirm-booking:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 8px 28px rgba(124, 58, 237, 0.32);
   filter: brightness(1.1);
@@ -325,7 +401,6 @@
 
 .booking-page .booking-error,
 .booking-page .booking-success {
-  grid-column: 1 / -1;
   width: 100%;
   margin: 8px 0 0;
   padding: 12px 14px;
@@ -347,10 +422,9 @@
 }
 
 /* ROUTE RESULTS */
-
 .booking-page .route-result {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1px;
   margin: 14px 0 0;
   overflow: hidden;
@@ -360,6 +434,7 @@
 }
 
 .booking-page .route-result > div {
+  min-width: 0;
   padding: 18px;
   background: #120d1d;
 }
@@ -378,8 +453,11 @@
   font-size: 20px;
 }
 
-/* VEHICLE CARDS */
+.booking-page .booking-route-legs {
+  margin-top: 10px;
+}
 
+/* VEHICLE CARDS */
 .booking-page .vehicle-options {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -447,8 +525,32 @@
   font-weight: 700;
 }
 
-/* DATE AND TIME */
+.booking-page .vehicle-message {
+  color: var(--booking-muted);
+  font-size: 13px;
+}
 
+.booking-page .vehicle-empty {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 28px 18px;
+  border: 1px dashed var(--booking-border);
+  border-radius: 14px;
+  color: var(--booking-muted);
+  text-align: center;
+}
+
+.booking-page .vehicle-empty svg {
+  color: var(--booking-pink);
+}
+
+.booking-page .vehicle-empty p,
+.booking-page .vehicle-empty small {
+  margin: 0;
+}
+
+/* DATE AND TIME */
 .booking-page .booking-date-row {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -481,8 +583,18 @@
   font-size: 14px;
 }
 
-/* PASSENGER COUNTER */
+.booking-page .booking-date-row > .booking-return-time {
+  grid-column: 1 / -1;
+}
 
+.booking-page .booking-field-hint {
+  margin: 11px 0 0;
+  color: #9386a5;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+/* PASSENGER COUNTER */
 .booking-page .passenger-control {
   display: flex;
   align-items: center;
@@ -534,7 +646,6 @@
 }
 
 /* JOURNEY SUMMARY */
-
 .booking-page .booking-summary {
   position: sticky;
   top: 24px;
@@ -619,7 +730,6 @@
 }
 
 /* SUMMARY DETAILS */
-
 .booking-page .summary-details {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -658,7 +768,6 @@
 }
 
 /* FARE */
-
 .booking-page .summary-fare {
   margin-top: 20px;
   padding: 19px;
@@ -690,7 +799,6 @@
 }
 
 /* CONFIRM BUTTON */
-
 .booking-page .confirm-booking {
   min-height: 53px;
   margin-top: 17px;
@@ -706,7 +814,6 @@
 }
 
 /* ACCEPTANCE POPUP */
-
 .booking-page .ride-popup-overlay {
   position: fixed;
   inset: 0;
@@ -784,22 +891,13 @@
 }
 
 @keyframes bookingPopupIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px) scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 /* TABLET */
-
 @media (max-width: 1000px) {
-  .booking-page .booking-container {
-    padding-top: 45px;
-  }
+  .booking-page .booking-container { padding-top: 45px; }
 
   .booking-page .booking-layout {
     grid-template-columns: minmax(0, 1fr);
@@ -817,7 +915,6 @@
 }
 
 /* MOBILE */
-
 @media (max-width: 700px) {
   .booking-page .booking-header {
     width: calc(100% - 36px);
@@ -829,9 +926,7 @@
     padding: 38px 0 55px;
   }
 
-  .booking-page .booking-title {
-    margin-bottom: 32px;
-  }
+  .booking-page .booking-title { margin-bottom: 32px; }
 
   .booking-page .booking-title .eyebrow {
     margin-bottom: 16px;
@@ -848,33 +943,32 @@
     line-height: 1.8;
   }
 
-  .booking-page .booking-layout {
-    gap: 25px;
-  }
+  .booking-page .booking-layout { gap: 25px; }
 
   .booking-page .booking-summary {
     padding: 19px;
     border-radius: 18px;
   }
 
-  .booking-page .booking-block {
-    padding: 23px 0;
-  }
+  .booking-page .booking-block { padding: 23px 0; }
 
   .booking-page .booking-block-header {
     gap: 11px;
     margin-bottom: 18px;
   }
 
-  .booking-page .booking-block-header h2 {
-    font-size: 19px;
-  }
+  .booking-page .booking-block-header h2 { font-size: 19px; }
 
   .booking-page .location-fields {
     display: flex;
     flex-direction: column;
     align-items: stretch;
     gap: 9px;
+  }
+
+  .booking-page .booking-trip-type {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-bottom: 5px;
   }
 
   .booking-page .booking-location {
@@ -890,9 +984,10 @@
     transform: rotate(90deg);
   }
 
-  .booking-page .booking-location input {
-    font-size: 15px;
-  }
+  .booking-page .booking-location input { font-size: 15px; }
+
+  .booking-page .booking-return-info,
+  .booking-page .calculate-route { width: 100%; }
 
   .booking-page .calculate-route {
     min-height: 48px;
@@ -912,13 +1007,8 @@
     gap: 12px;
   }
 
-  .booking-page .vehicle-info strong {
-    font-size: 16px;
-  }
-
-  .booking-page .vehicle-info span {
-    font-size: 12px;
-  }
+  .booking-page .vehicle-info strong { font-size: 16px; }
+  .booking-page .vehicle-info span { font-size: 12px; }
 
   .booking-page .vehicle-price {
     align-self: center;
@@ -926,37 +1016,16 @@
     font-size: 14px;
   }
 
-  .booking-page .booking-date-row {
-    gap: 10px;
-  }
-
-  .booking-page .booking-date-row label {
-    padding: 12px;
-  }
-
-  .booking-page .booking-date-row input {
-    font-size: 13px;
-  }
-
-  .booking-page .passenger-control {
-    min-width: 200px;
-  }
-
-  .booking-page .summary-location strong {
-    font-size: 13px;
-  }
-
-  .booking-page .summary-details > div {
-    padding: 12px;
-  }
-
-  .booking-page .summary-fare > strong {
-    font-size: 32px;
-  }
+  .booking-page .booking-date-row { gap: 10px; }
+  .booking-page .booking-date-row label { padding: 12px; }
+  .booking-page .booking-date-row input { font-size: 13px; }
+  .booking-page .passenger-control { min-width: 200px; }
+  .booking-page .summary-location strong { font-size: 13px; }
+  .booking-page .summary-details > div { padding: 12px; }
+  .booking-page .summary-fare > strong { font-size: 32px; }
 }
 
 /* SMALL MOBILE */
-
 @media (max-width: 380px) {
   .booking-page .booking-header,
   .booking-page .booking-container {
@@ -968,29 +1037,24 @@
     letter-spacing: -2px;
   }
 
-  .booking-page .booking-summary {
-    padding: 15px;
-  }
-
-  .booking-page .summary-details > div {
-    padding: 10px;
-  }
+  .booking-page .booking-summary { padding: 15px; }
+  .booking-page .summary-details > div { padding: 10px; }
 
   .booking-page .booking-date-row {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .booking-page .vehicle-option {
-    padding: 12px;
+  .booking-page .booking-option { padding: 12px; }
+
+  .booking-page .booking-trip-type {
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .booking-page .vehicle-info span {
-    max-width: 185px;
-  }
+  .booking-page .vehicle-option { padding: 12px; }
+  .booking-page .vehicle-info span { max-width: 185px; }
 }
 
 /* ACCESSIBILITY */
-
 @media (prefers-reduced-motion: reduce) {
   .booking-page *,
   .booking-page *::before,

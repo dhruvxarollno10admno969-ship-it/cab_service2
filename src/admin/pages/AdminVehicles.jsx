@@ -1,11 +1,8 @@
-
 import { useEffect, useState } from "react";
 
 import {
   collection,
   onSnapshot,
-  updateDoc,
-  deleteDoc,
   doc,
   serverTimestamp,
   runTransaction,
@@ -41,33 +38,51 @@ const EMPTY_FORM = {
   location: "",
   image: "",
   description: "",
-  pricePerKm: "12",
+  oneWayPricePerKm: "12",
+  roadTripPricePerKm: "12",
   passengers: "4",
   luggage: "2",
 };
 
 function getDefaultsByType(type) {
+  let price = "12";
+  let passengers = "4";
+  let luggage = "2";
+
   switch (type) {
     case "SUV":
-      return { pricePerKm: "16", passengers: "6", luggage: "4" };
-
+      price = "16";
+      passengers = "6";
+      luggage = "4";
+      break;
     case "Premium":
-      return { pricePerKm: "22", passengers: "4", luggage: "3" };
-
+      price = "22";
+      passengers = "4";
+      luggage = "3";
+      break;
     case "Hatchback":
-      return { pricePerKm: "10", passengers: "4", luggage: "2" };
-
+      price = "10";
+      passengers = "4";
+      luggage = "2";
+      break;
     case "MUV":
-      return { pricePerKm: "18", passengers: "7", luggage: "4" };
-
+      price = "18";
+      passengers = "7";
+      luggage = "4";
+      break;
     default:
-      return { pricePerKm: "12", passengers: "4", luggage: "2" };
+      break;
   }
-}
 
-/* =========================================
-   REUSABLE VEHICLE IMAGE
-========================================= */
+  // Both trip rates start at the vehicle's existing rate.
+  // Admin can edit them independently.
+  return {
+    oneWayPricePerKm: price,
+    roadTripPricePerKm: price,
+    passengers,
+    luggage,
+  };
+}
 
 function VehicleThumbnail({ src, name }) {
   const [imageError, setImageError] = useState(false);
@@ -95,25 +110,15 @@ function VehicleThumbnail({ src, name }) {
   );
 }
 
-/* =========================================
-   ADMIN VEHICLES
-========================================= */
-
 function AdminVehicles() {
   const [vehicles, setVehicles] = useState([]);
   const [drivers, setDrivers] = useState([]);
-
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-
   const [showForm, setShowForm] = useState(false);
   const [editingVehicle, setEditingVehicle] = useState(null);
-  const [vehicleForm, setVehicleForm] = useState(EMPTY_FORM);
-
-  /* =========================================
-     FIREBASE VEHICLE LISTENER
-  ========================================= */
+  const [vehicleForm, setVehicleForm] = useState({ ...EMPTY_FORM });
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -123,35 +128,32 @@ function AdminVehicles() {
           const data = firebaseDoc.data();
           const defaults = getDefaultsByType(data.type || "Sedan");
 
+          // Older vehicle documents only have pricePerKm.
+          // Use that value for both trip types until admin edits them.
+          const legacyPrice = Number(data.pricePerKm ?? 12);
+
           return {
             firebaseId: firebaseDoc.id,
             id: data.id || firebaseDoc.id,
-
             name: data.name || "",
             number: data.number || "",
             type: data.type || "Sedan",
-
             driverId: data.driverId || "",
             driver: data.driver || "Unassigned",
-
             status: data.status || "Available",
             location: data.location || "",
-
             image: data.image || "",
             description: data.description || "",
-
-            pricePerKm: Number(
-              data.pricePerKm ?? defaults.pricePerKm
+            oneWayPricePerKm: Number(
+              data.oneWayPricePerKm ?? data.pricePerKm ?? defaults.oneWayPricePerKm
             ),
-
-            passengers: String(
-              data.passengers ?? defaults.passengers
+            roadTripPricePerKm: Number(
+              data.roadTripPricePerKm ?? data.pricePerKm ?? defaults.roadTripPricePerKm
             ),
-
-            luggage: String(
-              data.luggage ?? defaults.luggage
-            ),
-
+            // Keep this legacy property for older admin UI or app code.
+            pricePerKm: Number.isFinite(legacyPrice) ? legacyPrice : 12,
+            passengers: String(data.passengers ?? defaults.passengers),
+            luggage: String(data.luggage ?? defaults.luggage),
             createdAt: data.createdAt || null,
             updatedAt: data.updatedAt || null,
           };
@@ -170,10 +172,6 @@ function AdminVehicles() {
 
     return () => unsubscribe();
   }, []);
-
-  /* =========================================
-     FIREBASE DRIVER LISTENER
-  ========================================= */
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -204,38 +202,23 @@ function AdminVehicles() {
     return () => unsubscribe();
   }, []);
 
-  /* =========================================
-     FORM FIELD HANDLING
-  ========================================= */
-
   function updateField(event) {
     const { name, value } = event.target;
 
     setVehicleForm((previous) => {
-      const updated = {
-        ...previous,
-        [name]: value,
-      };
+      const updated = { ...previous, [name]: value };
 
       if (name === "type") {
         const defaults = getDefaultsByType(value);
-
-        updated.pricePerKm = defaults.pricePerKm;
-        updated.passengers = defaults.passengers;
-        updated.luggage = defaults.luggage;
+        Object.assign(updated, defaults);
       }
 
       return updated;
     });
   }
 
-  /* =========================================
-     MANUAL DRIVER SELECTION
-  ========================================= */
-
   function handleDriverSelection(event) {
     const selectedId = event.target.value;
-
     const selectedDriver = drivers.find(
       (driver) => driver.firebaseId === selectedId
     );
@@ -247,20 +230,12 @@ function AdminVehicles() {
     }));
   }
 
-  /* =========================================
-     OPEN ADD VEHICLE
-  ========================================= */
-
   function openAddVehicle() {
     setEditingVehicle(null);
     setVehicleForm({ ...EMPTY_FORM });
     setError("");
     setShowForm(true);
   }
-
-  /* =========================================
-     OPEN EDIT VEHICLE
-  ========================================= */
 
   function openEditVehicle(vehicle) {
     setEditingVehicle(vehicle);
@@ -275,7 +250,8 @@ function AdminVehicles() {
       location: vehicle.location,
       image: vehicle.image,
       description: vehicle.description,
-      pricePerKm: String(vehicle.pricePerKm),
+      oneWayPricePerKm: String(vehicle.oneWayPricePerKm),
+      roadTripPricePerKm: String(vehicle.roadTripPricePerKm),
       passengers: String(vehicle.passengers),
       luggage: String(vehicle.luggage),
     });
@@ -283,10 +259,6 @@ function AdminVehicles() {
     setError("");
     setShowForm(true);
   }
-
-  /* =========================================
-     CLOSE FORM
-  ========================================= */
 
   function closeForm() {
     if (saving) return;
@@ -297,11 +269,6 @@ function AdminVehicles() {
     setError("");
   }
 
-  /* =========================================
-     SAVE / UPDATE VEHICLE
-     MANUAL DRIVER ASSIGNMENT
-  ========================================= */
-
   async function saveVehicle(event) {
     event.preventDefault();
     setError("");
@@ -311,39 +278,34 @@ function AdminVehicles() {
     const location = vehicleForm.location.trim();
     const image = vehicleForm.image.trim();
 
-    const pricePerKm = Number(vehicleForm.pricePerKm);
+    const oneWayPricePerKm = Number(vehicleForm.oneWayPricePerKm);
+    const roadTripPricePerKm = Number(vehicleForm.roadTripPricePerKm);
     const passengers = Number(vehicleForm.passengers);
     const luggage = Number(vehicleForm.luggage);
 
     if (!name || !number || !location) {
-      setError(
-        "Please enter the vehicle name, registration number and location."
-      );
+      setError("Please enter the vehicle name, registration number and location.");
       return;
     }
 
     if (
-      !Number.isFinite(pricePerKm) ||
-      pricePerKm < 0 ||
+      !Number.isFinite(oneWayPricePerKm) ||
+      oneWayPricePerKm < 0 ||
+      !Number.isFinite(roadTripPricePerKm) ||
+      roadTripPricePerKm < 0 ||
       !Number.isInteger(passengers) ||
       passengers < 1 ||
       !Number.isInteger(luggage) ||
       luggage < 0
     ) {
-      setError(
-        "Enter a valid price, passenger capacity and luggage capacity."
-      );
+      setError("Enter valid trip prices, passenger capacity and luggage capacity.");
       return;
     }
 
     if (image) {
       try {
         const parsedURL = new URL(image);
-
-        if (
-          parsedURL.protocol !== "https:" &&
-          parsedURL.protocol !== "http:"
-        ) {
+        if (parsedURL.protocol !== "https:" && parsedURL.protocol !== "http:") {
           throw new Error("Invalid image URL");
         }
       } catch {
@@ -353,17 +315,12 @@ function AdminVehicles() {
     }
 
     const selectedDriverId = vehicleForm.driverId.trim();
-
     const selectedDriver = selectedDriverId
-      ? drivers.find(
-          (driver) => driver.firebaseId === selectedDriverId
-        )
+      ? drivers.find((driver) => driver.firebaseId === selectedDriverId)
       : null;
 
     if (selectedDriverId && !selectedDriver) {
-      setError(
-        "The selected driver could not be found. Please refresh and select again."
-      );
+      setError("The selected driver could not be found. Please refresh and select again.");
       return;
     }
 
@@ -371,19 +328,21 @@ function AdminVehicles() {
       name,
       number,
       type: vehicleForm.type,
-
       driverId: selectedDriver?.firebaseId || "",
       driver: selectedDriver?.name || "Unassigned",
-
       status: vehicleForm.status,
       location,
       image,
       description: vehicleForm.description.trim(),
 
-      pricePerKm,
+      oneWayPricePerKm,
+      roadTripPricePerKm,
+
+      // Backward compatibility: older pages still read pricePerKm.
+      pricePerKm: oneWayPricePerKm,
+
       passengers,
       luggage,
-
       updatedAt: serverTimestamp(),
     };
 
@@ -395,35 +354,24 @@ function AdminVehicles() {
         : doc(collection(db, VEHICLES_COLLECTION));
 
       await runTransaction(db, async (transaction) => {
-        // READ 1: Existing vehicle, if editing.
         let currentVehicleData = {};
 
         if (editingVehicle) {
           const vehicleSnapshot = await transaction.get(vehicleRef);
-
           if (!vehicleSnapshot.exists()) {
             throw new Error("This vehicle no longer exists.");
           }
-
           currentVehicleData = vehicleSnapshot.data();
         }
 
         const previousDriverId = currentVehicleData.driverId || "";
 
-        // READ 2: Manually selected driver.
         let selectedDriverRef = null;
         let selectedDriverData = null;
 
         if (selectedDriverId) {
-          selectedDriverRef = doc(
-            db,
-            DRIVERS_COLLECTION,
-            selectedDriverId
-          );
-
-          const selectedSnapshot = await transaction.get(
-            selectedDriverRef
-          );
+          selectedDriverRef = doc(db, DRIVERS_COLLECTION, selectedDriverId);
+          const selectedSnapshot = await transaction.get(selectedDriverRef);
 
           if (!selectedSnapshot.exists()) {
             throw new Error("The selected driver no longer exists.");
@@ -432,58 +380,32 @@ function AdminVehicles() {
           selectedDriverData = selectedSnapshot.data();
         }
 
-        // READ 3: Previously assigned driver.
         let previousDriverRef = null;
         let previousDriverData = null;
 
-        if (
-          previousDriverId &&
-          previousDriverId !== selectedDriverId
-        ) {
-          previousDriverRef = doc(
-            db,
-            DRIVERS_COLLECTION,
-            previousDriverId
-          );
-
-          const previousSnapshot = await transaction.get(
-            previousDriverRef
-          );
+        if (previousDriverId && previousDriverId !== selectedDriverId) {
+          previousDriverRef = doc(db, DRIVERS_COLLECTION, previousDriverId);
+          const previousSnapshot = await transaction.get(previousDriverRef);
 
           if (previousSnapshot.exists()) {
             previousDriverData = previousSnapshot.data();
           }
         }
 
-        // READ 4: Previous vehicle of the selected driver.
         let previousVehicleRef = null;
         let previousVehicleData = null;
+        const previousVehicleId = selectedDriverData?.vehicleId || "";
 
-        const previousVehicleId =
-          selectedDriverData?.vehicleId || "";
-
-        if (
-          previousVehicleId &&
-          previousVehicleId !== vehicleRef.id
-        ) {
-          previousVehicleRef = doc(
-            db,
-            VEHICLES_COLLECTION,
-            previousVehicleId
-          );
-
-          const previousVehicleSnapshot = await transaction.get(
-            previousVehicleRef
-          );
+        if (previousVehicleId && previousVehicleId !== vehicleRef.id) {
+          previousVehicleRef = doc(db, VEHICLES_COLLECTION, previousVehicleId);
+          const previousVehicleSnapshot = await transaction.get(previousVehicleRef);
 
           if (previousVehicleSnapshot.exists()) {
             previousVehicleData = previousVehicleSnapshot.data();
           }
         }
 
-        // All reads are complete. Now perform writes.
-
-        // Clear the old driver's assignment.
+        // All transaction reads are completed before any writes.
         if (
           previousDriverRef &&
           previousDriverData?.vehicleId === vehicleRef.id
@@ -494,8 +416,6 @@ function AdminVehicles() {
           });
         }
 
-        // If the selected driver already has another vehicle,
-        // unassign that vehicle.
         if (
           previousVehicleRef &&
           previousVehicleData?.driverId === selectedDriverId
@@ -507,7 +427,6 @@ function AdminVehicles() {
           });
         }
 
-        // Save the vehicle.
         if (editingVehicle) {
           transaction.update(vehicleRef, vehicleData);
         } else {
@@ -517,7 +436,6 @@ function AdminVehicles() {
           });
         }
 
-        // Assign the selected driver to this vehicle.
         if (selectedDriverRef) {
           transaction.update(selectedDriverRef, {
             vehicleId: vehicleRef.id,
@@ -526,15 +444,12 @@ function AdminVehicles() {
         }
       });
 
-      console.log("Vehicle saved and driver assignment synchronized.");
-
       setShowForm(false);
       setEditingVehicle(null);
       setVehicleForm({ ...EMPTY_FORM });
       setError("");
     } catch (firebaseError) {
       console.error("Error saving vehicle:", firebaseError);
-
       setError(
         firebaseError.message ||
           "Could not save the vehicle. Check your Firebase connection and Firestore rules."
@@ -544,26 +459,14 @@ function AdminVehicles() {
     }
   }
 
-  /* =========================================
-     DELETE VEHICLE
-     ALSO UNASSIGN DRIVER
-  ========================================= */
-
   async function removeVehicle(vehicle) {
-    const confirmed = window.confirm(
-      `Are you sure you want to delete ${vehicle.name}?`
-    );
-
+    const confirmed = window.confirm(`Are you sure you want to delete ${vehicle.name}?`);
     if (!confirmed) return;
 
     setError("");
 
     try {
-      const vehicleRef = doc(
-        db,
-        VEHICLES_COLLECTION,
-        vehicle.firebaseId
-      );
+      const vehicleRef = doc(db, VEHICLES_COLLECTION, vehicle.firebaseId);
 
       await runTransaction(db, async (transaction) => {
         const vehicleSnapshot = await transaction.get(vehicleRef);
@@ -574,40 +477,24 @@ function AdminVehicles() {
 
         const currentData = vehicleSnapshot.data();
         const assignedDriverId = currentData.driverId || "";
+        const matchingDriver = drivers.find(
+          (driver) => driver.vehicleId === vehicle.firebaseId
+        );
+        const driverIdToCheck = assignedDriverId || matchingDriver?.firebaseId || "";
 
         let assignedDriverRef = null;
         let assignedDriverData = null;
 
-        // Fallback for older records where driverId is missing
-        // but the driver still references this vehicle.
-        const matchingDriver = drivers.find(
-          (driver) => driver.vehicleId === vehicle.firebaseId
-        );
-
-        const driverIdToCheck =
-          assignedDriverId || matchingDriver?.firebaseId || "";
-
         if (driverIdToCheck) {
-          assignedDriverRef = doc(
-            db,
-            DRIVERS_COLLECTION,
-            driverIdToCheck
-          );
-
-          const driverSnapshot = await transaction.get(
-            assignedDriverRef
-          );
+          assignedDriverRef = doc(db, DRIVERS_COLLECTION, driverIdToCheck);
+          const driverSnapshot = await transaction.get(assignedDriverRef);
 
           if (driverSnapshot.exists()) {
             assignedDriverData = driverSnapshot.data();
           }
         }
 
-        // Unassign driver if this vehicle belongs to them.
-        if (
-          assignedDriverRef &&
-          assignedDriverData?.vehicleId === vehicle.firebaseId
-        ) {
+        if (assignedDriverRef && assignedDriverData?.vehicleId === vehicle.firebaseId) {
           transaction.update(assignedDriverRef, {
             vehicleId: "",
             updatedAt: serverTimestamp(),
@@ -616,11 +503,8 @@ function AdminVehicles() {
 
         transaction.delete(vehicleRef);
       });
-
-      console.log("Vehicle deleted successfully.");
     } catch (firebaseError) {
       console.error("Error deleting vehicle:", firebaseError);
-
       setError(
         firebaseError.message ||
           "Could not delete the vehicle. Check your Firestore rules."
@@ -628,119 +512,67 @@ function AdminVehicles() {
     }
   }
 
-  /* =========================================
-     VEHICLE STATISTICS
-  ========================================= */
-
   const availableCount = vehicles.filter(
     (vehicle) => vehicle.status === "Available"
   ).length;
 
-  /* =========================================
-     RENDER
-  ========================================= */
-
   return (
     <div className="vehicles-page">
-
-      {/* HEADER */}
-
       <div className="vehicles-header">
         <div>
           <h1>Vehicles</h1>
           <p>Manage your fleet and vehicle information.</p>
         </div>
 
-        <button
-          type="button"
-          className="vehicles-add-btn"
-          onClick={openAddVehicle}
-        >
+        <button type="button" className="vehicles-add-btn" onClick={openAddVehicle}>
           <Plus size={18} />
           Add Vehicle
         </button>
       </div>
 
-      {/* STATISTICS */}
-
       <div className="vehicles-stats">
-
         <div className="vehicles-stat-card">
-          <span className="vehicles-stat-icon">
-            <CarFront size={21} />
-          </span>
-
-          <div>
-            <p>Total Vehicles</p>
-            <h2>{vehicles.length}</h2>
-          </div>
+          <span className="vehicles-stat-icon"><CarFront size={21} /></span>
+          <div><p>Total Vehicles</p><h2>{vehicles.length}</h2></div>
         </div>
 
         <div className="vehicles-stat-card">
-          <span className="vehicles-stat-icon">
-            <RefreshCw size={21} />
-          </span>
-
-          <div>
-            <p>Available</p>
-            <h2>{availableCount}</h2>
-          </div>
+          <span className="vehicles-stat-icon"><RefreshCw size={21} /></span>
+          <div><p>Available</p><h2>{availableCount}</h2></div>
         </div>
-
       </div>
 
-      {/* ERROR */}
-
-      {error && (
-        <div className="vehicles-error">
-          {error}
-        </div>
-      )}
-
-      {/* VEHICLE TABLE */}
+      {error && <div className="vehicles-error">{error}</div>}
 
       <div className="vehicles-content">
-
         <div className="vehicles-content-header">
           <h2>All Vehicles</h2>
           <span>{vehicles.length} vehicles</span>
         </div>
 
         {loading ? (
-          <div className="vehicles-empty">
-            Loading vehicles...
-          </div>
+          <div className="vehicles-empty">Loading vehicles...</div>
         ) : vehicles.length === 0 ? (
           <div className="vehicles-empty">
             <CarFront size={38} />
-
             <h3>No vehicles added yet</h3>
-
-            <p>
-              Add your first vehicle to your MANZILL 777 fleet.
-            </p>
-
-            <button
-              type="button"
-              className="vehicles-add-btn"
-              onClick={openAddVehicle}
-            >
+            <p>Add your first vehicle to your MANZILL 777 fleet.</p>
+            <button type="button" className="vehicles-add-btn" onClick={openAddVehicle}>
               <Plus size={18} />
               Add Vehicle
             </button>
           </div>
         ) : (
           <div className="vehicles-table-wrapper">
-
             <table className="vehicles-table">
-
               <thead>
                 <tr>
                   <th>Vehicle</th>
                   <th>Registration</th>
                   <th>Type</th>
                   <th>Driver</th>
-                  <th>Price / km</th>
+                  <th>One Way / km</th>
+                  <th>Road Trip / km</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
@@ -749,28 +581,20 @@ function AdminVehicles() {
               <tbody>
                 {vehicles.map((vehicle) => (
                   <tr key={vehicle.firebaseId}>
-
                     <td>
                       <div className="vehicles-name-cell">
-
-                        <VehicleThumbnail
-                          src={vehicle.image}
-                          name={vehicle.name}
-                        />
-
+                        <VehicleThumbnail src={vehicle.image} name={vehicle.name} />
                         <div>
                           <strong>{vehicle.name}</strong>
                           <small>{vehicle.location}</small>
                         </div>
-
                       </div>
                     </td>
-
                     <td>{vehicle.number}</td>
                     <td>{vehicle.type}</td>
                     <td>{vehicle.driver || "Unassigned"}</td>
-                    <td>₹{vehicle.pricePerKm}</td>
-
+                    <td>₹{vehicle.oneWayPricePerKm}</td>
+                    <td>₹{vehicle.roadTripPricePerKm}</td>
                     <td>
                       <span
                         className={`vehicles-status ${
@@ -784,10 +608,8 @@ function AdminVehicles() {
                         {vehicle.status}
                       </span>
                     </td>
-
                     <td>
                       <div className="vehicles-actions">
-
                         <button
                           type="button"
                           className="vehicles-edit-btn"
@@ -796,7 +618,6 @@ function AdminVehicles() {
                         >
                           <Pencil size={16} />
                         </button>
-
                         <button
                           type="button"
                           className="vehicles-delete-btn"
@@ -805,50 +626,35 @@ function AdminVehicles() {
                         >
                           <Trash2 size={16} />
                         </button>
-
                       </div>
                     </td>
-
                   </tr>
                 ))}
               </tbody>
-
             </table>
-
           </div>
         )}
-
       </div>
-
-      {/* ADD / EDIT MODAL */}
 
       {showForm && (
         <div
           className="vehicles-modal-overlay"
           onMouseDown={(event) => {
-            if (event.target === event.currentTarget) {
-              closeForm();
-            }
+            if (event.target === event.currentTarget) closeForm();
           }}
         >
-
           <div
             className="vehicles-modal"
             role="dialog"
             aria-modal="true"
             aria-labelledby="vehicle-form-title"
           >
-
             <div className="vehicles-modal-header">
-
               <div>
                 <h2 id="vehicle-form-title">
                   {editingVehicle ? "Edit Vehicle" : "Add New Vehicle"}
                 </h2>
-
-                <p>
-                  Vehicle information will be saved to Firebase.
-                </p>
+                <p>Vehicle information will be saved to Firebase.</p>
               </div>
 
               <button
@@ -860,16 +666,12 @@ function AdminVehicles() {
               >
                 <X size={21} />
               </button>
-
             </div>
 
             <form onSubmit={saveVehicle}>
-
               <div className="vehicles-form-grid">
-
                 <label className="vehicles-form-group">
                   <span>Vehicle Name *</span>
-
                   <input
                     name="name"
                     value={vehicleForm.name}
@@ -881,7 +683,6 @@ function AdminVehicles() {
 
                 <label className="vehicles-form-group">
                   <span>Registration Number *</span>
-
                   <input
                     name="number"
                     value={vehicleForm.number}
@@ -893,13 +694,7 @@ function AdminVehicles() {
 
                 <label className="vehicles-form-group">
                   <span>Vehicle Type *</span>
-
-                  <select
-                    name="type"
-                    value={vehicleForm.type}
-                    onChange={updateField}
-                    required
-                  >
+                  <select name="type" value={vehicleForm.type} onChange={updateField} required>
                     <option value="Sedan">Sedan</option>
                     <option value="SUV">SUV</option>
                     <option value="Premium">Premium</option>
@@ -910,71 +705,58 @@ function AdminVehicles() {
 
                 <label className="vehicles-form-group">
                   <span>Status *</span>
-
-                  <select
-                    name="status"
-                    value={vehicleForm.status}
-                    onChange={updateField}
-                    required
-                  >
+                  <select name="status" value={vehicleForm.status} onChange={updateField} required>
                     <option value="Available">Available</option>
                     <option value="On Trip">On Trip</option>
                     <option value="Maintenance">Maintenance</option>
                   </select>
                 </label>
 
-                {/* MANUAL DRIVER DROPDOWN */}
-
                 <label className="vehicles-form-group vehicles-form-full">
                   <span>Assigned Driver</span>
-
                   <select
                     name="driverId"
                     value={vehicleForm.driverId}
                     onChange={handleDriverSelection}
                   >
-                    <option value="">
-                      Unassigned
-                    </option>
-
+                    <option value="">Unassigned</option>
                     {drivers.map((driver) => (
-                      <option
-                        key={driver.firebaseId}
-                        value={driver.firebaseId}
-                      >
+                      <option key={driver.firebaseId} value={driver.firebaseId}>
                         {driver.name} ({driver.id})
                       </option>
                     ))}
                   </select>
-
-                  <small>
-                    Select the driver you want to assign to this vehicle.
-                  </small>
+                  <small>Select the driver you want to assign to this vehicle.</small>
                 </label>
 
                 <label className="vehicles-form-group">
-                  <span>
-                    <IndianRupee size={15} />
-                    Price per kilometre
-                  </span>
-
+                  <span><IndianRupee size={15} /> One Way Price per km *</span>
                   <input
-                    name="pricePerKm"
+                    name="oneWayPricePerKm"
                     type="number"
                     min="0"
                     step="0.5"
-                    value={vehicleForm.pricePerKm}
+                    value={vehicleForm.oneWayPricePerKm}
                     onChange={updateField}
                     required
                   />
                 </label>
 
                 <label className="vehicles-form-group">
-                  <span>
-                    <Users size={15} />
-                    Passenger Capacity
-                  </span>
+                  <span><IndianRupee size={15} /> Road Trip Price per km *</span>
+                  <input
+                    name="roadTripPricePerKm"
+                    type="number"
+                    min="0"
+                    step="0.5"
+                    value={vehicleForm.roadTripPricePerKm}
+                    onChange={updateField}
+                    required
+                  />
+                </label>
 
+                <label className="vehicles-form-group">
+                  <span><Users size={15} /> Passenger Capacity</span>
                   <input
                     name="passengers"
                     type="number"
@@ -986,11 +768,7 @@ function AdminVehicles() {
                 </label>
 
                 <label className="vehicles-form-group">
-                  <span>
-                    <BriefcaseBusiness size={15} />
-                    Luggage Capacity
-                  </span>
-
+                  <span><BriefcaseBusiness size={15} /> Luggage Capacity</span>
                   <input
                     name="luggage"
                     type="number"
@@ -1002,11 +780,7 @@ function AdminVehicles() {
                 </label>
 
                 <label className="vehicles-form-group">
-                  <span>
-                    <MapPin size={15} />
-                    Current Location *
-                  </span>
-
+                  <span><MapPin size={15} /> Current Location *</span>
                   <input
                     name="location"
                     value={vehicleForm.location}
@@ -1017,11 +791,7 @@ function AdminVehicles() {
                 </label>
 
                 <label className="vehicles-form-group vehicles-form-full">
-                  <span>
-                    <ImageIcon size={15} />
-                    Vehicle Image URL
-                  </span>
-
+                  <span><ImageIcon size={15} /> Vehicle Image URL</span>
                   <input
                     name="image"
                     type="url"
@@ -1029,15 +799,11 @@ function AdminVehicles() {
                     onChange={updateField}
                     placeholder="https://example.com/vehicle.jpg"
                   />
-
-                  <small>
-                    Use a publicly accessible direct image URL.
-                  </small>
+                  <small>Use a publicly accessible direct image URL.</small>
                 </label>
 
                 <label className="vehicles-form-group vehicles-form-full">
                   <span>Description</span>
-
                   <textarea
                     name="description"
                     value={vehicleForm.description}
@@ -1046,17 +812,11 @@ function AdminVehicles() {
                     rows={3}
                   />
                 </label>
-
               </div>
 
-              {error && (
-                <div className="vehicles-error vehicles-form-error">
-                  {error}
-                </div>
-              )}
+              {error && <div className="vehicles-error vehicles-form-error">{error}</div>}
 
               <div className="vehicles-form-actions">
-
                 <button
                   type="button"
                   className="vehicles-cancel-btn"
@@ -1065,28 +825,14 @@ function AdminVehicles() {
                 >
                   Cancel
                 </button>
-
-                <button
-                  type="submit"
-                  className="vehicles-save-btn"
-                  disabled={saving}
-                >
-                  {saving
-                    ? "Saving..."
-                    : editingVehicle
-                      ? "Update Vehicle"
-                      : "Save Vehicle"}
+                <button type="submit" className="vehicles-save-btn" disabled={saving}>
+                  {saving ? "Saving..." : editingVehicle ? "Update Vehicle" : "Save Vehicle"}
                 </button>
-
               </div>
-
             </form>
-
           </div>
-
         </div>
       )}
-
     </div>
   );
 }
