@@ -88,6 +88,8 @@ function Booking() {
 
   const [showRideBookedPopup, setShowRideBookedPopup] = useState(false);
   const [acceptedBookingId, setAcceptedBookingId] = useState(null);
+  const [showBookingSuccessPopup, setShowBookingSuccessPopup] =
+  useState(false);
 
   const isRoadTrip = tripType === "Road Trip";
 
@@ -787,15 +789,8 @@ function Booking() {
         bookingRef.id
       );
 
-      setSuccess(
-        "Booking request submitted successfully!"
-      );
-
-      alert(
-        "Booking request submitted successfully!"
-      );
-
-      navigate("/");
+     setSuccess("Booking request submitted successfully!");
+setShowBookingSuccessPopup(true);
     } catch (firebaseError) {
       console.error(
         "Booking creation error:",
