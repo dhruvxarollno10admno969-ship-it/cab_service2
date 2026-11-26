@@ -88,6 +88,8 @@ function Booking() {
 
   const [showRideBookedPopup, setShowRideBookedPopup] = useState(false);
   const [acceptedBookingId, setAcceptedBookingId] = useState(null);
+  const [showBookingSuccessPopup, setShowBookingSuccessPopup] =
+  useState(false);
 
   const isRoadTrip = tripType === "Road Trip";
 
@@ -782,7 +784,181 @@ const handleSubmit = async (event) => {
     } catch (emailError) {
       console.error("EmailJS notification failed:", emailError);
 
+<<<<<<< HEAD
       // Booking remains saved in Firebase.
+=======
+      if (!customerSnapshot.exists()) {
+        navigate("/complete-profile", {
+          state: {
+            from: "/booking",
+          },
+        });
+
+        return;
+      }
+
+      const customerData = customerSnapshot.data();
+
+      // -----------------------------------------------
+      // 3. VALIDATE REQUIRED PROFILE FIELDS
+      // -----------------------------------------------
+
+      const requiredFields = [
+        "name",
+        "phone",
+        "address",
+        "city",
+        "state",
+        "country",
+      ];
+
+      const missingFields = requiredFields.filter(
+        (field) =>
+          !customerData[field] ||
+          String(customerData[field]).trim() === ""
+      );
+
+      if (missingFields.length > 0) {
+        navigate("/complete-profile", {
+          state: {
+            from: "/booking",
+          },
+        });
+
+        return;
+      }
+
+      // -----------------------------------------------
+      // 4. GET CUSTOMER DETAILS
+      // -----------------------------------------------
+
+      const customerName = String(
+        customerData.name
+      ).trim();
+
+      const customerPhone = String(
+        customerData.phone
+      ).trim();
+
+      // -----------------------------------------------
+      // 5. PREPARE BOOKING DATA
+      // -----------------------------------------------
+
+      const bookingData = {
+        uid: user.uid,
+
+        customer: customerName,
+        email: user.email || "",
+        phone: customerPhone,
+
+        tripType,
+
+        pickup: pickup.trim(),
+        destination: destination.trim(),
+
+        returnPickup: isRoadTrip
+          ? pickup.trim()
+          : "",
+
+        date,
+        time,
+
+        returnTime: isRoadTrip
+          ? returnTime
+          : "",
+
+        vehicle: selectedVehicle.name,
+        vehicleId: selectedVehicle.id,
+
+        passengers: Number(passengers),
+
+        oneWayDistance: Number(
+          oneWayDistance.toFixed(1)
+        ),
+
+        returnDistance: isRoadTrip
+          ? Number(returnDistance.toFixed(1))
+          : 0,
+
+        distance: Number(distance.toFixed(1)),
+
+        oneWayDuration: Number(oneWayDuration),
+
+        returnDuration: isRoadTrip
+          ? Number(returnDuration)
+          : 0,
+
+        duration: Number(duration),
+
+        fare: Number(fare),
+
+        baseFare: Number(
+          selectedVehicle.baseFare
+        ),
+
+        toll: 0,
+
+        pricePerKm: Number(
+          selectedPricePerKm
+        ),
+
+        oneWayPricePerKm: Number(
+          selectedVehicle.oneWayPricePerKm
+        ),
+
+        roadTripPricePerKm: Number(
+          selectedVehicle.roadTripPricePerKm
+        ),
+
+        status: "Pending",
+        notificationShown: false,
+
+        bookedAt: new Date().toISOString(),
+        createdAt: serverTimestamp(),
+      };
+
+      // -----------------------------------------------
+      // 6. SAVE BOOKING TO FIRESTORE
+      // -----------------------------------------------
+
+      console.log(
+        "Creating Firebase booking:",
+        bookingData
+      );
+
+      const bookingRef = await addDoc(
+        collection(db, "bookings"),
+        bookingData
+      );
+
+      console.log(
+        "Booking created successfully:",
+        bookingRef.id
+      );
+
+     setSuccess("Booking request submitted successfully!");
+setShowBookingSuccessPopup(true);
+    } catch (firebaseError) {
+      console.error(
+        "Booking creation error:",
+        firebaseError
+      );
+
+      if (
+        firebaseError?.code === "permission-denied"
+      ) {
+        setError(
+          "Firebase permission denied. Check your Firestore security rules."
+        );
+      } else {
+        setError(
+          firebaseError?.message ||
+            "Unable to create booking. Please try again."
+        );
+      }
+    } finally {
+      setLoading(false);
+>>>>>>> origin/develop
     }
 
     // ========================================
