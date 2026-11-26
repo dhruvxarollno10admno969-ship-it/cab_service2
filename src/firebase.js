@@ -24,29 +24,17 @@ const firebaseConfig = {
   measurementId: "G-H42S14Y6JT",
 };
 
+// ========================================
+// INITIALIZE FIREBASE
+// ========================================
+
 export const app = initializeApp(firebaseConfig);
-
-// ========================================
-// FIREBASE SERVICES
-// ========================================
-
-export const auth = getAuth(app);
-export const db = getFirestore(app);
 
 // ========================================
 // FIREBASE APP CHECK
 // ========================================
 
-const isDevelopment = import.meta.env.DEV;
-
 const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
-
-if (isDevelopment) {
-  const debugToken = import.meta.env.VITE_FIREBASE_APPCHECK_DEBUG_TOKEN;
-
-  // Enable Firebase App Check debug mode.
-  self.FIREBASE_APPCHECK_DEBUG_TOKEN = debugToken || true;
-}
 
 if (!recaptchaSiteKey) {
   throw new Error(
@@ -54,10 +42,24 @@ if (!recaptchaSiteKey) {
   );
 }
 
+// Enable App Check debug mode during development.
+if (import.meta.env.DEV) {
+  const debugToken = import.meta.env.VITE_FIREBASE_APPCHECK_DEBUG_TOKEN;
+
+  self.FIREBASE_APPCHECK_DEBUG_TOKEN = debugToken || true;
+}
+
 export const appCheck = initializeAppCheck(app, {
   provider: new ReCaptchaV3Provider(recaptchaSiteKey),
   isTokenAutoRefreshEnabled: true,
 });
+
+// ========================================
+// FIREBASE SERVICES
+// ========================================
+
+export const auth = getAuth(app);
+export const db = getFirestore(app);
 
 // ========================================
 // FIREBASE CLOUD FUNCTIONS

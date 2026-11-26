@@ -6,7 +6,7 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-
+import emailjs from "@emailjs/browser";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -520,304 +520,300 @@ function Booking() {
   // SUBMIT BOOKING
   // =====================================================
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
 
-    setError("");
-    setSuccess("");
+const handleSubmit = async (event) => {
+  event.preventDefault();
 
-    if (!pickup.trim() || !destination.trim()) {
-      setError(
-        "Please enter pickup and destination."
-      );
+  setError("");
+  setSuccess("");
+
+  // ========================================
+  // 1. VALIDATE BOOKING DETAILS
+  // ========================================
+
+  if (!pickup.trim() || !destination.trim()) {
+    setError("Please enter pickup and destination.");
+    return;
+  }
+
+  if (distance === null || !Number.isFinite(distance)) {
+    setError("Please calculate the complete route before continuing.");
+    return;
+  }
+
+  if (
+    isRoadTrip &&
+    (returnDistance === null || returnDuration === null)
+  ) {
+    setError("Please calculate both legs of the Road Trip.");
+    return;
+  }
+
+  if (!selectedVehicle) {
+    setError("Please select an available vehicle.");
+    return;
+  }
+
+  if (!date || !time) {
+    setError("Please select your pickup date and time.");
+    return;
+  }
+
+  const today = new Date();
+
+  const localToday = [
+    today.getFullYear(),
+    String(today.getMonth() + 1).padStart(2, "0"),
+    String(today.getDate()).padStart(2, "0"),
+  ].join("-");
+
+  if (date < localToday) {
+    setError("Pickup date cannot be in the past.");
+    return;
+  }
+
+  if (isRoadTrip) {
+    if (!returnTime) {
+      setError("Please select your return time for the Road Trip.");
       return;
     }
 
-    if (
-      distance === null ||
-      !Number.isFinite(distance)
-    ) {
+    if (returnTime <= time) {
       setError(
-        "Please calculate the complete route before continuing."
+        "Return time must be later than pickup time on the same day."
       );
       return;
     }
+  }
 
-    if (
-      isRoadTrip &&
-      (returnDistance === null ||
-        returnDuration === null)
-    ) {
-      setError(
-        "Please calculate both legs of the Road Trip."
-      );
+  // ========================================
+  // 2. CHECK AUTHENTICATION
+  // ========================================
+
+  const user = auth.currentUser;
+
+  if (!user) {
+    setError("Please log in before creating a booking.");
+    return;
+  }
+
+  if (
+    passengers < 1 ||
+    passengers > selectedVehicle.maxPassengers
+  ) {
+    setError("Passenger count exceeds the selected car's capacity.");
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    // ========================================
+    // 3. LOAD CUSTOMER PROFILE
+    // ========================================
+
+    const customerRef = doc(db, "customers", user.uid);
+
+    const customerSnapshot = await getDoc(customerRef);
+
+    if (!customerSnapshot.exists()) {
+      navigate("/complete-profile", {
+        state: {
+          from: "/booking",
+        },
+      });
+
       return;
     }
 
-    if (!selectedVehicle) {
-      setError(
-        "Please select an available vehicle."
-      );
+    const customerData = customerSnapshot.data();
+
+    // ========================================
+    // 4. VALIDATE CUSTOMER PROFILE
+    // ========================================
+
+    const requiredFields = [
+      "name",
+      "phone",
+      "address",
+      "city",
+      "state",
+      "country",
+    ];
+
+    const missingFields = requiredFields.filter(
+      (field) =>
+        !customerData[field] ||
+        String(customerData[field]).trim() === ""
+    );
+
+    if (missingFields.length > 0) {
+      navigate("/complete-profile", {
+        state: {
+          from: "/booking",
+        },
+      });
+
       return;
     }
 
-    if (!date || !time) {
-      setError(
-        "Please select your pickup date and time."
-      );
-      return;
-    }
+    const customerName = String(customerData.name).trim();
+    const customerPhone = String(customerData.phone).trim();
 
-    const today = new Date();
-    const localToday = [
-      today.getFullYear(),
-      String(today.getMonth() + 1).padStart(2, "0"),
-      String(today.getDate()).padStart(2, "0"),
-    ].join("-");
+    // ========================================
+    // 5. PREPARE BOOKING DATA
+    // ========================================
 
-    if (date < localToday) {
-      setError(
-        "Pickup date cannot be in the past."
-      );
-      return;
-    }
+    const bookingData = {
+      uid: user.uid,
 
-    if (isRoadTrip) {
-      if (!returnTime) {
-        setError(
-          "Please select your return time for the Road Trip."
-        );
-        return;
-      }
+      customer: customerName,
+      email: user.email || "",
+      phone: customerPhone,
 
-      if (returnTime <= time) {
-        setError(
-          "Return time must be later than pickup time on the same day."
-        );
-        return;
-      }
-    }
+      tripType,
 
-    const user = auth.currentUser;
+      pickup: pickup.trim(),
+      destination: destination.trim(),
 
-    if (!user) {
-      setError(
-        "Please log in before creating a booking."
-      );
-      return;
-    }
+      returnPickup: isRoadTrip ? pickup.trim() : "",
 
-    if (
-      passengers < 1 ||
-      passengers > selectedVehicle.maxPassengers
-    ) {
-      setError(
-        "Passenger count exceeds the selected car's capacity."
-      );
-      return;
-    }
+      date,
+      time,
 
-    setLoading(true);
+      returnTime: isRoadTrip ? returnTime : "",
+
+      vehicle: selectedVehicle.name,
+      vehicleId: selectedVehicle.id,
+
+      passengers: Number(passengers),
+
+      oneWayDistance: Number(oneWayDistance.toFixed(1)),
+
+      returnDistance: isRoadTrip
+        ? Number(returnDistance.toFixed(1))
+        : 0,
+
+      distance: Number(distance.toFixed(1)),
+
+      oneWayDuration: Number(oneWayDuration),
+
+      returnDuration: isRoadTrip
+        ? Number(returnDuration)
+        : 0,
+
+      duration: Number(duration),
+
+      fare: Number(fare),
+
+      baseFare: Number(selectedVehicle.baseFare),
+
+      toll: 0,
+
+      pricePerKm: Number(selectedPricePerKm),
+
+      oneWayPricePerKm: Number(
+        selectedVehicle.oneWayPricePerKm
+      ),
+
+      roadTripPricePerKm: Number(
+        selectedVehicle.roadTripPricePerKm
+      ),
+
+      status: "Pending",
+      notificationShown: false,
+
+      bookedAt: new Date().toISOString(),
+      createdAt: serverTimestamp(),
+    };
+
+    // ========================================
+    // 6. SAVE BOOKING TO FIRESTORE
+    // ========================================
+
+    const bookingRef = await addDoc(
+      collection(db, "bookings"),
+      bookingData
+    );
+
+    console.log("Booking created:", bookingRef.id);
+
+    // ========================================
+    // 7. SEND BOOKING EMAIL TO ADMIN
+    // ========================================
 
     try {
-      // -----------------------------------------------
-      // 1. LOAD CUSTOMER PROFILE
-      // -----------------------------------------------
+      await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        {
+          booking_id: bookingRef.id,
 
-      const customerRef = doc(
-        db,
-        "customers",
-        user.uid
+          trip_type: bookingData.tripType,
+          status: bookingData.status,
+
+          customer_name: bookingData.customer,
+          customer_email: bookingData.email,
+          customer_phone: bookingData.phone,
+
+          pickup: bookingData.pickup,
+          destination: bookingData.destination,
+
+          date: bookingData.date,
+          time: bookingData.time,
+
+          return_time: bookingData.returnTime || "N/A",
+
+          vehicle: bookingData.vehicle,
+          passengers: bookingData.passengers,
+
+          distance: bookingData.distance,
+          duration: bookingData.duration,
+
+          fare: bookingData.fare,
+        },
+        {
+          publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
+        }
       );
 
-      const customerSnapshot = await getDoc(
-        customerRef
-      );
+      console.log("Admin email sent successfully!");
 
-      // -----------------------------------------------
-      // 2. CHECK PROFILE EXISTS
-      // -----------------------------------------------
+    } catch (emailError) {
+      console.error("EmailJS notification failed:", emailError);
 
-      if (!customerSnapshot.exists()) {
-        navigate("/complete-profile", {
-          state: {
-            from: "/booking",
-          },
-        });
-
-        return;
-      }
-
-      const customerData = customerSnapshot.data();
-
-      // -----------------------------------------------
-      // 3. VALIDATE REQUIRED PROFILE FIELDS
-      // -----------------------------------------------
-
-      const requiredFields = [
-        "name",
-        "phone",
-        "address",
-        "city",
-        "state",
-        "country",
-      ];
-
-      const missingFields = requiredFields.filter(
-        (field) =>
-          !customerData[field] ||
-          String(customerData[field]).trim() === ""
-      );
-
-      if (missingFields.length > 0) {
-        navigate("/complete-profile", {
-          state: {
-            from: "/booking",
-          },
-        });
-
-        return;
-      }
-
-      // -----------------------------------------------
-      // 4. GET CUSTOMER DETAILS
-      // -----------------------------------------------
-
-      const customerName = String(
-        customerData.name
-      ).trim();
-
-      const customerPhone = String(
-        customerData.phone
-      ).trim();
-
-      // -----------------------------------------------
-      // 5. PREPARE BOOKING DATA
-      // -----------------------------------------------
-
-      const bookingData = {
-        uid: user.uid,
-
-        customer: customerName,
-        email: user.email || "",
-        phone: customerPhone,
-
-        tripType,
-
-        pickup: pickup.trim(),
-        destination: destination.trim(),
-
-        returnPickup: isRoadTrip
-          ? pickup.trim()
-          : "",
-
-        date,
-        time,
-
-        returnTime: isRoadTrip
-          ? returnTime
-          : "",
-
-        vehicle: selectedVehicle.name,
-        vehicleId: selectedVehicle.id,
-
-        passengers: Number(passengers),
-
-        oneWayDistance: Number(
-          oneWayDistance.toFixed(1)
-        ),
-
-        returnDistance: isRoadTrip
-          ? Number(returnDistance.toFixed(1))
-          : 0,
-
-        distance: Number(distance.toFixed(1)),
-
-        oneWayDuration: Number(oneWayDuration),
-
-        returnDuration: isRoadTrip
-          ? Number(returnDuration)
-          : 0,
-
-        duration: Number(duration),
-
-        fare: Number(fare),
-
-        baseFare: Number(
-          selectedVehicle.baseFare
-        ),
-
-        toll: 0,
-
-        pricePerKm: Number(
-          selectedPricePerKm
-        ),
-
-        oneWayPricePerKm: Number(
-          selectedVehicle.oneWayPricePerKm
-        ),
-
-        roadTripPricePerKm: Number(
-          selectedVehicle.roadTripPricePerKm
-        ),
-
-        status: "Pending",
-        notificationShown: false,
-
-        bookedAt: new Date().toISOString(),
-        createdAt: serverTimestamp(),
-      };
-
-      // -----------------------------------------------
-      // 6. SAVE BOOKING TO FIRESTORE
-      // -----------------------------------------------
-
-      console.log(
-        "Creating Firebase booking:",
-        bookingData
-      );
-
-      const bookingRef = await addDoc(
-        collection(db, "bookings"),
-        bookingData
-      );
-
-      console.log(
-        "Booking created successfully:",
-        bookingRef.id
-      );
-
-      setSuccess(
-        "Booking request submitted successfully!"
-      );
-
-      alert(
-        "Booking request submitted successfully!"
-      );
-
-      navigate("/");
-    } catch (firebaseError) {
-      console.error(
-        "Booking creation error:",
-        firebaseError
-      );
-
-      if (
-        firebaseError?.code === "permission-denied"
-      ) {
-        setError(
-          "Firebase permission denied. Check your Firestore security rules."
-        );
-      } else {
-        setError(
-          firebaseError?.message ||
-            "Unable to create booking. Please try again."
-        );
-      }
-    } finally {
-      setLoading(false);
+      // Booking remains saved in Firebase.
     }
-  };
+
+    // ========================================
+    // 8. SUCCESS
+    // ========================================
+
+    setSuccess("Booking request submitted successfully!");
+
+    alert("Booking request submitted successfully!");
+
+    navigate("/");
+
+  } catch (firebaseError) {
+    console.error("Booking creation error:", firebaseError);
+
+    if (firebaseError?.code === "permission-denied") {
+      setError(
+        "Firebase permission denied. Check your Firestore security rules."
+      );
+    } else {
+      setError(
+        firebaseError?.message ||
+        "Unable to create booking. Please try again."
+      );
+    }
+
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   // =====================================================
   // UI

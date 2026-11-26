@@ -326,18 +326,51 @@ function AdminBooking() {
   // =====================================================
   // ACCEPT BOOKING
   // =====================================================
+  
+const handleAccept = async (id) => {
+  const booking = bookings.find((item) => item.id === id);
 
-  const handleAccept = async (id) => {
-    const success = await updateBookingStatus(id, "Confirmed");
+  if (!booking) {
+    toast.error("Booking not found.");
+    return;
+  }
 
-    if (!success) return;
+  // IMPORTANT: Open the tab BEFORE awaiting Firebase.
+  const whatsappWindow = window.open("about:blank", "_blank");
 
-    setSelectedBooking((previous) =>
-      previous?.id === id
-        ? { ...previous, status: "Confirmed" }
-        : previous
+  if (!whatsappWindow) {
+    toast.warning(
+      "Pop-up blocked. Please allow pop-ups for this website."
     );
+  }
+
+  // Update Firebase
+  const success = await updateBookingStatus(id, "Confirmed");
+
+  if (!success) {
+    if (whatsappWindow) whatsappWindow.close();
+    return;
+  }
+
+  const confirmedBooking = {
+    ...booking,
+    status: "Confirmed",
   };
+
+  setSelectedBooking((previous) =>
+    previous?.id === id ? confirmedBooking : previous
+  );
+
+  // Redirect the already-open tab to WhatsApp
+  if (whatsappWindow) {
+    handleWhatsAppConfirmation(
+      confirmedBooking,
+      whatsappWindow
+    );
+  }
+};
+
+
 
   // =====================================================
   // DECLINE BOOKING
@@ -375,87 +408,80 @@ function AdminBooking() {
   // MANUAL WHATSAPP CONFIRMATION
   // =====================================================
 
-  const handleWhatsAppConfirmation = (booking) => {
-    if (booking.status !== "Confirmed") {
-      toast.warning("Only confirmed bookings can receive a confirmation message.");
-      return;
-    }
+  
+const handleWhatsAppConfirmation = (
+  booking,
+  existingWindow = null
+) => {
+  if (booking.status !== "Confirmed") {
+    toast.warning("Only confirmed bookings can receive a confirmation message.");
+    return;
+  }
 
-    // IMPORTANT:
-    // The recipient is the CUSTOMER'S saved profile number.
-    // Never hardcode the admin's number here.
+  let phoneNumber = String(booking.phone || "").replace(/\D/g, "");
 
-    let phoneNumber = String(booking.phone || "").replace(/\D/g, "");
+  if (/^[6-9]\d{9}$/.test(phoneNumber)) {
+    phoneNumber = `91${phoneNumber}`;
+  }
 
-    // Convert 10-digit Indian number to international format.
-    if (/^[6-9]\d{9}$/.test(phoneNumber)) {
-      phoneNumber = `91${phoneNumber}`;
-    }
+  if (/^0[6-9]\d{9}$/.test(phoneNumber)) {
+    phoneNumber = `91${phoneNumber.slice(1)}`;
+  }
 
-    // Accept a number saved with 0 before the 10 digits.
-    if (/^0[6-9]\d{9}$/.test(phoneNumber)) {
-      phoneNumber = `91${phoneNumber.slice(1)}`;
-    }
+  if (!/^91[6-9]\d{9}$/.test(phoneNumber)) {
+    if (existingWindow) existingWindow.close();
 
-    // Validate Indian mobile number.
-    if (!/^91[6-9]\d{9}$/.test(phoneNumber)) {
-      toast.error(
-        "Customer phone number is missing or invalid. Check the customer's profile."
-      );
-      return;
-    }
-
-    const isRoadTrip =
-      String(booking.tripType).toLowerCase().includes("road");
-
-    const message = [
-      `Hello ${booking.customer}! 👋`,
-      "",
-      "Your MANZILL 777 ride is confirmed! 🚗",
-      "",
-      `Booking ID: ${booking.id}`,
-      `Trip Type: ${booking.tripType}`,
-      `Pickup: ${booking.pickup}`,
-      `Destination: ${booking.destination}`,
-      ...(isRoadTrip
-        ? [
-            `Return to: ${booking.returnPickup || booking.pickup}`,
-            `Return Time: ${booking.returnTime || "As discussed"}`,
-          ]
-        : []),
-      `Date: ${booking.date}`,
-      `Pickup Time: ${booking.time}`,
-      `Vehicle: ${booking.vehicle}`,
-      `Passengers: ${booking.passengers}`,
-      ...(booking.totalDistance
-        ? [`Total Distance: ${booking.totalDistance} km`]
-        : []),
-      `Total Fare: ₹${Number(booking.fare || 0).toLocaleString("en-IN")}`,
-      "",
-      "Thank you for choosing MANZILL 777.",
-      "Have a safe journey! ❤️",
-    ].join("\n");
-
-    const whatsappUrl =
-      `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-
-    // Opens WhatsApp with a prefilled message.
-    // Admin must press Send manually.
-    const whatsappWindow = window.open(
-      whatsappUrl,
-      "_blank",
-      "noopener,noreferrer"
+    toast.error(
+      "Customer phone number is missing or invalid."
     );
+    return;
+  }
 
-    if (!whatsappWindow) {
-      toast.warning(
-        "WhatsApp could not open. Please allow pop-ups in your browser."
-      );
-      return;
-    }
+  const isRoadTrip = String(booking.tripType)
+    .toLowerCase()
+    .includes("road");
 
-    toast.success("WhatsApp confirmation message is ready!");
-  };
+  const message = [
+    `Hello ${booking.customer}!`,
+    "",
+    "Your MANZILL77 ride is confirmed!",
+    "",
+    `Booking ID: ${booking.id}`,
+    `Trip Type: ${booking.tripType}`,
+    `Pickup: ${booking.pickup}`,
+    `Destination: ${booking.destination}`,
+    ...(isRoadTrip
+      ? [
+          `Return to: ${booking.returnPickup || booking.pickup}`,
+          `Return Time: ${booking.returnTime || "As discussed"}`,
+        ]
+      : []),
+    `Date: ${booking.date}`,
+    `Pickup Time: ${booking.time}`,
+    `Vehicle: ${booking.vehicle}`,
+    `Passengers: ${booking.passengers}`,
+    ...(booking.totalDistance
+      ? [`Total Distance: ${booking.totalDistance} km`]
+      : []),
+    `Total Fare: ₹${Number(booking.fare || 0).toLocaleString("en-IN")}`,
+    "",
+    "Thank you for choosing MANZILL77.",
+    "Have a safe journey!",
+  ].join("\n");
+
+  const whatsappUrl =
+    `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+  if (existingWindow) {
+    existingWindow.location.href = whatsappUrl;
+  } else {
+    // For manually clicking the WhatsApp button
+    window.open(whatsappUrl, "_blank");
+  }
+
+  toast.success("WhatsApp confirmation message is ready!");
+};
+
 
   // =====================================================
   // STATUS ICON

@@ -1,9 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { User, Mail, Phone, MapPin, Home, Pencil, Save } from "lucide-react";
-import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { ArrowLeft } from "lucide-react";
+
+import { useEffect, useState } from "react";
+
+import {
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Home,
+  Pencil,
+  Save,
+  ArrowLeft,
+} from "lucide-react";
+
+import { onAuthStateChanged, updateProfile } from "firebase/auth";
+
+import {
+  doc,
+  getDoc,
+  setDoc,
+  serverTimestamp,
+} from "firebase/firestore";
+
 import { Link, useNavigate } from "react-router-dom";
+
 import { auth, db } from "../firebase";
 
 import "./profile.css";
@@ -13,6 +32,8 @@ function Profile() {
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -25,11 +46,7 @@ function Profile() {
     country: "India",
   });
 
-  
-
-
-  /* ================= GET USER ================= */
-
+  // LOAD CUSTOMER PROFILE
   useEffect(() => {
     let active = true;
 
@@ -38,64 +55,59 @@ function Profile() {
       async (currentUser) => {
         if (!active) return;
 
-        setUser(currentUser);
-
         if (!currentUser) {
+          setUser(null);
           setLoading(false);
           return;
         }
 
-        // Show Firebase Authentication data immediately.
-        setFormData({
-          name: currentUser.displayName || "",
-          email: currentUser.email || "",
-          phone: "",
-          address: "",
-          city: "",
-          state: "",
-          country: "India",
-        });
+        setUser(currentUser);
 
         try {
-          const userRef = doc(db, "users", currentUser.uid);
-          const userSnap = await getDoc(userRef);
+          // IMPORTANT: Read from customers, not users.
+          const customerRef = doc(
+            db,
+            "customers",
+            currentUser.uid
+          );
+
+          const customerSnap = await getDoc(customerRef);
 
           if (!active) return;
 
-          if (userSnap.exists()) {
-            const data = userSnap.data();
+          if (customerSnap.exists()) {
+            const data = customerSnap.data();
 
             setFormData({
               name: data.name || currentUser.displayName || "",
-              email: currentUser.email || "",
+              email: currentUser.email || data.email || "",
               phone: data.phone || "",
               address: data.address || "",
               city: data.city || "",
               state: data.state || "",
               country: data.country || "India",
             });
+          } else {
+            setFormData({
+              name: currentUser.displayName || "",
+              email: currentUser.email || "",
+              phone: "",
+              address: "",
+              city: "",
+              state: "",
+              country: "India",
+            });
           }
         } catch (error) {
           console.error("Profile loading error:", error);
 
           if (active) {
-            console.error(
-              "Check Firestore rules, network connectivity, " +
-              "and the users collection."
-            );
+            setError("Unable to load your profile.");
           }
         } finally {
           if (active) {
             setLoading(false);
           }
-        }
-      },
-      (error) => {
-        console.error("Authentication listener error:", error);
-
-        if (active) {
-          setUser(null);
-          setLoading(false);
         }
       }
     );
@@ -106,54 +118,111 @@ function Profile() {
     };
   }, []);
 
-
-  /* ================= INPUT CHANGE ================= */
-
+  // HANDLE INPUT CHANGES
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    setFormData((previous) => ({
+      ...previous,
+      [name]: value,
+    }));
+
+    setError("");
   };
 
-  /* ================= SAVE PROFILE ================= */
-
+  // SAVE PROFILE
   const handleSave = async () => {
-    if (!user) return;
+    if (!user || auth.currentUser?.uid !== user.uid) {
+      setError("Please sign in again.");
+      return;
+    }
+
+    const requiredFields = [
+      "name",
+      "phone",
+      "address",
+      "city",
+      "state",
+      "country",
+    ];
+
+    for (const field of requiredFields) {
+      if (!String(formData[field] || "").trim()) {
+        setError(`${field} is required.`);
+        return;
+      }
+    }
+
+    const phoneDigits = formData.phone.replace(/\D/g, "");
+
+    const validPhone =
+      /^[6-9]\d{9}$/.test(phoneDigits) ||
+      /^91[6-9]\d{9}$/.test(phoneDigits);
+
+    if (!validPhone) {
+      setError("Please enter a valid Indian mobile number.");
+      return;
+    }
 
     try {
       setSaving(true);
+      setError("");
 
-      const userRef = doc(db, "users", user.uid);
-
-      await setDoc(
-        userRef,
-        {
-          uid: user.uid,
-          name: formData.name,
-          email: user.email,
-          phone: formData.phone,
-          address: formData.address,
-          city: formData.city,
-          state: formData.state,
-          country: formData.country,
-        },
-        { merge: true }
+      // IMPORTANT: Save to the SAME collection.
+      const customerRef = doc(
+        db,
+        "customers",
+        user.uid
       );
 
-      setEditing(false);
+      const customerSnap = await getDoc(customerRef);
 
+      if (
+        customerSnap.exists() &&
+        customerSnap.data().role &&
+        customerSnap.data().role !== "customer"
+      ) {
+        throw new Error("This account is not a customer account.");
+      }
+
+      const updatedData = {
+        uid: user.uid,
+        name: formData.name.trim(),
+        email: user.email || "",
+        phone: formData.phone.trim(),
+        address: formData.address.trim(),
+        city: formData.city.trim(),
+        state: formData.state.trim(),
+        country: formData.country.trim(),
+        role: "customer",
+        profileCompleted: true,
+        emailVerified: user.emailVerified,
+        updatedAt: serverTimestamp(),
+      };
+
+      await setDoc(customerRef, updatedData, {
+        merge: true,
+      });
+
+      // Keep Firebase Authentication display name synchronized.
+      if (user.displayName !== formData.name.trim()) {
+        await updateProfile(user, {
+          displayName: formData.name.trim(),
+        });
+      }
+
+      setEditing(false);
       alert("Profile updated successfully!");
+
     } catch (error) {
       console.error("Profile save error:", error);
-      alert("Failed to update profile.");
+      setError(error.message || "Failed to update profile.");
     } finally {
       setSaving(false);
     }
   };
 
-  /* ================= LOADING ================= */
-
+  // LOADING
   if (loading) {
     return (
       <div className="profile-page">
@@ -164,13 +233,16 @@ function Profile() {
     );
   }
 
-  /* ================= NOT LOGGED IN ================= */
-
+  // NOT LOGGED IN
   if (!user) {
     return (
       <div className="profile-page">
         <div className="profile-card">
           <h2>Please login first</h2>
+
+          <button onClick={() => navigate("/login")}>
+            Login
+          </button>
         </div>
       </div>
     );
@@ -183,23 +255,17 @@ function Profile() {
 
   return (
     <main className="profile-page">
- {/* HEADER */}
-      <header className="profile-header">
 
+      <header className="profile-header">
         <Link to="/" className="profile-back">
           <ArrowLeft size={20} />
           <span>Back to Home</span>
         </Link>
-
-      
       </header>
 
       <div className="profile-container">
 
-        {/* ================= HEADER ================= */}
-
         <div className="profile-title">
-
           <div>
             <span className="profile-label">
               ACCOUNT
@@ -230,11 +296,13 @@ function Profile() {
               {saving ? "Saving..." : "Save Changes"}
             </button>
           )}
-
         </div>
 
-
-        {/* ================= PROFILE CARD ================= */}
+        {error && (
+          <div className="profile-error" role="alert">
+            {error}
+          </div>
+        )}
 
         <section className="profile-card">
 
@@ -245,44 +313,26 @@ function Profile() {
             </div>
 
             <div>
-              <h2>
-                {formData.name || "User"}
-              </h2>
-
-              <p>
-                {user.email}
-              </p>
+              <h2>{formData.name || "User"}</h2>
+              <p>{user.email}</p>
             </div>
 
           </div>
 
-
           <div className="profile-divider" />
-
-
-          {/* ================= PERSONAL INFORMATION ================= */}
 
           <div className="personal-section">
 
             <div className="section-heading">
-
               <div>
                 <h3>Personal Information</h3>
-
-                <p>
-                  Your basic account information
-                </p>
+                <p>Your basic account information</p>
               </div>
-
             </div>
-
 
             <div className="profile-grid">
 
-              {/* NAME */}
-
               <div className="profile-field">
-
                 <label>
                   <User size={16} />
                   Full Name
@@ -301,30 +351,20 @@ function Profile() {
                     {formData.name || "Not added"}
                   </div>
                 )}
-
               </div>
 
-
-              {/* EMAIL */}
-
               <div className="profile-field">
-
                 <label>
                   <Mail size={16} />
                   Email
                 </label>
 
                 <div className="field-value">
-                  {user.email}
+                  {user.email || "Not available"}
                 </div>
-
               </div>
 
-
-              {/* PHONE */}
-
               <div className="profile-field">
-
                 <label>
                   <Phone size={16} />
                   Phone Number
@@ -343,14 +383,9 @@ function Profile() {
                     {formData.phone || "Not added"}
                   </div>
                 )}
-
               </div>
 
-
-              {/* CITY */}
-
               <div className="profile-field">
-
                 <label>
                   <MapPin size={16} />
                   City
@@ -369,14 +404,9 @@ function Profile() {
                     {formData.city || "Not added"}
                   </div>
                 )}
-
               </div>
 
-
-              {/* ADDRESS */}
-
               <div className="profile-field full-width">
-
                 <label>
                   <Home size={16} />
                   Home Address
@@ -395,14 +425,9 @@ function Profile() {
                     {formData.address || "Not added"}
                   </div>
                 )}
-
               </div>
 
-
-              {/* STATE */}
-
               <div className="profile-field">
-
                 <label>
                   <MapPin size={16} />
                   State
@@ -421,14 +446,9 @@ function Profile() {
                     {formData.state || "Not added"}
                   </div>
                 )}
-
               </div>
 
-
-              {/* COUNTRY */}
-
               <div className="profile-field">
-
                 <label>
                   <MapPin size={16} />
                   Country
@@ -447,17 +467,12 @@ function Profile() {
                     {formData.country || "India"}
                   </div>
                 )}
-
               </div>
 
             </div>
-
           </div>
-
         </section>
-
       </div>
-
     </main>
   );
 }
