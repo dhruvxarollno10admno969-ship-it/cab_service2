@@ -1,5 +1,5 @@
-
 import { useState } from "react";
+
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -11,6 +11,9 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   GoogleAuthProvider,
   signInWithPopup,
+  getAdditionalUserInfo,
+  deleteUser,
+  signOut,
 } from "firebase/auth";
 
 import {
@@ -21,26 +24,28 @@ import {
 } from "firebase/firestore";
 
 import { auth, db } from "../../firebase";
+
 import "./login.css";
 
 function Login() {
   const navigate = useNavigate();
 
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleGoogleLogin = async () => {
+    if (loading) return;
+
     setError("");
 
-    // Prevent accidental switching from an existing admin/customer session.
     if (auth.currentUser) {
       setError("Please sign out of your current account first.");
       return;
     }
 
-    try {
-      setLoading(true);
+    setLoading(true);
 
+    try {
       const provider = new GoogleAuthProvider();
 
       provider.setCustomParameters({
@@ -48,16 +53,42 @@ function Login() {
       });
 
       const result = await signInWithPopup(auth, provider);
-      const user = result.user;
 
+      const user = result.user;
+      const additionalInfo = getAdditionalUserInfo(result);
+
+      // Reject new accounts from the Login page.
+      if (additionalInfo?.isNewUser) {
+        try {
+          await deleteUser(user);
+        } catch (deleteError) {
+          console.error("New account cleanup failed:", deleteError);
+
+          // Make sure the user is signed out even if deletion fails.
+          await signOut(auth).catch((signOutError) => {
+            console.error("Sign out failed:", signOutError);
+          });
+
+          setError(
+            "No existing account was found. Please sign up first. The temporary account could not be removed automatically."
+          );
+
+          return;
+        }
+
+        setError("No account found. Please sign up first.");
+        return;
+      }
+
+      // Get the customer's Firestore profile.
       const customerRef = doc(db, "customers", user.uid);
       const customerSnapshot = await getDoc(customerRef);
 
       let customerData;
 
+      // Repair a missing customer profile for an existing Auth account.
       if (!customerSnapshot.exists()) {
-        // Create a new customer record.
-        customerData = {
+        const newCustomer = {
           uid: user.uid,
           name: user.displayName || "",
           email: user.email || "",
@@ -74,12 +105,14 @@ function Login() {
           updatedAt: serverTimestamp(),
         };
 
-        await setDoc(customerRef, customerData);
+        await setDoc(customerRef, newCustomer);
+
+        customerData = newCustomer;
       } else {
         customerData = customerSnapshot.data();
       }
 
-      // Check all mandatory profile fields.
+      // Check whether the customer profile is complete.
       const requiredFields = [
         "name",
         "phone",
@@ -89,36 +122,29 @@ function Login() {
         "country",
       ];
 
-      const profileComplete = requiredFields.every((field) =>
-        String(customerData[field] || "").trim()
-      );
+      const isProfileComplete = requiredFields.every((field) => {
+        return (
+          typeof customerData[field] === "string" &&
+          customerData[field].trim() !== ""
+        );
+      });
 
-      if (profileComplete) {
-        // Support existing customer records created before this update.
-        if (customerData.profileCompleted !== true) {
-          await setDoc(
-            customerRef,
-            {
-              profileCompleted: true,
-              updatedAt: serverTimestamp(),
-            },
-            { merge: true }
-          );
-        }
-
-        navigate("/", { replace: true });
-      } else {
-        // Mandatory profile completion.
+      // Update profile completion status.
+      if (customerData.profileCompleted !== isProfileComplete) {
         await setDoc(
           customerRef,
           {
-            profileCompleted: false,
+            profileCompleted: isProfileComplete,
             updatedAt: serverTimestamp(),
           },
           { merge: true }
         );
+      }
 
-        navigate("/complete-profile", { replace: true });
+      if (isProfileComplete) {
+        navigate("/");
+      } else {
+        navigate("/complete-profile");
       }
     } catch (error) {
       console.error("Google login error:", error);
@@ -129,24 +155,29 @@ function Login() {
           break;
 
         case "auth/popup-blocked":
-          setError("Please allow popups and try again.");
+          setError("Your browser blocked the Google sign-in popup.");
           break;
 
-        case "auth/unauthorized-domain":
-          setError("This domain is not authorized in Firebase.");
+        case "auth/cancelled-popup-request":
+          setError("A Google sign-in request is already in progress.");
           break;
 
         case "auth/network-request-failed":
-          setError("Network error. Please check your connection.");
+          setError("Network error. Please check your internet connection.");
           break;
 
         case "permission-denied":
         case "firestore/permission-denied":
-          setError("Unable to access your customer profile. Check Firestore security rules.");
+          setError("Permission denied. Please contact support.");
+          break;
+
+        case "auth/user-disabled":
+          setError("This account has been disabled.");
           break;
 
         default:
-          setError(error.message || "Google sign-in failed.");
+          setError("Unable to log in. Please try again.");
+          break;
       }
     } finally {
       setLoading(false);
@@ -154,53 +185,59 @@ function Login() {
   };
 
   return (
-    <main className="login-page">
+    <div className="login-page">
+      <div className="login-orb login-orb-one"></div>
+      <div className="login-orb login-orb-two"></div>
+      <div className="login-grid"></div>
 
-      <div className="login-grid" />
-      <div className="login-orb login-orb-one" />
-      <div className="login-orb login-orb-two" />
-
-      <header className="login-topbar">
+      <div className="login-topbar">
         <Link to="/" className="login-back">
-          <ArrowLeft size={16} />
-          <span>Back to Home</span>
+          <ArrowLeft size={18} />
+          <span>Back to home</span>
         </Link>
 
-        <div className="login-security">
-          <ShieldCheck size={15} />
-          Secure Login
-        </div>
-      </header>
+        <Link to="/" className="login-brand">
+          <span className="login-brand-mark">M</span>
+          <span>MANZILL <strong>777</strong></span>
+        </Link>
+      </div>
 
-      <section className="login-card">
+      <div className="login-card">
+        <div className="login-card-icon">
+          <ShieldCheck size={25} />
+        </div>
 
         <div className="login-heading">
-          <div className="login-eyebrow">
-            <span />
+          <span className="login-eyebrow">
             WELCOME BACK
-          </div>
+          </span>
 
           <h1>
-            Ready to
+            Your journey
             <br />
-            <em>ride?</em>
+            <span>starts here.</span>
           </h1>
 
           <p>
-            Sign in to your account and continue
-            <br />
-            your journey with MANZIL 777.
+            Sign in to your MANZILL 777 account and continue
+            your journey with us.
           </p>
         </div>
 
+        {error && (
+          <div className="login-error">
+            {error}
+          </div>
+        )}
+
         <button
           type="button"
-          className="login-google-button"
+          className="login-google-btn"
           onClick={handleGoogleLogin}
           disabled={loading}
         >
           {loading ? (
-            <span className="login-google-loader" />
+            <span className="login-loader"></span>
           ) : (
             <svg
               width="20"
@@ -214,64 +251,46 @@ function Login() {
               />
               <path
                 fill="#4285F4"
-                d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.72 7.18l7.6 5.9c4.43-4.09 7.16-10.11 7.16-17.55z"
+                d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.72 7.18l7.35 5.7c4.29-3.96 7.41-9.8 7.41-17.35z"
               />
               <path
                 fill="#FBBC05"
-                d="M10.53 28.59A14.4 14.4 0 0 1 9.75 24c0-1.59.27-3.13.75-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.86.92 7.5 2.56 10.78l7.97-6.19z"
+                d="M10.53 28.59A14.5 14.5 0 0 1 9.75 24c0-1.59.27-3.13.75-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.88.93 7.55 2.56 10.78l7.97-6.19z"
               />
               <path
                 fill="#34A853"
-                d="M24 48c6.48 0 11.93-2.13 15.9-5.8l-7.6-5.9c-2.12 1.43-4.84 2.28-8.3 2.28-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+                d="M24 48c6.47 0 11.91-2.13 15.88-5.8l-7.35-5.7c-2.04 1.37-4.65 2.18-8.53 2.18-6.26 0-11.57-4.22-13.46-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
               />
             </svg>
           )}
 
           <span>
-            {loading
-              ? "CONNECTING TO GOOGLE..."
-              : "Continue with Google"}
+            {loading ? "Signing in..." : "Continue with Google"}
           </span>
 
-          {!loading && (
-            <ArrowUpRight
-              className="login-google-arrow"
-              size={18}
-            />
-          )}
+          {!loading && <ArrowUpRight size={18} />}
         </button>
-
-        {error && (
-          <div className="login-error" role="alert">
-            <span />
-            {error}
-          </div>
-        )}
 
         <div className="login-switch">
           <span>Don't have an account?</span>
-
           <Link to="/signup">
             Create account
-            <ArrowUpRight size={14} />
           </Link>
         </div>
 
-        <p className="login-legal">
+        <div className="login-legal">
           By continuing, you agree to our
-          {" "}<span>Terms</span> and{" "}
-          <span>Privacy Policy</span>.
-        </p>
-
-      </section>
-
-      <div className="login-bottom">
-        <span>MANZIL 777</span>
-        <i />
-        <span>PREMIUM TRAVEL EXPERIENCE</span>
+          <Link to="/terms"> Terms of Service </Link>
+          and
+          <Link to="/privacy"> Privacy Policy</Link>.
+        </div>
       </div>
 
-    </main>
+      <div className="login-bottom">
+        <span>MANZILL 777</span>
+        <span>PREMIUM CAB SERVICES</span>
+      </div>
+    </div>
   );
 }
 
