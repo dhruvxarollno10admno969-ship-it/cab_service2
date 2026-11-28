@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
-  signInWithEmailAndPassword,
-  sendPasswordResetEmail,
   signInWithPopup,
   GoogleAuthProvider,
   signOut,
@@ -14,18 +12,11 @@ import {
 import { auth } from "../../firebase";
 
 import {
-  Mail,
   LockKeyhole,
   ArrowRight,
-  Eye,
-  EyeOff,
 } from "lucide-react";
 
 import "../styles/adminlogin.css";
-
-// =====================================================
-// ADMIN EMAIL
-// =====================================================
 
 const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL;
 
@@ -38,31 +29,18 @@ googleProvider.setCustomParameters({
 const AdminLogin = () => {
   const navigate = useNavigate();
 
-  // =====================================================
-  // STATE
-  // =====================================================
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [resetLoading, setResetLoading] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
 
-  // =====================================================
-  // CHECK EXISTING FIREBASE LOGIN
-  // =====================================================
-
+  // Check existing Firebase login
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser && currentUser.email === ADMIN_EMAIL) {
-        navigate("/admin", {
-          replace: true,
-        });
-
+      if (
+        currentUser &&
+        currentUser.email?.toLowerCase() === ADMIN_EMAIL?.toLowerCase()
+      ) {
+        navigate("/admin", { replace: true });
         return;
       }
 
@@ -72,85 +50,20 @@ const AdminLogin = () => {
     return () => unsubscribe();
   }, [navigate]);
 
-  // =====================================================
-  // ADMIN EMAIL/PASSWORD LOGIN
-  // =====================================================
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
-    setError("");
-    setSuccess("");
-
-    if (!email || !password) {
-      setError("Please enter your email and password.");
-      return;
-    }
-
-    try {
-      setLoading(true);
-
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
-      const user = userCredential.user;
-
-      if (user.email !== ADMIN_EMAIL) {
-        await signOut(auth);
-
-        setError(
-          "You are not authorized to access the admin panel."
-        );
-
-        return;
-      }
-
-      navigate("/admin", {
-        replace: true,
-      });
-    } catch (error) {
-      console.error("Admin login error:", error);
-
-      if (error.code === "auth/invalid-credential") {
-        setError("Invalid admin email or password.");
-      } else if (error.code === "auth/user-not-found") {
-        setError("Admin account does not exist.");
-      } else if (error.code === "auth/wrong-password") {
-        setError("Incorrect admin password.");
-      } else {
-        setError("Unable to login. Please try again.");
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // =====================================================
-  // GOOGLE SSO LOGIN
-  // =====================================================
-
+  // Google SSO login
   const handleGoogleLogin = async () => {
+    if (googleLoading) return;
+
     setError("");
-    setSuccess("");
 
     try {
       setGoogleLoading(true);
 
-      const result = await signInWithPopup(
-        auth,
-        googleProvider
-      );
-
+      const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
 
-      // Only the authorized admin email is allowed.
-
       if (
-        user.email?.toLowerCase() !==
-        ADMIN_EMAIL.toLowerCase()
+        user.email?.toLowerCase() !== ADMIN_EMAIL?.toLowerCase()
       ) {
         await signOut(auth);
 
@@ -161,9 +74,7 @@ const AdminLogin = () => {
         return;
       }
 
-      navigate("/admin", {
-        replace: true,
-      });
+      navigate("/admin", { replace: true });
     } catch (error) {
       console.error("Google admin login error:", error);
 
@@ -183,45 +94,6 @@ const AdminLogin = () => {
     }
   };
 
-  // =====================================================
-  // FORGOT PASSWORD
-  // =====================================================
-
-  const handleForgotPassword = async () => {
-    setError("");
-    setSuccess("");
-
-    if (!email) {
-      setError("Enter your admin email first.");
-      return;
-    }
-
-    if (email !== ADMIN_EMAIL) {
-      setError(
-        "Password reset is only available for the admin account."
-      );
-      return;
-    }
-
-    try {
-      setResetLoading(true);
-
-      await sendPasswordResetEmail(auth, email);
-
-      setSuccess("Password reset email has been sent.");
-    } catch (error) {
-      console.error("Password reset error:", error);
-
-      setError("Unable to send password reset email.");
-    } finally {
-      setResetLoading(false);
-    }
-  };
-
-  // =====================================================
-  // CHECKING AUTH
-  // =====================================================
-
   if (checkingAuth) {
     return (
       <div className="admin-auth-loading">
@@ -230,15 +102,10 @@ const AdminLogin = () => {
     );
   }
 
-  // =====================================================
-  // UI
-  // =====================================================
-
   return (
     <div className="admin-login-page">
 
       {/* BACKGROUND */}
-
       <div className="admin-login-bg">
         <span></span>
         <span></span>
@@ -246,11 +113,9 @@ const AdminLogin = () => {
       </div>
 
       {/* LOGIN CARD */}
-
       <div className="admin-login-card">
 
         {/* HEADER */}
-
         <div className="admin-login-header">
 
           <div className="admin-lock">
@@ -266,139 +131,27 @@ const AdminLogin = () => {
           </h1>
 
           <p className="admin-subtitle">
-            Sign in to access the admin panel.
+            Sign in securely with your authorized Google account.
           </p>
 
         </div>
 
-        {/* LOGIN FORM */}
-
-        <form onSubmit={handleLogin}>
-
-          {/* EMAIL */}
-
-          <div className="admin-input-group">
-
-            <label htmlFor="admin-email">
-              Email Address
-            </label>
-
-            <div className="admin-input">
-
-              <Mail size={18} />
-
-              <input
-                id="admin-email"
-                type="email"
-                placeholder="Admin email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                autoComplete="email"
-              />
-
-            </div>
-
+        {/* ERROR */}
+        {error && (
+          <div className="admin-login-error">
+            {error}
           </div>
+        )}
 
-          {/* PASSWORD */}
-
-          <div className="admin-input-group">
-
-            <label htmlFor="admin-password">
-              Password
-            </label>
-
-            <div className="admin-input">
-
-              <LockKeyhole size={18} />
-
-              <input
-                id="admin-password"
-                type={showPassword ? "text" : "password"}
-                placeholder="Admin password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete="current-password"
-              />
-
-              {/* SHOW / HIDE PASSWORD */}
-
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={() =>
-                  setShowPassword((prev) => !prev)
-                }
-                aria-label={
-                  showPassword
-                    ? "Hide password"
-                    : "Show password"
-                }
-              >
-                {showPassword ? (
-                  <EyeOff size={18} />
-                ) : (
-                  <Eye size={18} />
-                )}
-              </button>
-
-            </div>
-
-            {/* FORGOT PASSWORD */}
-
-            <button
-              type="button"
-              className="forgot-password"
-              onClick={handleForgotPassword}
-              disabled={resetLoading}
-            >
-              {resetLoading
-                ? "Sending..."
-                : "Forgot password?"}
-            </button>
-
-          </div>
-
-          {/* ERROR */}
-
-          {error && (
-            <div className="admin-login-error">
-              {error}
-            </div>
-          )}
-
-          {/* SUCCESS */}
-
-          {success && (
-            <div className="admin-login-success">
-              {success}
-            </div>
-          )}
-
-          {/* EMAIL LOGIN BUTTON */}
-
-          <button
-            type="submit"
-            className="admin-login-btn"
-            disabled={loading || googleLoading}
-          >
-            {loading ? "Signing in..." : "Admin Sign In"}
-
-            {!loading && <ArrowRight size={18} />}
-          </button>
-
-        </form>
-
-        {/* GOOGLE SSO BUTTON */}
-
+        {/* GOOGLE SSO */}
         <button
           type="button"
           onClick={handleGoogleLogin}
-          disabled={googleLoading || loading}
+          disabled={googleLoading}
           style={{
             width: "100%",
             height: "54px",
-            marginTop: "14px",
+            marginTop: "24px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -410,10 +163,7 @@ const AdminLogin = () => {
             fontFamily: "inherit",
             fontSize: "14px",
             fontWeight: 600,
-            cursor:
-              googleLoading || loading
-                ? "not-allowed"
-                : "pointer",
+            cursor: googleLoading ? "not-allowed" : "pointer",
             opacity: googleLoading ? 0.6 : 1,
             transition: "background 0.2s ease",
           }}
@@ -447,12 +197,13 @@ const AdminLogin = () => {
               </svg>
 
               Continue with Google
+
+              <ArrowRight size={18} />
             </>
           )}
         </button>
 
         {/* BACK TO WEBSITE */}
-
         <button
           type="button"
           className="back-to-website"
